@@ -13,7 +13,6 @@ class MainApp extends StatelessWidget {
         home: Scaffold(
       appBar: AppBar(
         title: const Text('LG hackathon'),
-        actions: [],
       ),
       body: Center(
         child: Column(
