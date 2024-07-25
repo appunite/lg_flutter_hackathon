@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+printf "\e[33;1m%s\e[0m\n" 'Running the Flutter formatter'
+dart format lib/ -l 120 --set-exit-if-changed
+if [ $? -ne 0 ]; then
+printf "\e[33;1m%s\e[0m\n" 'Finished running the Flutter formatter now You can commit changes'
+  exit 1
+fi
+printf "\e[33;1m%s\e[0m\n" 'Finished running the Flutter formatter'
