@@ -1,81 +1,74 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MainApp());
+import 'package:lg_flutter_hackathon/constants/colors.dart';
+import 'package:lg_flutter_hackathon/dependencies.dart';
+
+import 'package:provider/provider.dart';
+
+import 'app_lifecycle/app_lifecycle.dart';
+import 'audio/audio_controller.dart';
+import 'router.dart';
+import 'settings/settings.dart';
+
+void main() async {
+  await runZonedGuarded(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
+
+      setupDependencies();
+
+      runApp(const MyApp());
+    },
+    (e, st) {
+      debugPrintStack(stackTrace: st, label: e.toString());
+    },
+  );
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        home: Scaffold(
-      appBar: AppBar(
-        title: const Text('LG hackathon'),
+    return AppLifecycleObserver(
+      child: MultiProvider(
+        providers: [
+          Provider(create: (context) => SettingsController()),
+          ProxyProvider2<AppLifecycleStateNotifier, SettingsController, AudioController>(
+            create: (context) => AudioController(),
+            update: (context, lifecycleNotifier, settings, audio) {
+              audio!.attachDependencies(lifecycleNotifier, settings);
+              return audio;
+            },
+            dispose: (context, audio) => audio.dispose(),
+            lazy: false,
+          ),
+        ],
+        child: Builder(builder: (context) {
+          return MaterialApp.router(
+            title: 'LG hackathon',
+            theme: ThemeData(
+              primarySwatch: Colors.deepPurple,
+              scaffoldBackgroundColor: AppColors.background,
+              textTheme: const TextTheme(
+                headlineLarge: TextStyle(color: AppColors.primary),
+              ),
+            ).copyWith(
+              filledButtonTheme: FilledButtonThemeData(
+                style: FilledButton.styleFrom(
+                  textStyle: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+            ),
+            routerConfig: router,
+          );
+        }),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            OutlinedButton(
-              onPressed: () {},
-              style: OutlinedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                side: const BorderSide(
-                  color: Colors.blue,
-                  width: 2.0,
-                ),
-              ),
-              child: const Text('2 players'),
-            ),
-            const SizedBox(height: 10.0),
-            OutlinedButton(
-              onPressed: () {},
-              style: OutlinedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                side: const BorderSide(
-                  color: Colors.blue,
-                  width: 2.0,
-                ),
-              ),
-              child: const Text('3 players'),
-            ),
-            const SizedBox(height: 10.0),
-            OutlinedButton(
-              onPressed: () {},
-              style: OutlinedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                side: const BorderSide(
-                  color: Colors.blue,
-                  width: 2.0,
-                ),
-              ),
-              child: const Text('4 players'),
-            ),
-            const SizedBox(height: 100.0),
-            OutlinedButton(
-              onPressed: () {},
-              style: OutlinedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                side: const BorderSide(
-                  color: Colors.red,
-                  width: 2.0,
-                ),
-              ),
-              child: const Text('Quit'),
-            ),
-          ],
-        ),
-      ),
-    ));
+    );
   }
 }
