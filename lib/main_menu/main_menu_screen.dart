@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:lg_flutter_hackathon/buttons/primary_button.dart';
+import 'package:lg_flutter_hackathon/components/confirmation_pop_up.dart';
+import 'package:lg_flutter_hackathon/constants/strings.dart';
+import 'package:lg_flutter_hackathon/router.dart';
 import 'package:provider/provider.dart';
 import '../settings/settings.dart';
 
@@ -11,38 +14,55 @@ class MainMenuScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final settingsController = context.watch<SettingsController>();
 
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            soundSettings(settingsController),
-            const Spacer(),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                PrimaryButton(
-                  onPressed: () {},
-                  child: const Text('2 players'),
-                ),
-                const Gap(10),
-                PrimaryButton(
-                  onPressed: () {},
-                  child: const Text('3 players'),
-                ),
-                const Gap(10),
-                PrimaryButton(
-                  onPressed: () {},
-                  child: const Text('4 players'),
-                ),
-                const Gap(10),
-                PrimaryButton(
-                  onPressed: () {},
-                  child: const Text('Quit'),
-                ),
-              ],
-            ),
-            const Spacer(),
-          ],
+    /// when pop from battle page this should be disabled but it doesn't work :) https://github.com/jonataslaw/getx/issues/3121
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        body: SafeArea(
+          child: Column(
+            children: [
+              soundSettings(settingsController),
+              const Spacer(),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  PrimaryButton(
+                    onPressed: () {
+                      router.push('/battle');
+                    },
+                    child: const Text(Strings.twoPlayers),
+                  ),
+                  const Gap(10),
+                  PrimaryButton(
+                    onPressed: () {
+                      router.push('/battle');
+                    },
+                    child: const Text(Strings.threePlayers),
+                  ),
+                  const Gap(10),
+                  PrimaryButton(
+                    onPressed: () {
+                      router.push('/battle');
+                    },
+                    child: const Text(Strings.fourPlayers),
+                  ),
+                  const Gap(10),
+                  PrimaryButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return const ConfirmationPopUp(title: Strings.exitConfirmation);
+                        },
+                      );
+                    },
+                    child: const Text('Quit'),
+                  ),
+                ],
+              ),
+              const Spacer(),
+            ],
+          ),
         ),
       ),
     );
