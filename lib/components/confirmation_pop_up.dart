@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:lg_flutter_hackathon/constants/strings.dart';
-import 'package:lg_flutter_hackathon/router.dart';
 
 class ConfirmationPopUp extends StatelessWidget {
   const ConfirmationPopUp({super.key, required this.title, this.alertMessage});
@@ -13,8 +12,7 @@ class ConfirmationPopUp extends StatelessWidget {
     Widget yesButton = TextButton(
       child: const Text(Strings.yes),
       onPressed: () {
-        router.pop();
-        router.go('/');
+        Navigator.popAndPushNamed(context, '/');
       },
     );
     Widget cancelButton = TextButton(
@@ -23,7 +21,7 @@ class ConfirmationPopUp extends StatelessWidget {
         style: TextStyle(color: Colors.red),
       ),
       onPressed: () {
-        router.pop();
+        Navigator.pop(context);
       },
     );
     return AlertDialog(

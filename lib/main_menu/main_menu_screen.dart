@@ -3,7 +3,6 @@ import 'package:gap/gap.dart';
 import 'package:lg_flutter_hackathon/buttons/primary_button.dart';
 import 'package:lg_flutter_hackathon/components/confirmation_pop_up.dart';
 import 'package:lg_flutter_hackathon/constants/strings.dart';
-import 'package:lg_flutter_hackathon/router.dart';
 import 'package:provider/provider.dart';
 import '../settings/settings.dart';
 
@@ -28,21 +27,21 @@ class MainMenuScreen extends StatelessWidget {
                 children: [
                   PrimaryButton(
                     onPressed: () {
-                      router.push('/battle');
+                      Navigator.pushNamed(context, '/battle');
                     },
                     child: const Text(Strings.twoPlayers),
                   ),
                   const Gap(10),
                   PrimaryButton(
                     onPressed: () {
-                      router.push('/battle');
+                      Navigator.pushNamed(context, '/battle');
                     },
                     child: const Text(Strings.threePlayers),
                   ),
                   const Gap(10),
                   PrimaryButton(
                     onPressed: () {
-                      router.push('/battle');
+                      Navigator.pushNamed(context, '/battle');
                     },
                     child: const Text(Strings.fourPlayers),
                   ),
