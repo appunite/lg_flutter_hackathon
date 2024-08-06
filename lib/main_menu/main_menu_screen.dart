@@ -13,7 +13,6 @@ class MainMenuScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final settingsController = context.watch<SettingsController>();
 
-    /// when pop from battle page this should be disabled but it doesn't work :) https://github.com/jonataslaw/getx/issues/3121
     return PopScope(
       canPop: false,
       child: Scaffold(
