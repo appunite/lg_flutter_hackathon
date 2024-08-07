@@ -11,16 +11,14 @@ class DrawingOverlay extends StatefulWidget {
   final ValueChanged<DrawingDetails> onDrawingCompleted;
   final double thresholdPercentage;
   final GlyphEntity glyphAsset;
-  final double drawingAreaWidth;
-  final double drawingAreaHeight;
+  final double drawingAreaSize;
 
   const DrawingOverlay({
     super.key,
     required this.onDrawingCompleted,
     required this.thresholdPercentage,
     required this.glyphAsset,
-    required this.drawingAreaWidth,
-    required this.drawingAreaHeight,
+    required this.drawingAreaSize,
   });
 
   @override
@@ -51,24 +49,23 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
 
   void _calculateStrokeWidth() {
     const double baseStrokeWidth = 10.0;
-    const double baseDrawingAreaSize = 250.0;
-    final double scaleFactor = widget.drawingAreaWidth / baseDrawingAreaSize;
+    final double scaleFactor = widget.drawingAreaSize / widget.drawingAreaSize;
     strokeWidth = baseStrokeWidth * scaleFactor;
   }
 
   Future<DrawingDetails> _saveAndCompareDrawing() async {
     final recorder = ui.PictureRecorder();
-    final canvas = Canvas(recorder, Rect.fromLTWH(0, 0, widget.drawingAreaWidth, widget.drawingAreaHeight));
+    final canvas = Canvas(recorder, Rect.fromLTWH(0, 0, widget.drawingAreaSize, widget.drawingAreaSize));
 
     canvas.drawRect(
-      Rect.fromLTWH(0, 0, widget.drawingAreaWidth, widget.drawingAreaHeight),
+      Rect.fromLTWH(0, 0, widget.drawingAreaSize, widget.drawingAreaSize),
       Paint()..color = Colors.white,
     );
 
     final painter = DrawPainter(points, null, strokeWidth);
-    painter.paint(canvas, Size(widget.drawingAreaWidth, widget.drawingAreaHeight));
+    painter.paint(canvas, Size(widget.drawingAreaSize, widget.drawingAreaSize));
     final picture = recorder.endRecording();
-    final imgBytes = await (await picture.toImage(widget.drawingAreaWidth.toInt(), widget.drawingAreaHeight.toInt()))
+    final imgBytes = await (await picture.toImage(widget.drawingAreaSize.toInt(), widget.drawingAreaSize.toInt()))
         .toByteData(format: ui.ImageByteFormat.png);
 
     drawnImageBytes = imgBytes!.buffer.asUint8List();
@@ -191,30 +188,26 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: GestureDetector(
-        onPanUpdate: (details) {
-          setState(() {
+  Widget build(BuildContext context) => Center(
+        child: GestureDetector(
+          onPanUpdate: (details) => setState(() {
             Offset localPosition = details.localPosition;
             points.add(localPosition);
-          });
-        },
-        onPanEnd: (details) async {
-          points.add(null);
-          DrawingDetails details = await _saveAndCompareDrawing();
-          widget.onDrawingCompleted(details);
-          setState(() => points.clear());
-        },
-        child: SizedBox(
-          width: widget.drawingAreaWidth,
-          height: widget.drawingAreaHeight,
-          child: CustomPaint(
-            painter: DrawPainter(points, backgroundImage, strokeWidth),
-            size: Size.infinite,
+          }),
+          onPanEnd: (details) async {
+            points.add(null);
+            DrawingDetails details = await _saveAndCompareDrawing();
+            widget.onDrawingCompleted(details);
+            setState(() => points.clear());
+          },
+          child: SizedBox(
+            width: widget.drawingAreaSize,
+            height: widget.drawingAreaSize,
+            child: CustomPaint(
+              painter: DrawPainter(points, backgroundImage, strokeWidth),
+              size: Size.infinite,
+            ),
           ),
         ),
-      ),
-    );
-  }
+      );
 }

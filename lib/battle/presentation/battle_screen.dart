@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lg_flutter_hackathon/battle/domain/drawing_details_entity.dart';
 import 'package:lg_flutter_hackathon/battle/domain/glyph_entity.dart';
+import 'package:lg_flutter_hackathon/battle/presentation/widgets/accuracy_animted_text.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/drawing_overlay.dart';
 import 'package:lg_flutter_hackathon/components/confirmation_pop_up.dart';
 import 'package:lg_flutter_hackathon/components/tool_tip.dart';
+import 'package:lg_flutter_hackathon/constants/image_assets.dart';
 import 'package:lg_flutter_hackathon/constants/strings.dart';
 import 'package:overlay_tooltip/overlay_tooltip.dart';
+
 import 'package:flutter_svg/flutter_svg.dart';
 
 class BattleScreen extends StatefulWidget {
@@ -20,6 +23,7 @@ class _BattleScreenState extends State<BattleScreen> {
   final TooltipController _controller = TooltipController();
   bool done = false;
   bool canDraw = true;
+  double? accuracy;
 
   @override
   void initState() {
@@ -57,6 +61,11 @@ class _BattleScreenState extends State<BattleScreen> {
             _buildEnemy(),
             _buildStartButton(context),
             _buildSettingsButton(context),
+            Positioned(
+              top: MediaQuery.of(context).size.height / 5,
+              left: MediaQuery.of(context).size.width / 2,
+              child: AccuracyAnimatedText(accuracy: accuracy),
+            ),
           ],
         ),
       ),
@@ -65,7 +74,7 @@ class _BattleScreenState extends State<BattleScreen> {
 
   Widget _buildBackground() {
     return SvgPicture.asset(
-      'assets/ilustrations/battle_background.svg',
+      ImageAssets.battleBackground,
       fit: BoxFit.cover,
       width: double.infinity,
       height: double.infinity,
@@ -79,41 +88,42 @@ class _BattleScreenState extends State<BattleScreen> {
 
   Widget _buildRune(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
 
     final drawingAreaHeight = screenHeight / 3;
     const glyphSize = 250.0;
 
-    return Positioned(
-      top: screenHeight / 10,
-      left: screenWidth / 4,
-      child: OverlayTooltipItem(
-        displayIndex: 1,
-        tooltip: (controller) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: MTooltip(title: 'This is the rune!', controller: controller),
-          );
-        },
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            SvgPicture.asset(
-              'assets/ilustrations/stone_drawing_holder.svg',
-              fit: BoxFit.cover,
-              height: drawingAreaHeight,
-              placeholderBuilder: (BuildContext context) => const SizedBox(
-                width: 50,
-                height: 50,
-                child: CircularProgressIndicator(),
+    return Align(
+      alignment: Alignment.topCenter,
+      child: Container(
+        margin: EdgeInsets.only(top: screenHeight / 10),
+        child: OverlayTooltipItem(
+          displayIndex: 1,
+          tooltip: (controller) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: MTooltip(title: 'This is the rune!', controller: controller),
+            );
+          },
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              SvgPicture.asset(
+                ImageAssets.stoneDrawingHolder,
+                fit: BoxFit.cover,
+                height: drawingAreaHeight,
+                placeholderBuilder: (BuildContext context) => const SizedBox(
+                  width: 50,
+                  height: 50,
+                  child: CircularProgressIndicator(),
+                ),
               ),
-            ),
-            if (canDraw)
-              _buildDrawingOverlay(
-                context,
-                glyphSize,
-              ),
-          ],
+              if (canDraw)
+                _buildDrawingOverlay(
+                  context,
+                  glyphSize,
+                ),
+            ],
+          ),
         ),
       ),
     );
@@ -124,15 +134,19 @@ class _BattleScreenState extends State<BattleScreen> {
       width: glyphSize,
       height: glyphSize,
       child: DrawingOverlay(
-        // ignore: avoid_print
-        onDrawingCompleted: (DrawingDetails details) => print(details),
+        onDrawingCompleted: (DrawingDetails details) {
+          setState(() {
+            accuracy = details.accuracy;
+          });
+          // ignore: avoid_print
+          print(details);
+        },
         thresholdPercentage: 0.9,
         glyphAsset: GlyphEntity(
-          glyphCompare: 'assets/ilustrations/glyph_compare.png',
-          glyphPresentation: 'assets/ilustrations/glyph_presentation.png',
+          glyphCompare: ImageAssets.glyphCompare,
+          glyphPresentation: ImageAssets.glyphPresentation,
         ),
-        drawingAreaWidth: glyphSize,
-        drawingAreaHeight: glyphSize,
+        drawingAreaSize: glyphSize,
       ),
     );
   }
@@ -151,7 +165,7 @@ class _BattleScreenState extends State<BattleScreen> {
         },
         child: SvgPicture.asset(
           height: MediaQuery.sizeOf(context).height / 3,
-          'assets/ilustrations/players.svg',
+          ImageAssets.players,
           fit: BoxFit.cover,
           placeholderBuilder: (BuildContext context) => const SizedBox(
             width: 50,
@@ -177,7 +191,7 @@ class _BattleScreenState extends State<BattleScreen> {
         },
         child: SvgPicture.asset(
           height: MediaQuery.sizeOf(context).height / 4,
-          'assets/ilustrations/troll-enemy.svg',
+          ImageAssets.trollEnemy,
           fit: BoxFit.cover,
           placeholderBuilder: (BuildContext context) => const SizedBox(
             width: 50,

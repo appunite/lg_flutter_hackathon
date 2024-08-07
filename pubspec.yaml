@@ -19,6 +19,7 @@ dependencies:
   gap: ^3.0.1
   overlay_tooltip: ^0.2.3
   flutter_svg: ^2.0.10+1
+  google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_test:
@@ -32,3 +33,4 @@ flutter:
     - assets/sfx/
     - assets/images/
     - assets/ilustrations/
+    - assets/ilustrations/glyphs/
