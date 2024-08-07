@@ -46,7 +46,9 @@ class _PrimaryButtonState extends State<PrimaryButton> with SingleTickerProvider
         child: FilledButton(
           onPressed: () {
             audioController.playSfx(widget.sfxType ?? SfxType.buttonTap);
-            widget.onPressed;
+            if (widget.onPressed != null) {
+              widget.onPressed!();
+            }
           },
           child: widget.child,
         ),

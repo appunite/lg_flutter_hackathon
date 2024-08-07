@@ -1,15 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:lg_flutter_hackathon/battle/presentation/battle_screen.dart';
 
 import 'package:lg_flutter_hackathon/constants/colors.dart';
 import 'package:lg_flutter_hackathon/dependencies.dart';
+import 'package:lg_flutter_hackathon/main_menu/main_menu_screen.dart';
 
 import 'package:provider/provider.dart';
 
 import 'app_lifecycle/app_lifecycle.dart';
 import 'audio/audio_controller.dart';
-import 'router.dart';
 import 'settings/settings.dart';
 
 void main() async {
@@ -47,7 +48,7 @@ class MyApp extends StatelessWidget {
           ),
         ],
         child: Builder(builder: (context) {
-          return MaterialApp.router(
+          return MaterialApp(
             title: 'LG hackathon',
             theme: ThemeData(
               primarySwatch: Colors.deepPurple,
@@ -65,7 +66,11 @@ class MyApp extends StatelessWidget {
                 ),
               ),
             ),
-            routerConfig: router,
+            initialRoute: '/',
+            routes: {
+              '/': (context) => const MainMenuScreen(),
+              '/battle': (context) => const BattleScreen(),
+            },
           );
         }),
       ),
