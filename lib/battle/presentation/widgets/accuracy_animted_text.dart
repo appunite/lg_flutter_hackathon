@@ -31,13 +31,22 @@ class _AccuracyAnimatedTextState extends State<AccuracyAnimatedText> with Single
     _positionAnimation = Tween<double>(begin: 0.0, end: -50.0).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
+
+    _animationController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        setState(() {
+          displayText = '';
+        });
+        _animationController.reset();
+      }
+    });
   }
 
   @override
   void didUpdateWidget(covariant AccuracyAnimatedText oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (widget.accuracy != null && oldWidget.accuracy == null) {
+    if (widget.accuracy != null) {
       _setDisplayTextAndAnimate();
     }
   }
@@ -55,15 +64,6 @@ class _AccuracyAnimatedTextState extends State<AccuracyAnimatedText> with Single
       }
       _animationController.forward();
     });
-
-    Future.delayed(const Duration(seconds: 1), () {
-      if (mounted) {
-        setState(() {
-          _animationController.reset();
-          displayText = '';
-        });
-      }
-    });
   }
 
   @override
@@ -76,17 +76,19 @@ class _AccuracyAnimatedTextState extends State<AccuracyAnimatedText> with Single
   Widget build(BuildContext context) => widget.accuracy != null
       ? AnimatedBuilder(
           animation: _animationController,
-          builder: (context, child) => Transform.translate(
-            offset: Offset(0, _positionAnimation.value),
-            child: Text(
-              displayText,
-              style: GoogleFonts.knewave(
-                fontSize: _sizeAnimation.value,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+          builder: (context, child) {
+            return Transform.translate(
+              offset: Offset(0, _positionAnimation.value),
+              child: Text(
+                displayText,
+                style: GoogleFonts.knewave(
+                  fontSize: _sizeAnimation.value,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
-            ),
-          ),
+            );
+          },
         )
       : const SizedBox.shrink();
 }
