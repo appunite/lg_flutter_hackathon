@@ -8,6 +8,7 @@ import 'package:lg_flutter_hackathon/components/confirmation_pop_up.dart';
 import 'package:lg_flutter_hackathon/components/tool_tip.dart';
 import 'package:lg_flutter_hackathon/constants/image_assets.dart';
 import 'package:lg_flutter_hackathon/constants/strings.dart';
+import 'package:lg_flutter_hackathon/logger.dart';
 import 'package:overlay_tooltip/overlay_tooltip.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
@@ -19,7 +20,7 @@ class BattleScreen extends StatefulWidget {
   State<BattleScreen> createState() => _BattleScreenState();
 }
 
-class _BattleScreenState extends State<BattleScreen> {
+class _BattleScreenState extends State<BattleScreen> with ReporterMixin {
   final TooltipController _controller = TooltipController();
   bool done = false;
   bool canDraw = true;
@@ -138,8 +139,7 @@ class _BattleScreenState extends State<BattleScreen> {
           setState(() {
             accuracy = details.accuracy;
           });
-          // ignore: avoid_print
-          print(details);
+          info(details.toString());
         },
         thresholdPercentage: 0.9,
         glyphAsset: GlyphEntity(

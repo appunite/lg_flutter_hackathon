@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lg_flutter_hackathon/constants/strings.dart';
 
 class AccuracyAnimatedText extends StatefulWidget {
   final double? accuracy;
@@ -54,13 +55,13 @@ class _AccuracyAnimatedTextState extends State<AccuracyAnimatedText> with Single
   void _setDisplayTextAndAnimate() {
     setState(() {
       if (widget.accuracy! >= 90) {
-        displayText = 'EXCELLENT';
+        displayText = Strings.commonExcellent;
       } else if (widget.accuracy! >= 75) {
-        displayText = 'VERY GOOD';
+        displayText = Strings.commonVeryGood;
       } else if (widget.accuracy! >= 50) {
-        displayText = 'GOOD';
+        displayText = Strings.commonGood;
       } else {
-        displayText = 'NOT EVEN CLOSE';
+        displayText = Strings.commonNotEvenClose;
       }
       _animationController.forward();
     });

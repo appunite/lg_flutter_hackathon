@@ -29,7 +29,7 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
   List<Offset?> points = [];
   Uint8List? drawnImageBytes;
   ui.Image? backgroundImage;
-  double strokeWidth = 5.0;
+  double strokeWidth = 10;
 
   @override
   void initState() {
@@ -43,14 +43,7 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
     final frame = await codec.getNextFrame();
     setState(() {
       backgroundImage = frame.image;
-      _calculateStrokeWidth();
     });
-  }
-
-  void _calculateStrokeWidth() {
-    const double baseStrokeWidth = 10.0;
-    final double scaleFactor = widget.drawingAreaSize / widget.drawingAreaSize;
-    strokeWidth = baseStrokeWidth * scaleFactor;
   }
 
   Future<DrawingDetails> _saveAndCompareDrawing() async {
