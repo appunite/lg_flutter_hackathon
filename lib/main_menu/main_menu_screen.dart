@@ -13,8 +13,8 @@ class MainMenuScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final settingsController = context.watch<SettingsController>();
 
-    return PopScope(
-      canPop: false,
+    return WillPopScope(
+      onWillPop: () async => false,
       child: Scaffold(
         body: SafeArea(
           child: Column(
