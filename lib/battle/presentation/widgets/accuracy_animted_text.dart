@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lg_flutter_hackathon/constants/strings.dart';
 
-class AccuracyAnimatedText extends StatefulWidget {
+class AnimatedAccuracyText extends StatefulWidget {
   final double? accuracy;
 
-  const AccuracyAnimatedText({super.key, required this.accuracy});
+  const AnimatedAccuracyText({super.key, required this.accuracy});
 
   @override
-  State<AccuracyAnimatedText> createState() => _AccuracyAnimatedTextState();
+  State<AnimatedAccuracyText> createState() => _AnimatedAccuracyTextState();
 }
 
-class _AccuracyAnimatedTextState extends State<AccuracyAnimatedText> with SingleTickerProviderStateMixin {
+class _AnimatedAccuracyTextState extends State<AnimatedAccuracyText> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _sizeAnimation;
   late Animation<double> _positionAnimation;
@@ -41,13 +40,16 @@ class _AccuracyAnimatedTextState extends State<AccuracyAnimatedText> with Single
         _animationController.reset();
       }
     });
+
+    if (widget.accuracy != null) {
+      _setDisplayTextAndAnimate();
+    }
   }
 
   @override
-  void didUpdateWidget(covariant AccuracyAnimatedText oldWidget) {
+  void didUpdateWidget(covariant AnimatedAccuracyText oldWidget) {
     super.didUpdateWidget(oldWidget);
-
-    if (widget.accuracy != null) {
+    if (widget.accuracy != null && widget.accuracy != oldWidget.accuracy) {
       _setDisplayTextAndAnimate();
     }
   }
@@ -74,22 +76,25 @@ class _AccuracyAnimatedTextState extends State<AccuracyAnimatedText> with Single
   }
 
   @override
-  Widget build(BuildContext context) => widget.accuracy != null
-      ? AnimatedBuilder(
-          animation: _animationController,
-          builder: (context, child) {
-            return Transform.translate(
-              offset: Offset(0, _positionAnimation.value),
-              child: Text(
-                displayText,
-                style: GoogleFonts.knewave(
-                  fontSize: _sizeAnimation.value,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+  Widget build(BuildContext context) {
+    return widget.accuracy != null
+        ? AnimatedBuilder(
+            animation: _animationController,
+            builder: (context, child) {
+              return Transform.translate(
+                offset: Offset(0, _positionAnimation.value),
+                child: Text(
+                  displayText,
+                  style: TextStyle(
+                    fontFamily: 'Knewave',
+                    fontSize: _sizeAnimation.value,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
-            );
-          },
-        )
-      : const SizedBox.shrink();
+              );
+            },
+          )
+        : const SizedBox.shrink();
+  }
 }

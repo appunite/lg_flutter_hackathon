@@ -1,31 +1,86 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:lg_flutter_hackathon/battle/presentation/battle_screen.dart';
-
-import 'package:lg_flutter_hackathon/constants/colors.dart';
-import 'package:lg_flutter_hackathon/dependencies.dart';
-import 'package:lg_flutter_hackathon/main_menu/main_menu_screen.dart';
-
 import 'package:provider/provider.dart';
+import 'package:window_manager/window_manager.dart';
+
+import 'package:lg_flutter_hackathon/battle/presentation/battle_screen.dart';
+import 'package:lg_flutter_hackathon/constants/colors.dart';
+import 'package:lg_flutter_hackathon/main_menu/main_menu_screen.dart';
 
 import 'app_lifecycle/app_lifecycle.dart';
 import 'audio/audio_controller.dart';
 import 'settings/settings.dart';
 
+import 'package:logging/logging.dart';
+
 void main() async {
+  initializeLogger();
+
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await windowManager.ensureInitialized();
+
+  WindowOptions windowOptions = const WindowOptions(
+    size: Size(1280, 720),
+    minimumSize: Size(1280, 720),
+    maximumSize: Size(3840, 2160),
+    center: true,
+  );
+
+  windowManager.waitUntilReadyToShow(windowOptions, () async {
+    await windowManager.show();
+    await windowManager.focus();
+
+    windowManager.addListener(MyWindowListener());
+  });
+
   await runZonedGuarded(
     () async {
-      WidgetsFlutterBinding.ensureInitialized();
-
-      setupDependencies();
-
       runApp(const MyApp());
     },
     (e, st) {
-      debugPrintStack(stackTrace: st, label: e.toString());
+      Logger.root.severe('Unhandled exception in runZonedGuarded', e, st);
     },
   );
+}
+
+void initializeLogger() {
+  Logger.root.level = Level.ALL;
+  Logger.root.onRecord.listen((record) {
+    debugPrint('${record.time} [${record.level.name}] ${record.loggerName}: ${record.message}');
+    if (record.error != null) {
+      debugPrint('Error: ${record.error}');
+    }
+    if (record.stackTrace != null) {
+      debugPrint('StackTrace: ${record.stackTrace}');
+    }
+  });
+}
+
+class MyWindowListener extends WindowListener {
+  @override
+  void onWindowResize() {
+    _maintainAspectRatio();
+  }
+
+  void _maintainAspectRatio() async {
+    final currentSize = await windowManager.getSize();
+    final double aspectRatio = 16 / 9;
+
+    double newWidth = currentSize.width;
+    double newHeight = currentSize.height;
+
+    if ((currentSize.width / currentSize.height).toStringAsFixed(2) != aspectRatio.toStringAsFixed(2)) {
+      if (currentSize.width / aspectRatio <= currentSize.height) {
+        newHeight = currentSize.width / aspectRatio;
+      } else {
+        newWidth = currentSize.height * aspectRatio;
+      }
+
+      windowManager.setSize(Size(newWidth, newHeight));
+    }
+  }
 }
 
 class MyApp extends StatelessWidget {
