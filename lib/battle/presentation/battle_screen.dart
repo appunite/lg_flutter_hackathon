@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:lg_flutter_hackathon/battle/domain/drawing_details_entity.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/accuracy_animated_text.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/drawing_overlay.dart';
+import 'package:lg_flutter_hackathon/battle/presentation/widgets/health_bar.dart';
 import 'package:lg_flutter_hackathon/components/confirmation_pop_up.dart';
 import 'package:lg_flutter_hackathon/components/tool_tip.dart';
 import 'package:lg_flutter_hackathon/constants/image_assets.dart';
@@ -56,6 +57,7 @@ class _BattleScreenState extends State<BattleScreen> with ReporterMixin {
         body: Stack(
           children: [
             _buildBackground(),
+            _buildPlayerHealthBar(),
             _buildPlayer(),
             _buildEnemy(),
             _buildSettingsButton(context),
@@ -77,6 +79,14 @@ class _BattleScreenState extends State<BattleScreen> with ReporterMixin {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildPlayerHealthBar() {
+    return Positioned(
+      left: MediaQuery.sizeOf(context).width / 24,
+      top: MediaQuery.sizeOf(context).height / 32,
+      child: const HealthBar(),
     );
   }
 
