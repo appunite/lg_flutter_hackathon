@@ -248,6 +248,7 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
     );
   }
 
+  //TODO: As suggestion we can add a fade in and fade out animation for the magic pen
   Widget _buildMagicPen(double glyphSize) {
     double offsetX = glyphSize * -0.8;
     double offsetY = glyphSize * -0.25;
