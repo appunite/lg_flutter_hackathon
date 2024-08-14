@@ -14,8 +14,6 @@ import 'app_lifecycle/app_lifecycle.dart';
 import 'audio/audio_controller.dart';
 import 'settings/settings.dart';
 
-import 'package:logging/logging.dart';
-
 void main() async {
   await runZonedGuarded(
     () async {
@@ -41,7 +39,7 @@ void main() async {
       runApp(const App());
     },
     (e, st) {
-      Logger.root.severe('Unhandled exception in runZonedGuarded', e, st);
+      debugPrintStack(stackTrace: st, label: e.toString());
     },
   );
 }
