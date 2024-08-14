@@ -5,9 +5,9 @@ import 'package:lg_flutter_hackathon/settings/settings_prefs/local_storage_setti
 class SettingsController {
   final SettingsPrefs _store;
 
-  ValueNotifier<bool> soundsOn = ValueNotifier(true);
+  ValueNotifier<bool> soundsOn = ValueNotifier(false);
 
-  ValueNotifier<bool> musicOn = ValueNotifier(true);
+  ValueNotifier<bool> musicOn = ValueNotifier(false);
 
   SettingsController({SettingsPrefs? store}) : _store = store ?? LocalStorageSettingsPrefs() {
     _loadStateFromPrefs();
