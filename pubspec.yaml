@@ -4,22 +4,21 @@ publish_to: "none"
 version: 0.1.0
 
 environment:
-  sdk: ">=3.2.0 <4.0.0"
+  sdk: ">=3.1.5 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
-  audioplayers: ^6.0.0
+  audioplayers: ^5.0.0
   provider: ^6.1.2
   shared_preferences: ^2.2.3
   flutter_lints: ^4.0.0
   logging: ^1.2.0
-  get_it: ^7.7.0
+  get_it: ^7.2.0
   gap: ^3.0.1
   overlay_tooltip: ^0.2.3
   flutter_svg: ^2.0.10+1
-  google_fonts: ^6.2.1
   lottie: ^3.1.2
   window_manager: ^0.4.0
 
@@ -36,7 +35,6 @@ flutter:
   assets:
     - assets/music/
     - assets/sfx/
-    - assets/images/
     - assets/ilustrations/
     - assets/ilustrations/glyphs/
     - assets/videos/
