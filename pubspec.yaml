@@ -19,7 +19,8 @@ dependencies:
   gap: ^3.0.1
   overlay_tooltip: ^0.2.3
   flutter_svg: ^2.0.10+1
-  google_fonts: 6.0.0
+  lottie: 2.7.0
+  window_manager: ^0.4.0
 
 dev_dependencies:
   flutter_test:
@@ -27,9 +28,13 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-
+  fonts:
+  - family: Knewave
+    fonts:
+      - asset: assets/fonts/Knewave-Regular.ttf
   assets:
     - assets/music/
     - assets/sfx/
     - assets/ilustrations/
     - assets/ilustrations/glyphs/
+    - assets/videos/

@@ -2,10 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:lg_flutter_hackathon/battle/domain/drawing_details_entity.dart';
 import 'dart:ui' as ui;
 import 'package:lg_flutter_hackathon/battle/domain/glyph_entity.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/drawing_painter.dart';
+import 'package:lg_flutter_hackathon/constants/image_assets.dart';
+
+import 'package:flutter_svg/flutter_svg.dart';
 
 class DrawingOverlay extends StatefulWidget {
   final ValueChanged<DrawingDetails> onDrawingCompleted;
@@ -27,9 +31,11 @@ class DrawingOverlay extends StatefulWidget {
 
 class _DrawingOverlayState extends State<DrawingOverlay> {
   List<Offset?> points = [];
+  Offset? currentPenPosition;
+
   Uint8List? drawnImageBytes;
   ui.Image? backgroundImage;
-  double strokeWidth = 10;
+  double strokeWidth = 16;
 
   @override
   void initState() {
@@ -41,9 +47,7 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
     final ByteData data = await rootBundle.load(widget.glyphAsset.glyphPresentation);
     final codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
     final frame = await codec.getNextFrame();
-    setState(() {
-      backgroundImage = frame.image;
-    });
+    setState(() => backgroundImage = frame.image);
   }
 
   Future<DrawingDetails> _saveAndCompareDrawing() async {
@@ -181,26 +185,85 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
   }
 
   @override
-  Widget build(BuildContext context) => Center(
-        child: GestureDetector(
-          onPanUpdate: (details) => setState(() {
-            Offset localPosition = details.localPosition;
-            points.add(localPosition);
-          }),
-          onPanEnd: (details) async {
-            points.add(null);
-            DrawingDetails details = await _saveAndCompareDrawing();
-            widget.onDrawingCompleted(details);
-            setState(() => points.clear());
-          },
+  Widget build(BuildContext context) {
+    final double drawingBoardSize = widget.drawingAreaSize * 2;
+    final double glyphSize = widget.drawingAreaSize;
+
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Container(
+          width: double.infinity,
+          height: double.infinity,
+          color: Colors.black.withOpacity(0.9),
+        ),
+        Center(
           child: SizedBox(
-            width: widget.drawingAreaSize,
-            height: widget.drawingAreaSize,
-            child: CustomPaint(
-              painter: DrawPainter(points, backgroundImage, strokeWidth),
-              size: Size.infinite,
+            width: drawingBoardSize,
+            height: drawingBoardSize,
+            child: Stack(
+              children: [
+                SvgPicture.asset(
+                  ImageAssets.drawingBoard,
+                  width: drawingBoardSize,
+                  height: drawingBoardSize,
+                ),
+                Center(
+                  //TODO: Add a drawing sound effect, based on currentPenPosition changes
+                  child: GestureDetector(
+                    onPanStart: (details) => setState(() {
+                      currentPenPosition = details.localPosition;
+                    }),
+                    onPanUpdate: (details) => setState(() {
+                      Offset localPosition = details.localPosition;
+                      points.add(localPosition);
+                      if (points.length > 1 && points[points.length - 2] != null) {}
+                      currentPenPosition = localPosition;
+                    }),
+                    onPanEnd: (details) async {
+                      points.add(null);
+                      DrawingDetails details = await _saveAndCompareDrawing();
+                      widget.onDrawingCompleted(details);
+                      setState(() {
+                        points.clear();
+                        currentPenPosition = null;
+                      });
+                    },
+                    child: SizedBox(
+                      width: glyphSize,
+                      height: glyphSize,
+                      child: CustomPaint(
+                        painter: DrawPainter(points, backgroundImage, strokeWidth),
+                        size: Size.infinite,
+                      ),
+                    ),
+                  ),
+                ),
+                if (currentPenPosition != null) _buildMagicPen(glyphSize),
+              ],
             ),
           ),
         ),
-      );
+      ],
+    );
+  }
+
+  //TODO: As suggestion we can add a fade in and fade out animation for the magic pen
+  Widget _buildMagicPen(double glyphSize) {
+    double offsetX = glyphSize * -0.8;
+    double offsetY = glyphSize * -0.25;
+
+    return Positioned(
+      left: currentPenPosition!.dx - offsetX,
+      top: currentPenPosition!.dy - offsetY,
+      child: Transform.rotate(
+        angle: -45,
+        child: SvgPicture.asset(
+          ImageAssets.magicPenSvg,
+          width: glyphSize,
+          height: glyphSize,
+        ),
+      ),
+    );
+  }
 }
