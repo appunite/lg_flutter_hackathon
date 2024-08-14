@@ -9,7 +9,6 @@ import 'package:lg_flutter_hackathon/constants/image_assets.dart';
 import 'package:lg_flutter_hackathon/constants/strings.dart';
 import 'package:lg_flutter_hackathon/logger.dart';
 import 'package:lg_flutter_hackathon/utils/drawing_utils.dart';
-import 'package:lottie/lottie.dart';
 import 'package:overlay_tooltip/overlay_tooltip.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
@@ -83,8 +82,8 @@ class _BattleScreenState extends State<BattleScreen> with ReporterMixin {
 
   Widget _buildBackground() {
     return SizedBox.expand(
-      child: Lottie.asset(
-        ImageAssets.backgroundLottie,
+      child: SvgPicture.asset(
+        ImageAssets.battleBackground,
         fit: BoxFit.cover,
       ),
     );

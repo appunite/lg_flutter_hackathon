@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -33,7 +32,7 @@ class DrawingOverlay extends StatefulWidget {
 class _DrawingOverlayState extends State<DrawingOverlay> {
   List<Offset?> points = [];
   Offset? currentPenPosition;
-  double? currentPenRotation;
+
   Uint8List? drawnImageBytes;
   ui.Image? backgroundImage;
   double strokeWidth = 16;
@@ -72,27 +71,6 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
         await _resizeImageAndConvertToBW(drawnImageBytes!, backgroundImage!.width, backgroundImage!.height);
 
     return await _compareImages(widget.glyphAsset.glyphCompare, resizedDrawnImage);
-  }
-
-  double _calculateRotationAngle(Offset prevPoint, Offset currentPoint) {
-    final dx = currentPoint.dx - prevPoint.dx;
-    final dy = currentPoint.dy - prevPoint.dy;
-    return atan2(dy, dx);
-  }
-
-  double _interpolateRotation(double? previousRotation, double newRotation, double smoothingFactor) {
-    if (previousRotation == null) return newRotation;
-    double difference = newRotation - previousRotation;
-
-    if (difference.abs() > pi) {
-      if (difference > 0) {
-        difference -= 2 * pi;
-      } else {
-        difference += 2 * pi;
-      }
-    }
-
-    return previousRotation + difference * smoothingFactor;
   }
 
   Future<Uint8List> _resizeImageAndConvertToBW(Uint8List data, int targetWidth, int targetHeight) async {
@@ -238,10 +216,7 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
                     onPanUpdate: (details) => setState(() {
                       Offset localPosition = details.localPosition;
                       points.add(localPosition);
-                      if (points.length > 1 && points[points.length - 2] != null) {
-                        final newRotation = _calculateRotationAngle(points[points.length - 2]!, localPosition);
-                        currentPenRotation = _interpolateRotation(currentPenRotation, newRotation, 0.1);
-                      }
+                      if (points.length > 1 && points[points.length - 2] != null) {}
                       currentPenPosition = localPosition;
                     }),
                     onPanEnd: (details) async {
@@ -251,7 +226,6 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
                       setState(() {
                         points.clear();
                         currentPenPosition = null;
-                        currentPenRotation = null;
                       });
                     },
                     child: SizedBox(
@@ -275,7 +249,7 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
 
   Widget _buildMagicPen(double glyphSize) {
     double offsetX = glyphSize * -0.8;
-    double offsetY = glyphSize * -0.1;
+    double offsetY = glyphSize * -0.25;
 
     return Positioned(
       left: currentPenPosition!.dx - offsetX,
@@ -283,7 +257,7 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
       child: Transform.rotate(
         angle: -45,
         child: SvgPicture.asset(
-          'assets/ilustrations/magic_pen.svg',
+          ImageAssets.magicPenSvg,
           width: glyphSize,
           height: glyphSize,
         ),

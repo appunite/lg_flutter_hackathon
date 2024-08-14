@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:lg_flutter_hackathon/dependencies.dart';
+import 'package:lg_flutter_hackathon/utils/window_manager_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -15,29 +17,28 @@ import 'settings/settings.dart';
 import 'package:logging/logging.dart';
 
 void main() async {
-  initializeLogger();
-
-  WidgetsFlutterBinding.ensureInitialized();
-
-  await windowManager.ensureInitialized();
-
-  WindowOptions windowOptions = const WindowOptions(
-    size: Size(1280, 720),
-    minimumSize: Size(1280, 720),
-    maximumSize: Size(3840, 2160),
-    center: true,
-  );
-
-  windowManager.waitUntilReadyToShow(windowOptions, () async {
-    await windowManager.show();
-    await windowManager.focus();
-
-    windowManager.addListener(MyWindowListener());
-  });
-
   await runZonedGuarded(
     () async {
-      runApp(const MyApp());
+      WidgetsFlutterBinding.ensureInitialized();
+
+      await windowManager.ensureInitialized();
+
+      setupDependencies();
+
+      WindowOptions windowOptions = const WindowOptions(
+        size: Size(1280, 720),
+        minimumSize: Size(1280, 720),
+        maximumSize: Size(3840, 2160),
+        center: true,
+      );
+
+      windowManager.waitUntilReadyToShow(windowOptions, () async {
+        await windowManager.show();
+        await windowManager.focus();
+
+        windowManager.addListener(WindowManagerListener());
+      });
+      runApp(const App());
     },
     (e, st) {
       Logger.root.severe('Unhandled exception in runZonedGuarded', e, st);
@@ -45,46 +46,8 @@ void main() async {
   );
 }
 
-void initializeLogger() {
-  Logger.root.level = Level.ALL;
-  Logger.root.onRecord.listen((record) {
-    debugPrint('${record.time} [${record.level.name}] ${record.loggerName}: ${record.message}');
-    if (record.error != null) {
-      debugPrint('Error: ${record.error}');
-    }
-    if (record.stackTrace != null) {
-      debugPrint('StackTrace: ${record.stackTrace}');
-    }
-  });
-}
-
-class MyWindowListener extends WindowListener {
-  @override
-  void onWindowResize() {
-    _maintainAspectRatio();
-  }
-
-  void _maintainAspectRatio() async {
-    final currentSize = await windowManager.getSize();
-    const double aspectRatio = 16 / 9;
-
-    double newWidth = currentSize.width;
-    double newHeight = currentSize.height;
-
-    if ((currentSize.width / currentSize.height).toStringAsFixed(2) != aspectRatio.toStringAsFixed(2)) {
-      if (currentSize.width / aspectRatio <= currentSize.height) {
-        newHeight = currentSize.width / aspectRatio;
-      } else {
-        newWidth = currentSize.height * aspectRatio;
-      }
-
-      windowManager.setSize(Size(newWidth, newHeight));
-    }
-  }
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class App extends StatelessWidget {
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {

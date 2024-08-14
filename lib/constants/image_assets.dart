@@ -7,4 +7,5 @@ class ImageAssets {
   static const String trollEnemy = 'assets/ilustrations/troll_enemy.svg';
   static const String drawingBoard = 'assets/ilustrations/drawing_board.svg';
   static const String backgroundLottie = 'assets/videos/background_movie.json';
+  static const String magicPenSvg = 'assets/ilustrations/magic_pen.svg';
 }
