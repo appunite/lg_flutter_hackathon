@@ -209,6 +209,7 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
                   height: drawingBoardSize,
                 ),
                 Center(
+                  //TODO: Add a drawing sound effect
                   child: GestureDetector(
                     onPanStart: (details) => setState(() {
                       currentPenPosition = details.localPosition;
