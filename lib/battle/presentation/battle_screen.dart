@@ -68,7 +68,7 @@ class _BattleScreenState extends State<BattleScreen> with ReporterMixin {
             ),
             if (showAccuracyAnimation && accuracy != null)
               Positioned(
-                top: MediaQuery.of(context).size.height * 0.1,
+                top: MediaQuery.of(context).size.height * 0.2,
                 left: 0,
                 right: 0,
                 child: Center(

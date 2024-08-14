@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +8,9 @@ import 'package:lg_flutter_hackathon/battle/domain/drawing_details_entity.dart';
 import 'dart:ui' as ui;
 import 'package:lg_flutter_hackathon/battle/domain/glyph_entity.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/drawing_painter.dart';
+import 'package:lg_flutter_hackathon/constants/image_assets.dart';
+
+import 'package:flutter_svg/flutter_svg.dart';
 
 class DrawingOverlay extends StatefulWidget {
   final ValueChanged<DrawingDetails> onDrawingCompleted;
@@ -28,6 +32,8 @@ class DrawingOverlay extends StatefulWidget {
 
 class _DrawingOverlayState extends State<DrawingOverlay> {
   List<Offset?> points = [];
+  Offset? currentPenPosition;
+  double? currentPenRotation;
   Uint8List? drawnImageBytes;
   ui.Image? backgroundImage;
   double strokeWidth = 16;
@@ -66,6 +72,27 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
         await _resizeImageAndConvertToBW(drawnImageBytes!, backgroundImage!.width, backgroundImage!.height);
 
     return await _compareImages(widget.glyphAsset.glyphCompare, resizedDrawnImage);
+  }
+
+  double _calculateRotationAngle(Offset prevPoint, Offset currentPoint) {
+    final dx = currentPoint.dx - prevPoint.dx;
+    final dy = currentPoint.dy - prevPoint.dy;
+    return atan2(dy, dx);
+  }
+
+  double _interpolateRotation(double? previousRotation, double newRotation, double smoothingFactor) {
+    if (previousRotation == null) return newRotation;
+    double difference = newRotation - previousRotation;
+
+    if (difference.abs() > pi) {
+      if (difference > 0) {
+        difference -= 2 * pi;
+      } else {
+        difference += 2 * pi;
+      }
+    }
+
+    return previousRotation + difference * smoothingFactor;
   }
 
   Future<Uint8List> _resizeImageAndConvertToBW(Uint8List data, int targetWidth, int targetHeight) async {
@@ -199,21 +226,33 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
             child: Stack(
               children: [
                 SvgPicture.asset(
-                  'assets/ilustrations/drawing_board.svg',
+                  ImageAssets.drawingBoard,
                   width: drawingBoardSize,
                   height: drawingBoardSize,
                 ),
                 Center(
                   child: GestureDetector(
+                    onPanStart: (details) => setState(() {
+                      currentPenPosition = details.localPosition;
+                    }),
                     onPanUpdate: (details) => setState(() {
                       Offset localPosition = details.localPosition;
                       points.add(localPosition);
+                      if (points.length > 1 && points[points.length - 2] != null) {
+                        final newRotation = _calculateRotationAngle(points[points.length - 2]!, localPosition);
+                        currentPenRotation = _interpolateRotation(currentPenRotation, newRotation, 0.1);
+                      }
+                      currentPenPosition = localPosition;
                     }),
                     onPanEnd: (details) async {
                       points.add(null);
                       DrawingDetails details = await _saveAndCompareDrawing();
                       widget.onDrawingCompleted(details);
-                      setState(() => points.clear());
+                      setState(() {
+                        points.clear();
+                        currentPenPosition = null;
+                        currentPenRotation = null;
+                      });
                     },
                     child: SizedBox(
                       width: glyphSize,
@@ -225,11 +264,30 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
                     ),
                   ),
                 ),
+                if (currentPenPosition != null) _buildMagicPen(glyphSize),
               ],
             ),
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildMagicPen(double glyphSize) {
+    double offsetX = glyphSize * -0.8;
+    double offsetY = glyphSize * -0.1;
+
+    return Positioned(
+      left: currentPenPosition!.dx - offsetX,
+      top: currentPenPosition!.dy - offsetY,
+      child: Transform.rotate(
+        angle: -45,
+        child: SvgPicture.asset(
+          'assets/ilustrations/magic_pen.svg',
+          width: glyphSize,
+          height: glyphSize,
+        ),
+      ),
     );
   }
 }

@@ -66,7 +66,7 @@ class MyWindowListener extends WindowListener {
 
   void _maintainAspectRatio() async {
     final currentSize = await windowManager.getSize();
-    final double aspectRatio = 16 / 9;
+    const double aspectRatio = 16 / 9;
 
     double newWidth = currentSize.width;
     double newHeight = currentSize.height;
