@@ -113,9 +113,9 @@ class _BattleScreenState extends State<BattleScreen> with ReporterMixin {
     return Positioned(
       right: MediaQuery.sizeOf(context).width / 24,
       top: MediaQuery.sizeOf(context).height / 32,
-      child: const HealthBar(
-        currentHealth: 100,
-        incomingHealth: 100,
+      child: HealthBar(
+        currentHealth: currentHealth,
+        incomingHealth: incomingHealth,
       ),
     );
   }
