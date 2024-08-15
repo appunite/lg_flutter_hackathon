@@ -117,11 +117,11 @@ class _HealthBarState extends State<HealthBar> with TickerProviderStateMixin {
                 width: healthBarWidth,
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: padding),
                 child: Stack(
                   children: [
                     Container(
-                      margin: const EdgeInsets.only(left: 16),
+                      margin: const EdgeInsets.only(left: padding),
                       child: Align(
                         alignment: AlignmentDirectional.center,
                         child: AnimatedContainer(

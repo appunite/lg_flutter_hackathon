@@ -32,7 +32,6 @@ class _BattleScreenState extends State<BattleScreen> with ReporterMixin {
   double overlayOpacity = 0.0;
   bool showAccuracyAnimation = false;
 
-  // Dodane zmienne zdrowia
   double currentHealth = 100;
   double incomingHealth = 100;
 
