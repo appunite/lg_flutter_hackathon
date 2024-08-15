@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lg_flutter_hackathon/battle/domain/drawing_details_entity.dart';
@@ -30,12 +32,24 @@ class _BattleScreenState extends State<BattleScreen> with ReporterMixin {
   double overlayOpacity = 0.0;
   bool showAccuracyAnimation = false;
 
+  // Dodane zmienne zdrowia
+  double currentHealth = 100;
+  double incomingHealth = 100;
+
   @override
   void initState() {
     _controller.onDone(
       () => setState(() => done = true),
     );
     super.initState();
+  }
+
+  void _simulateDamage() {
+    setState(() {
+      final random = Random();
+      incomingHealth = max(0, currentHealth - random.nextInt(20) - 5);
+      currentHealth = incomingHealth;
+    });
   }
 
   @override
@@ -58,10 +72,12 @@ class _BattleScreenState extends State<BattleScreen> with ReporterMixin {
           children: [
             _buildBackground(),
             _buildPlayerHealthBar(),
+            _buildEnemyHealthBar(),
             _buildPlayer(),
             _buildEnemy(),
             _buildSettingsButton(context),
             _buildCentralButton(context),
+            _buildDamageButton(),
             AnimatedOpacity(
               opacity: overlayOpacity,
               duration: const Duration(milliseconds: 500),
@@ -86,7 +102,32 @@ class _BattleScreenState extends State<BattleScreen> with ReporterMixin {
     return Positioned(
       left: MediaQuery.sizeOf(context).width / 24,
       top: MediaQuery.sizeOf(context).height / 32,
-      child: const HealthBar(),
+      child: HealthBar(
+        currentHealth: currentHealth,
+        incomingHealth: incomingHealth,
+      ),
+    );
+  }
+
+  Widget _buildEnemyHealthBar() {
+    return Positioned(
+      right: MediaQuery.sizeOf(context).width / 24,
+      top: MediaQuery.sizeOf(context).height / 32,
+      child: const HealthBar(
+        currentHealth: 100,
+        incomingHealth: 100,
+      ),
+    );
+  }
+
+  Widget _buildDamageButton() {
+    return Positioned(
+      bottom: 50,
+      right: 50,
+      child: ElevatedButton(
+        onPressed: _simulateDamage,
+        child: const Text('Simulate Damage'),
+      ),
     );
   }
 
