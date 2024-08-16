@@ -19,7 +19,6 @@ mixin _$MonsterEntity {
   int get speed => throw _privateConstructorUsedError;
   double get healthPoints => throw _privateConstructorUsedError;
   int get damage => throw _privateConstructorUsedError;
-  String get background => throw _privateConstructorUsedError;
   String get attackAnimation => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -34,11 +33,7 @@ abstract class $MonsterEntityCopyWith<$Res> {
       _$MonsterEntityCopyWithImpl<$Res, MonsterEntity>;
   @useResult
   $Res call(
-      {int speed,
-      double healthPoints,
-      int damage,
-      String background,
-      String attackAnimation});
+      {int speed, double healthPoints, int damage, String attackAnimation});
 }
 
 /// @nodoc
@@ -57,7 +52,6 @@ class _$MonsterEntityCopyWithImpl<$Res, $Val extends MonsterEntity>
     Object? speed = null,
     Object? healthPoints = null,
     Object? damage = null,
-    Object? background = null,
     Object? attackAnimation = null,
   }) {
     return _then(_value.copyWith(
@@ -73,10 +67,6 @@ class _$MonsterEntityCopyWithImpl<$Res, $Val extends MonsterEntity>
           ? _value.damage
           : damage // ignore: cast_nullable_to_non_nullable
               as int,
-      background: null == background
-          ? _value.background
-          : background // ignore: cast_nullable_to_non_nullable
-              as String,
       attackAnimation: null == attackAnimation
           ? _value.attackAnimation
           : attackAnimation // ignore: cast_nullable_to_non_nullable
@@ -94,11 +84,7 @@ abstract class _$$MonsterEntityImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {int speed,
-      double healthPoints,
-      int damage,
-      String background,
-      String attackAnimation});
+      {int speed, double healthPoints, int damage, String attackAnimation});
 }
 
 /// @nodoc
@@ -115,7 +101,6 @@ class __$$MonsterEntityImplCopyWithImpl<$Res>
     Object? speed = null,
     Object? healthPoints = null,
     Object? damage = null,
-    Object? background = null,
     Object? attackAnimation = null,
   }) {
     return _then(_$MonsterEntityImpl(
@@ -131,10 +116,6 @@ class __$$MonsterEntityImplCopyWithImpl<$Res>
           ? _value.damage
           : damage // ignore: cast_nullable_to_non_nullable
               as int,
-      background: null == background
-          ? _value.background
-          : background // ignore: cast_nullable_to_non_nullable
-              as String,
       attackAnimation: null == attackAnimation
           ? _value.attackAnimation
           : attackAnimation // ignore: cast_nullable_to_non_nullable
@@ -150,7 +131,6 @@ class _$MonsterEntityImpl implements _MonsterEntity {
       {required this.speed,
       required this.healthPoints,
       required this.damage,
-      required this.background,
       required this.attackAnimation});
 
   @override
@@ -160,13 +140,11 @@ class _$MonsterEntityImpl implements _MonsterEntity {
   @override
   final int damage;
   @override
-  final String background;
-  @override
   final String attackAnimation;
 
   @override
   String toString() {
-    return 'MonsterEntity(speed: $speed, healthPoints: $healthPoints, damage: $damage, background: $background, attackAnimation: $attackAnimation)';
+    return 'MonsterEntity(speed: $speed, healthPoints: $healthPoints, damage: $damage, attackAnimation: $attackAnimation)';
   }
 
   @override
@@ -178,15 +156,13 @@ class _$MonsterEntityImpl implements _MonsterEntity {
             (identical(other.healthPoints, healthPoints) ||
                 other.healthPoints == healthPoints) &&
             (identical(other.damage, damage) || other.damage == damage) &&
-            (identical(other.background, background) ||
-                other.background == background) &&
             (identical(other.attackAnimation, attackAnimation) ||
                 other.attackAnimation == attackAnimation));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, speed, healthPoints, damage, background, attackAnimation);
+  int get hashCode =>
+      Object.hash(runtimeType, speed, healthPoints, damage, attackAnimation);
 
   @JsonKey(ignore: true)
   @override
@@ -200,7 +176,6 @@ abstract class _MonsterEntity implements MonsterEntity {
       {required final int speed,
       required final double healthPoints,
       required final int damage,
-      required final String background,
       required final String attackAnimation}) = _$MonsterEntityImpl;
 
   @override
@@ -209,8 +184,6 @@ abstract class _MonsterEntity implements MonsterEntity {
   double get healthPoints;
   @override
   int get damage;
-  @override
-  String get background;
   @override
   String get attackAnimation;
   @override

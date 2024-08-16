@@ -373,7 +373,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
     // TODO: Create game over screen
   }
 
-  _openVictoryScreen() {
+  void _openVictoryScreen() {
     // TODO: Create victory over screen
   }
 }

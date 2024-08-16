@@ -6,39 +6,42 @@ enum LevelEnum {
       speed: 4,
       healthPoints: 7 * 15,
       damage: 25,
-      background: 'goblin-background',
       attackAnimation: 'goblin-attack',
     ),
+    'goblin-background',
   ),
   second(
-    MonsterEntity(
-      speed: 50,
-      healthPoints: 37 * 14,
-      damage: 11,
-      background: 'wolf-background',
-      attackAnimation: 'wolf-attack',
-    ),
-  ),
+      MonsterEntity(
+        speed: 50,
+        healthPoints: 37 * 14,
+        damage: 11,
+        attackAnimation: 'wolf-attack',
+      ),
+      'wolf-background'),
   third(
     MonsterEntity(
       speed: 30,
       healthPoints: 27 * 16,
       damage: 11,
-      background: 'bugbear-background',
       attackAnimation: 'bugbear-attack',
     ),
+    'bugbear-background',
   ),
   fourth(
     MonsterEntity(
       speed: 40,
       healthPoints: 59 * 11,
       damage: 13,
-      background: 'ogre-background',
       attackAnimation: 'ogre-attack',
     ),
+    'ogre-background',
   );
 
-  const LevelEnum(this.monster);
+  const LevelEnum(
+    this.monster,
+    this.background,
+  );
 
   final MonsterEntity monster;
+  final String background;
 }
