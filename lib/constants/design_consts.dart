@@ -16,4 +16,26 @@ class DesignConsts {
   static const double healthBarMaxWidthFactor = 28.0;
   static const double healthBarHeightDivision = 28.0;
   static BorderRadius healthBarRadius = BorderRadius.circular(56);
+
+  //MAIN
+  static const double screenBottomPositionFactor = 4;
+  static const double screenLeftRightPositionFactor = 6;
+  static const double containerWidthFactor = 1.5;
+  static const double containerHeightFactor = 3;
+  static const double playerIconWidthFactor = 8;
+  static const double playerIconHeightFactor = 8;
+  static const double buttonWidthFactor = 15;
+  static const double buttonHeightFactor = 15;
+  static const double buttonSpacingFactor = 60;
+  static const double acceptButtonWidthFactor = 5;
+  static const double acceptButtonHeightFactor = 15;
+  static const double acceptButtonSpacingFactor = 120;
+  static const double textSpacingFactor = 40;
+  static const double soundSettingsTopPositionFactor = 60;
+  static const double soundSettingsLeftPositionFactor = 20;
+  static const double playerNumberContainerWidthFactor = 10;
+  static const double playerNumberContainerHeightFactor = 10;
+  static const double titleFontSizeFactor = 50;
+  static const double numberFontSizeFactor = 50;
+  static const double iconSizeFactor = 50;
 }

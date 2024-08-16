@@ -1,12 +1,6 @@
 class Strings {
   Strings._();
 
-  static const String twoPlayers = "2 players";
-
-  static const String threePlayers = "3 players";
-
-  static const String fourPlayers = "4 players";
-
   static const String yes = "Yes";
 
   static const String cancel = "Cancel";
@@ -20,4 +14,6 @@ class Strings {
   static const String commonGood = 'GOOD';
 
   static const String commonNotEvenClose = 'NOT EVEN CLOSE';
+
+  static const String numberOfPlayers = 'Number Of Players';
 }
