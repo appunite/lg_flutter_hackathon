@@ -1,20 +1,23 @@
-import 'dart:ui';
+import 'package:flutter/material.dart';
 
 class AppColors {
-  // Primary Color
-  static const Color primary = Color(0xFF3867D6); // Royal Blue
+  static const LinearGradient healthBarGreen = LinearGradient(
+    colors: [Color(0xFF2CB63A), Color(0xFF3DE558)],
+    begin: Alignment.centerLeft,
+    end: Alignment.centerRight,
+  );
 
-  // Secondary Color
-  static const Color secondary = Color(0xFF98FB98); // Light Green
+  static const LinearGradient healthBarOrange = LinearGradient(
+    colors: [Color(0xFFB65E2C), Color(0xFFE57C3D)],
+    begin: Alignment.centerLeft,
+    end: Alignment.centerRight,
+  );
 
-  // Accent Color
-  static const Color accent = Color(0xFFFFCC00); // Golden Yellow
-
-  // Background Color
-  static const Color background = Color(0xFF20232A); // Almost Black
-
-  // UI Elements Color (lighter shade of primary)
-  static const Color uiElements = Color(0xFF4C8EFF); // Lighter Blue
+  static const LinearGradient healthBarRed = LinearGradient(
+    colors: [Color(0xFFB62C2C), Color(0xFFE53D3D)],
+    begin: Alignment.centerLeft,
+    end: Alignment.centerRight,
+  );
 
   AppColors._();
 }

@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'package:lg_flutter_hackathon/battle/presentation/battle_screen.dart';
-import 'package:lg_flutter_hackathon/constants/colors.dart';
 import 'package:lg_flutter_hackathon/main_menu/main_menu_screen.dart';
 
 import 'app_lifecycle/app_lifecycle.dart';
@@ -68,10 +67,6 @@ class App extends StatelessWidget {
             title: 'LG hackathon',
             theme: ThemeData(
               primarySwatch: Colors.deepPurple,
-              scaffoldBackgroundColor: AppColors.background,
-              textTheme: const TextTheme(
-                headlineLarge: TextStyle(color: AppColors.primary),
-              ),
             ).copyWith(
               filledButtonTheme: FilledButtonThemeData(
                 style: FilledButton.styleFrom(
