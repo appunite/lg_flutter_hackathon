@@ -94,7 +94,7 @@ class _HealthBarState extends State<HealthBar> with TickerProviderStateMixin {
                             duration: const Duration(milliseconds: 300),
                             curve: Curves.easeInOut,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(56),
+                              borderRadius: DesignConsts.healthBarRadius,
                               gradient: healthGradient,
                             ),
                             width: maxHealthBarWidth * (animationManager.healthAnimation.value / 100),

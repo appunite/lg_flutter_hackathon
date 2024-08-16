@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class DesignConsts {
   static const double heightDivision32 = 32;
 
@@ -13,4 +15,5 @@ class DesignConsts {
   static const double healthBarForegroundWidthFactor = 0.8;
   static const double healthBarMaxWidthFactor = 28.0;
   static const double healthBarHeightDivision = 28.0;
+  static BorderRadius healthBarRadius = BorderRadius.circular(56);
 }
