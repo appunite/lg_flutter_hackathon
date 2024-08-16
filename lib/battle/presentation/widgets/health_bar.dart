@@ -33,13 +33,19 @@ class _HealthBarState extends State<HealthBar> with TickerProviderStateMixin {
       vsync: this,
     );
 
-    _shakeAnimation =
-        Tween<double>(begin: 0, end: 10).chain(CurveTween(curve: Curves.elasticIn)).animate(_shakeController)
-          ..addStatusListener((status) {
-            if (status == AnimationStatus.completed) {
-              _shakeController.reverse();
-            }
-          });
+    _shakeAnimation = Tween<double>(begin: 0, end: 10)
+        .chain(
+          CurveTween(
+            curve: Curves.elasticIn,
+          ),
+        )
+        .animate(
+          _shakeController,
+        )..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          _shakeController.reverse();
+        }
+      });
 
     _healthChangeController = AnimationController(
       duration: const Duration(milliseconds: 300),
@@ -54,7 +60,6 @@ class _HealthBarState extends State<HealthBar> with TickerProviderStateMixin {
         setState(() {});
       });
 
-    _shakeController.forward();
     _healthChangeController.forward();
   }
 
