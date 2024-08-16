@@ -1,14 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:lg_flutter_hackathon/battle/domain/entities/level_enum.dart';
+import 'package:lg_flutter_hackathon/battle/domain/entities/players_entity.dart';
+import 'package:lg_flutter_hackathon/battle/presentation/battle_screen.dart';
+import 'package:lg_flutter_hackathon/constants/colors.dart';
 import 'package:lg_flutter_hackathon/dependencies.dart';
+import 'package:lg_flutter_hackathon/main_menu/main_menu_screen.dart';
 import 'package:lg_flutter_hackathon/utils/window_manager_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart';
-
-import 'package:lg_flutter_hackathon/battle/presentation/battle_screen.dart';
-import 'package:lg_flutter_hackathon/constants/colors.dart';
-import 'package:lg_flutter_hackathon/main_menu/main_menu_screen.dart';
 
 import 'app_lifecycle/app_lifecycle.dart';
 import 'audio/audio_controller.dart';
@@ -85,7 +86,10 @@ class App extends StatelessWidget {
             initialRoute: '/',
             routes: {
               '/': (context) => const MainMenuScreen(),
-              '/battle': (context) => const BattleScreen(),
+              '/battle': (context) => const BattleScreen(
+                    level: LevelEnum.first,
+                    players: PlayersEntity(healthPoints: 100, numberOfPlayers: 4, damage: 10),
+                  ),
             },
           );
         }),

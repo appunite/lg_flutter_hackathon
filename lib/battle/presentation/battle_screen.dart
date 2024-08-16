@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lg_flutter_hackathon/battle/domain/drawing_details_entity.dart';
+import 'package:lg_flutter_hackathon/battle/domain/entities/level_enum.dart';
+import 'package:lg_flutter_hackathon/battle/domain/entities/players_entity.dart';
+import 'package:lg_flutter_hackathon/battle/presentation/cubit/battle_cubit.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/accuracy_animated_text.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/drawing_overlay.dart';
 import 'package:lg_flutter_hackathon/components/confirmation_pop_up.dart';
@@ -10,19 +15,40 @@ import 'package:lg_flutter_hackathon/constants/strings.dart';
 import 'package:lg_flutter_hackathon/logger.dart';
 import 'package:lg_flutter_hackathon/utils/drawing_utils.dart';
 import 'package:overlay_tooltip/overlay_tooltip.dart';
+import 'package:pausable_timer/pausable_timer.dart';
 
-import 'package:flutter_svg/flutter_svg.dart';
+class BattleScreen extends StatelessWidget {
+  const BattleScreen({
+    super.key,
+    required this.level,
+    required this.players,
+  });
 
-class BattleScreen extends StatefulWidget {
-  const BattleScreen({super.key});
+  final LevelEnum level;
+  final PlayersEntity players;
 
   @override
-  State<BattleScreen> createState() => _BattleScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => BattleCubit(level, players),
+      child: _BattleScreenBody(level),
+    );
+  }
 }
 
-class _BattleScreenState extends State<BattleScreen> with ReporterMixin {
+class _BattleScreenBody extends StatefulWidget {
+  const _BattleScreenBody(this.level);
+
+  final LevelEnum level;
+
+  @override
+  State<_BattleScreenBody> createState() => __BattleScreenBodyState();
+}
+
+class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixin {
   final TooltipController _controller = TooltipController();
   bool done = false;
+  PausableTimer? _timer;
 
   bool isDrawing = false;
   double? accuracy;
@@ -31,52 +57,74 @@ class _BattleScreenState extends State<BattleScreen> with ReporterMixin {
 
   @override
   void initState() {
+    super.initState();
     _controller.onDone(
       () => setState(() => done = true),
     );
-    super.initState();
+
+    _startTimer(widget.level.monster.speed);
+  }
+
+  void _startTimer(int monsterSpeed) {
+    _timer ??= PausableTimer.periodic(
+      Duration(seconds: monsterSpeed),
+      () {
+        context.read<BattleCubit>().monsterAttack();
+      },
+    );
+    _timer!.start();
   }
 
   @override
   Widget build(BuildContext context) {
-    return OverlayTooltipScaffold(
-      overlayColor: Colors.red.withOpacity(.4),
-      tooltipAnimationCurve: Curves.linear,
-      tooltipAnimationDuration: const Duration(milliseconds: 1000),
-      controller: _controller,
-      preferredOverlay: GestureDetector(
-        onTap: () => _controller.next(),
-        child: Container(
-          height: double.infinity,
-          width: double.infinity,
-          color: Colors.blue.withOpacity(.2),
-        ),
-      ),
-      builder: (context) => Scaffold(
-        body: Stack(
-          children: [
-            _buildBackground(),
-            _buildPlayer(),
-            _buildEnemy(),
-            _buildSettingsButton(context),
-            _buildCentralButton(context),
-            AnimatedOpacity(
-              opacity: overlayOpacity,
-              duration: const Duration(milliseconds: 500),
-              child: isDrawing ? _buildDrawingOverlayContent(context, 250) : const SizedBox.shrink(),
+    return BlocConsumer<BattleCubit, BattleState>(
+      listener: (context, state) {
+        state.mapOrNull(
+          monsterAttack: (damage) => updatePlayersHealthBar(damage),
+          playerAttack: (damage) => updateMonsterHealthBar(damage),
+        );
+      },
+      builder: (context, state) {
+        return OverlayTooltipScaffold(
+          overlayColor: Colors.red.withOpacity(.4),
+          tooltipAnimationCurve: Curves.linear,
+          tooltipAnimationDuration: const Duration(milliseconds: 1000),
+          controller: _controller,
+          preferredOverlay: GestureDetector(
+            onTap: () => _controller.next(),
+            child: Container(
+              height: double.infinity,
+              width: double.infinity,
+              color: Colors.blue.withOpacity(.2),
             ),
-            if (showAccuracyAnimation && accuracy != null)
-              Positioned(
-                top: MediaQuery.of(context).size.height * 0.2,
-                left: 0,
-                right: 0,
-                child: Center(
-                  child: AnimatedAccuracyText(accuracy: accuracy),
+          ),
+          builder: (context) => Scaffold(
+            body: Stack(
+              children: [
+                _buildBackground(),
+                _buildPlayer(),
+                _buildEnemy(),
+                _buildSettingsButton(context),
+                _buildCentralButton(context),
+                AnimatedOpacity(
+                  opacity: overlayOpacity,
+                  duration: const Duration(milliseconds: 500),
+                  child: isDrawing ? _buildDrawingOverlayContent(context, 250) : const SizedBox.shrink(),
                 ),
-              ),
-          ],
-        ),
-      ),
+                if (showAccuracyAnimation && accuracy != null)
+                  Positioned(
+                    top: MediaQuery.of(context).size.height * 0.2,
+                    left: 0,
+                    right: 0,
+                    child: Center(
+                      child: AnimatedAccuracyText(accuracy: accuracy),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -99,6 +147,8 @@ class _BattleScreenState extends State<BattleScreen> with ReporterMixin {
           showAccuracyAnimation = true;
         });
         info("Drawing completed with accuracy: ${details.accuracy}");
+
+        context.read<BattleCubit>().playerAttack(accuracy: details.accuracy);
       },
       thresholdPercentage: 0.9,
       glyphAsset: DrawingUtils().getRandomGlyphEntity(),
@@ -183,4 +233,20 @@ class _BattleScreenState extends State<BattleScreen> with ReporterMixin {
           child: const Text('Draw Rune'),
         ),
       );
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  updatePlayersHealthBar(damage) {
+    // TODO: Update players health bar
+    print('TODO: Update players health bar');
+  }
+
+  updateMonsterHealthBar(damage) {
+    // TODO: Update players health bar
+    print('TODO: Update monster health bar');
+  }
 }
