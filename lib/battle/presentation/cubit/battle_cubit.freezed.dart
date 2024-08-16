@@ -18,51 +18,63 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$BattleState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function(int playersHealthPoints) loaded,
-    required TResult Function(int damage) monsterAttack,
-    required TResult Function(int damage) playerAttack,
+    required TResult Function(double currentPlayersHealthPoints,
+            double currentMonsterHealthPoints, int currentPlayerIndex)
+        loaded,
+    required TResult Function() monsterAttack,
+    required TResult Function() playerAttack,
+    required TResult Function() gameOver,
+    required TResult Function() victory,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function(int playersHealthPoints)? loaded,
-    TResult? Function(int damage)? monsterAttack,
-    TResult? Function(int damage)? playerAttack,
+    TResult? Function(double currentPlayersHealthPoints,
+            double currentMonsterHealthPoints, int currentPlayerIndex)?
+        loaded,
+    TResult? Function()? monsterAttack,
+    TResult? Function()? playerAttack,
+    TResult? Function()? gameOver,
+    TResult? Function()? victory,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(int playersHealthPoints)? loaded,
-    TResult Function(int damage)? monsterAttack,
-    TResult Function(int damage)? playerAttack,
+    TResult Function(double currentPlayersHealthPoints,
+            double currentMonsterHealthPoints, int currentPlayerIndex)?
+        loaded,
+    TResult Function()? monsterAttack,
+    TResult Function()? playerAttack,
+    TResult Function()? gameOver,
+    TResult Function()? victory,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
     required TResult Function(_Loaded value) loaded,
     required TResult Function(_MonsterAttack value) monsterAttack,
     required TResult Function(_PlayerAttack value) playerAttack,
+    required TResult Function(_GameOver value) gameOver,
+    required TResult Function(_Victory value) victory,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
     TResult? Function(_Loaded value)? loaded,
     TResult? Function(_MonsterAttack value)? monsterAttack,
     TResult? Function(_PlayerAttack value)? playerAttack,
+    TResult? Function(_GameOver value)? gameOver,
+    TResult? Function(_Victory value)? victory,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
     TResult Function(_Loaded value)? loaded,
     TResult Function(_MonsterAttack value)? monsterAttack,
     TResult Function(_PlayerAttack value)? playerAttack,
+    TResult Function(_GameOver value)? gameOver,
+    TResult Function(_Victory value)? victory,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -87,126 +99,15 @@ class _$BattleStateCopyWithImpl<$Res, $Val extends BattleState>
 }
 
 /// @nodoc
-abstract class _$$InitialImplCopyWith<$Res> {
-  factory _$$InitialImplCopyWith(
-          _$InitialImpl value, $Res Function(_$InitialImpl) then) =
-      __$$InitialImplCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$InitialImplCopyWithImpl<$Res>
-    extends _$BattleStateCopyWithImpl<$Res, _$InitialImpl>
-    implements _$$InitialImplCopyWith<$Res> {
-  __$$InitialImplCopyWithImpl(
-      _$InitialImpl _value, $Res Function(_$InitialImpl) _then)
-      : super(_value, _then);
-}
-
-/// @nodoc
-
-class _$InitialImpl implements _Initial {
-  const _$InitialImpl();
-
-  @override
-  String toString() {
-    return 'BattleState.initial()';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$InitialImpl);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function(int playersHealthPoints) loaded,
-    required TResult Function(int damage) monsterAttack,
-    required TResult Function(int damage) playerAttack,
-  }) {
-    return initial();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function(int playersHealthPoints)? loaded,
-    TResult? Function(int damage)? monsterAttack,
-    TResult? Function(int damage)? playerAttack,
-  }) {
-    return initial?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(int playersHealthPoints)? loaded,
-    TResult Function(int damage)? monsterAttack,
-    TResult Function(int damage)? playerAttack,
-    required TResult orElse(),
-  }) {
-    if (initial != null) {
-      return initial();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Loaded value) loaded,
-    required TResult Function(_MonsterAttack value) monsterAttack,
-    required TResult Function(_PlayerAttack value) playerAttack,
-  }) {
-    return initial(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-    TResult? Function(_Loaded value)? loaded,
-    TResult? Function(_MonsterAttack value)? monsterAttack,
-    TResult? Function(_PlayerAttack value)? playerAttack,
-  }) {
-    return initial?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loaded value)? loaded,
-    TResult Function(_MonsterAttack value)? monsterAttack,
-    TResult Function(_PlayerAttack value)? playerAttack,
-    required TResult orElse(),
-  }) {
-    if (initial != null) {
-      return initial(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _Initial implements BattleState {
-  const factory _Initial() = _$InitialImpl;
-}
-
-/// @nodoc
 abstract class _$$LoadedImplCopyWith<$Res> {
   factory _$$LoadedImplCopyWith(
           _$LoadedImpl value, $Res Function(_$LoadedImpl) then) =
       __$$LoadedImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({int playersHealthPoints});
+  $Res call(
+      {double currentPlayersHealthPoints,
+      double currentMonsterHealthPoints,
+      int currentPlayerIndex});
 }
 
 /// @nodoc
@@ -220,12 +121,22 @@ class __$$LoadedImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? playersHealthPoints = null,
+    Object? currentPlayersHealthPoints = null,
+    Object? currentMonsterHealthPoints = null,
+    Object? currentPlayerIndex = null,
   }) {
     return _then(_$LoadedImpl(
-      playersHealthPoints: null == playersHealthPoints
-          ? _value.playersHealthPoints
-          : playersHealthPoints // ignore: cast_nullable_to_non_nullable
+      currentPlayersHealthPoints: null == currentPlayersHealthPoints
+          ? _value.currentPlayersHealthPoints
+          : currentPlayersHealthPoints // ignore: cast_nullable_to_non_nullable
+              as double,
+      currentMonsterHealthPoints: null == currentMonsterHealthPoints
+          ? _value.currentMonsterHealthPoints
+          : currentMonsterHealthPoints // ignore: cast_nullable_to_non_nullable
+              as double,
+      currentPlayerIndex: null == currentPlayerIndex
+          ? _value.currentPlayerIndex
+          : currentPlayerIndex // ignore: cast_nullable_to_non_nullable
               as int,
     ));
   }
@@ -234,14 +145,21 @@ class __$$LoadedImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$LoadedImpl implements _Loaded {
-  const _$LoadedImpl({required this.playersHealthPoints});
+  const _$LoadedImpl(
+      {required this.currentPlayersHealthPoints,
+      required this.currentMonsterHealthPoints,
+      required this.currentPlayerIndex});
 
   @override
-  final int playersHealthPoints;
+  final double currentPlayersHealthPoints;
+  @override
+  final double currentMonsterHealthPoints;
+  @override
+  final int currentPlayerIndex;
 
   @override
   String toString() {
-    return 'BattleState.loaded(playersHealthPoints: $playersHealthPoints)';
+    return 'BattleState.loaded(currentPlayersHealthPoints: $currentPlayersHealthPoints, currentMonsterHealthPoints: $currentMonsterHealthPoints, currentPlayerIndex: $currentPlayerIndex)';
   }
 
   @override
@@ -249,12 +167,21 @@ class _$LoadedImpl implements _Loaded {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$LoadedImpl &&
-            (identical(other.playersHealthPoints, playersHealthPoints) ||
-                other.playersHealthPoints == playersHealthPoints));
+            (identical(other.currentPlayersHealthPoints,
+                    currentPlayersHealthPoints) ||
+                other.currentPlayersHealthPoints ==
+                    currentPlayersHealthPoints) &&
+            (identical(other.currentMonsterHealthPoints,
+                    currentMonsterHealthPoints) ||
+                other.currentMonsterHealthPoints ==
+                    currentMonsterHealthPoints) &&
+            (identical(other.currentPlayerIndex, currentPlayerIndex) ||
+                other.currentPlayerIndex == currentPlayerIndex));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, playersHealthPoints);
+  int get hashCode => Object.hash(runtimeType, currentPlayersHealthPoints,
+      currentMonsterHealthPoints, currentPlayerIndex);
 
   @JsonKey(ignore: true)
   @override
@@ -265,36 +192,48 @@ class _$LoadedImpl implements _Loaded {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function(int playersHealthPoints) loaded,
-    required TResult Function(int damage) monsterAttack,
-    required TResult Function(int damage) playerAttack,
+    required TResult Function(double currentPlayersHealthPoints,
+            double currentMonsterHealthPoints, int currentPlayerIndex)
+        loaded,
+    required TResult Function() monsterAttack,
+    required TResult Function() playerAttack,
+    required TResult Function() gameOver,
+    required TResult Function() victory,
   }) {
-    return loaded(playersHealthPoints);
+    return loaded(currentPlayersHealthPoints, currentMonsterHealthPoints,
+        currentPlayerIndex);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function(int playersHealthPoints)? loaded,
-    TResult? Function(int damage)? monsterAttack,
-    TResult? Function(int damage)? playerAttack,
+    TResult? Function(double currentPlayersHealthPoints,
+            double currentMonsterHealthPoints, int currentPlayerIndex)?
+        loaded,
+    TResult? Function()? monsterAttack,
+    TResult? Function()? playerAttack,
+    TResult? Function()? gameOver,
+    TResult? Function()? victory,
   }) {
-    return loaded?.call(playersHealthPoints);
+    return loaded?.call(currentPlayersHealthPoints, currentMonsterHealthPoints,
+        currentPlayerIndex);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(int playersHealthPoints)? loaded,
-    TResult Function(int damage)? monsterAttack,
-    TResult Function(int damage)? playerAttack,
+    TResult Function(double currentPlayersHealthPoints,
+            double currentMonsterHealthPoints, int currentPlayerIndex)?
+        loaded,
+    TResult Function()? monsterAttack,
+    TResult Function()? playerAttack,
+    TResult Function()? gameOver,
+    TResult Function()? victory,
     required TResult orElse(),
   }) {
     if (loaded != null) {
-      return loaded(playersHealthPoints);
+      return loaded(currentPlayersHealthPoints, currentMonsterHealthPoints,
+          currentPlayerIndex);
     }
     return orElse();
   }
@@ -302,10 +241,11 @@ class _$LoadedImpl implements _Loaded {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
     required TResult Function(_Loaded value) loaded,
     required TResult Function(_MonsterAttack value) monsterAttack,
     required TResult Function(_PlayerAttack value) playerAttack,
+    required TResult Function(_GameOver value) gameOver,
+    required TResult Function(_Victory value) victory,
   }) {
     return loaded(this);
   }
@@ -313,10 +253,11 @@ class _$LoadedImpl implements _Loaded {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
     TResult? Function(_Loaded value)? loaded,
     TResult? Function(_MonsterAttack value)? monsterAttack,
     TResult? Function(_PlayerAttack value)? playerAttack,
+    TResult? Function(_GameOver value)? gameOver,
+    TResult? Function(_Victory value)? victory,
   }) {
     return loaded?.call(this);
   }
@@ -324,10 +265,11 @@ class _$LoadedImpl implements _Loaded {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
     TResult Function(_Loaded value)? loaded,
     TResult Function(_MonsterAttack value)? monsterAttack,
     TResult Function(_PlayerAttack value)? playerAttack,
+    TResult Function(_GameOver value)? gameOver,
+    TResult Function(_Victory value)? victory,
     required TResult orElse(),
   }) {
     if (loaded != null) {
@@ -338,10 +280,14 @@ class _$LoadedImpl implements _Loaded {
 }
 
 abstract class _Loaded implements BattleState {
-  const factory _Loaded({required final int playersHealthPoints}) =
-      _$LoadedImpl;
+  const factory _Loaded(
+      {required final double currentPlayersHealthPoints,
+      required final double currentMonsterHealthPoints,
+      required final int currentPlayerIndex}) = _$LoadedImpl;
 
-  int get playersHealthPoints;
+  double get currentPlayersHealthPoints;
+  double get currentMonsterHealthPoints;
+  int get currentPlayerIndex;
   @JsonKey(ignore: true)
   _$$LoadedImplCopyWith<_$LoadedImpl> get copyWith =>
       throw _privateConstructorUsedError;
@@ -352,8 +298,6 @@ abstract class _$$MonsterAttackImplCopyWith<$Res> {
   factory _$$MonsterAttackImplCopyWith(
           _$MonsterAttackImpl value, $Res Function(_$MonsterAttackImpl) then) =
       __$$MonsterAttackImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({int damage});
 }
 
 /// @nodoc
@@ -363,84 +307,69 @@ class __$$MonsterAttackImplCopyWithImpl<$Res>
   __$$MonsterAttackImplCopyWithImpl(
       _$MonsterAttackImpl _value, $Res Function(_$MonsterAttackImpl) _then)
       : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? damage = null,
-  }) {
-    return _then(_$MonsterAttackImpl(
-      damage: null == damage
-          ? _value.damage
-          : damage // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
-  }
 }
 
 /// @nodoc
 
 class _$MonsterAttackImpl implements _MonsterAttack {
-  const _$MonsterAttackImpl({required this.damage});
-
-  @override
-  final int damage;
+  const _$MonsterAttackImpl();
 
   @override
   String toString() {
-    return 'BattleState.monsterAttack(damage: $damage)';
+    return 'BattleState.monsterAttack()';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$MonsterAttackImpl &&
-            (identical(other.damage, damage) || other.damage == damage));
+        (other.runtimeType == runtimeType && other is _$MonsterAttackImpl);
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, damage);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$MonsterAttackImplCopyWith<_$MonsterAttackImpl> get copyWith =>
-      __$$MonsterAttackImplCopyWithImpl<_$MonsterAttackImpl>(this, _$identity);
+  int get hashCode => runtimeType.hashCode;
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function(int playersHealthPoints) loaded,
-    required TResult Function(int damage) monsterAttack,
-    required TResult Function(int damage) playerAttack,
+    required TResult Function(double currentPlayersHealthPoints,
+            double currentMonsterHealthPoints, int currentPlayerIndex)
+        loaded,
+    required TResult Function() monsterAttack,
+    required TResult Function() playerAttack,
+    required TResult Function() gameOver,
+    required TResult Function() victory,
   }) {
-    return monsterAttack(damage);
+    return monsterAttack();
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function(int playersHealthPoints)? loaded,
-    TResult? Function(int damage)? monsterAttack,
-    TResult? Function(int damage)? playerAttack,
+    TResult? Function(double currentPlayersHealthPoints,
+            double currentMonsterHealthPoints, int currentPlayerIndex)?
+        loaded,
+    TResult? Function()? monsterAttack,
+    TResult? Function()? playerAttack,
+    TResult? Function()? gameOver,
+    TResult? Function()? victory,
   }) {
-    return monsterAttack?.call(damage);
+    return monsterAttack?.call();
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(int playersHealthPoints)? loaded,
-    TResult Function(int damage)? monsterAttack,
-    TResult Function(int damage)? playerAttack,
+    TResult Function(double currentPlayersHealthPoints,
+            double currentMonsterHealthPoints, int currentPlayerIndex)?
+        loaded,
+    TResult Function()? monsterAttack,
+    TResult Function()? playerAttack,
+    TResult Function()? gameOver,
+    TResult Function()? victory,
     required TResult orElse(),
   }) {
     if (monsterAttack != null) {
-      return monsterAttack(damage);
+      return monsterAttack();
     }
     return orElse();
   }
@@ -448,10 +377,11 @@ class _$MonsterAttackImpl implements _MonsterAttack {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
     required TResult Function(_Loaded value) loaded,
     required TResult Function(_MonsterAttack value) monsterAttack,
     required TResult Function(_PlayerAttack value) playerAttack,
+    required TResult Function(_GameOver value) gameOver,
+    required TResult Function(_Victory value) victory,
   }) {
     return monsterAttack(this);
   }
@@ -459,10 +389,11 @@ class _$MonsterAttackImpl implements _MonsterAttack {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
     TResult? Function(_Loaded value)? loaded,
     TResult? Function(_MonsterAttack value)? monsterAttack,
     TResult? Function(_PlayerAttack value)? playerAttack,
+    TResult? Function(_GameOver value)? gameOver,
+    TResult? Function(_Victory value)? victory,
   }) {
     return monsterAttack?.call(this);
   }
@@ -470,10 +401,11 @@ class _$MonsterAttackImpl implements _MonsterAttack {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
     TResult Function(_Loaded value)? loaded,
     TResult Function(_MonsterAttack value)? monsterAttack,
     TResult Function(_PlayerAttack value)? playerAttack,
+    TResult Function(_GameOver value)? gameOver,
+    TResult Function(_Victory value)? victory,
     required TResult orElse(),
   }) {
     if (monsterAttack != null) {
@@ -484,13 +416,7 @@ class _$MonsterAttackImpl implements _MonsterAttack {
 }
 
 abstract class _MonsterAttack implements BattleState {
-  const factory _MonsterAttack({required final int damage}) =
-      _$MonsterAttackImpl;
-
-  int get damage;
-  @JsonKey(ignore: true)
-  _$$MonsterAttackImplCopyWith<_$MonsterAttackImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  const factory _MonsterAttack() = _$MonsterAttackImpl;
 }
 
 /// @nodoc
@@ -498,8 +424,6 @@ abstract class _$$PlayerAttackImplCopyWith<$Res> {
   factory _$$PlayerAttackImplCopyWith(
           _$PlayerAttackImpl value, $Res Function(_$PlayerAttackImpl) then) =
       __$$PlayerAttackImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({int damage});
 }
 
 /// @nodoc
@@ -509,84 +433,69 @@ class __$$PlayerAttackImplCopyWithImpl<$Res>
   __$$PlayerAttackImplCopyWithImpl(
       _$PlayerAttackImpl _value, $Res Function(_$PlayerAttackImpl) _then)
       : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? damage = null,
-  }) {
-    return _then(_$PlayerAttackImpl(
-      damage: null == damage
-          ? _value.damage
-          : damage // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
-  }
 }
 
 /// @nodoc
 
 class _$PlayerAttackImpl implements _PlayerAttack {
-  const _$PlayerAttackImpl({required this.damage});
-
-  @override
-  final int damage;
+  const _$PlayerAttackImpl();
 
   @override
   String toString() {
-    return 'BattleState.playerAttack(damage: $damage)';
+    return 'BattleState.playerAttack()';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$PlayerAttackImpl &&
-            (identical(other.damage, damage) || other.damage == damage));
+        (other.runtimeType == runtimeType && other is _$PlayerAttackImpl);
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, damage);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$PlayerAttackImplCopyWith<_$PlayerAttackImpl> get copyWith =>
-      __$$PlayerAttackImplCopyWithImpl<_$PlayerAttackImpl>(this, _$identity);
+  int get hashCode => runtimeType.hashCode;
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function(int playersHealthPoints) loaded,
-    required TResult Function(int damage) monsterAttack,
-    required TResult Function(int damage) playerAttack,
+    required TResult Function(double currentPlayersHealthPoints,
+            double currentMonsterHealthPoints, int currentPlayerIndex)
+        loaded,
+    required TResult Function() monsterAttack,
+    required TResult Function() playerAttack,
+    required TResult Function() gameOver,
+    required TResult Function() victory,
   }) {
-    return playerAttack(damage);
+    return playerAttack();
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function(int playersHealthPoints)? loaded,
-    TResult? Function(int damage)? monsterAttack,
-    TResult? Function(int damage)? playerAttack,
+    TResult? Function(double currentPlayersHealthPoints,
+            double currentMonsterHealthPoints, int currentPlayerIndex)?
+        loaded,
+    TResult? Function()? monsterAttack,
+    TResult? Function()? playerAttack,
+    TResult? Function()? gameOver,
+    TResult? Function()? victory,
   }) {
-    return playerAttack?.call(damage);
+    return playerAttack?.call();
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(int playersHealthPoints)? loaded,
-    TResult Function(int damage)? monsterAttack,
-    TResult Function(int damage)? playerAttack,
+    TResult Function(double currentPlayersHealthPoints,
+            double currentMonsterHealthPoints, int currentPlayerIndex)?
+        loaded,
+    TResult Function()? monsterAttack,
+    TResult Function()? playerAttack,
+    TResult Function()? gameOver,
+    TResult Function()? victory,
     required TResult orElse(),
   }) {
     if (playerAttack != null) {
-      return playerAttack(damage);
+      return playerAttack();
     }
     return orElse();
   }
@@ -594,10 +503,11 @@ class _$PlayerAttackImpl implements _PlayerAttack {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
     required TResult Function(_Loaded value) loaded,
     required TResult Function(_MonsterAttack value) monsterAttack,
     required TResult Function(_PlayerAttack value) playerAttack,
+    required TResult Function(_GameOver value) gameOver,
+    required TResult Function(_Victory value) victory,
   }) {
     return playerAttack(this);
   }
@@ -605,10 +515,11 @@ class _$PlayerAttackImpl implements _PlayerAttack {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
     TResult? Function(_Loaded value)? loaded,
     TResult? Function(_MonsterAttack value)? monsterAttack,
     TResult? Function(_PlayerAttack value)? playerAttack,
+    TResult? Function(_GameOver value)? gameOver,
+    TResult? Function(_Victory value)? victory,
   }) {
     return playerAttack?.call(this);
   }
@@ -616,10 +527,11 @@ class _$PlayerAttackImpl implements _PlayerAttack {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
     TResult Function(_Loaded value)? loaded,
     TResult Function(_MonsterAttack value)? monsterAttack,
     TResult Function(_PlayerAttack value)? playerAttack,
+    TResult Function(_GameOver value)? gameOver,
+    TResult Function(_Victory value)? victory,
     required TResult orElse(),
   }) {
     if (playerAttack != null) {
@@ -630,10 +542,257 @@ class _$PlayerAttackImpl implements _PlayerAttack {
 }
 
 abstract class _PlayerAttack implements BattleState {
-  const factory _PlayerAttack({required final int damage}) = _$PlayerAttackImpl;
+  const factory _PlayerAttack() = _$PlayerAttackImpl;
+}
 
-  int get damage;
-  @JsonKey(ignore: true)
-  _$$PlayerAttackImplCopyWith<_$PlayerAttackImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+/// @nodoc
+abstract class _$$GameOverImplCopyWith<$Res> {
+  factory _$$GameOverImplCopyWith(
+          _$GameOverImpl value, $Res Function(_$GameOverImpl) then) =
+      __$$GameOverImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$GameOverImplCopyWithImpl<$Res>
+    extends _$BattleStateCopyWithImpl<$Res, _$GameOverImpl>
+    implements _$$GameOverImplCopyWith<$Res> {
+  __$$GameOverImplCopyWithImpl(
+      _$GameOverImpl _value, $Res Function(_$GameOverImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$GameOverImpl implements _GameOver {
+  const _$GameOverImpl();
+
+  @override
+  String toString() {
+    return 'BattleState.gameOver()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$GameOverImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(double currentPlayersHealthPoints,
+            double currentMonsterHealthPoints, int currentPlayerIndex)
+        loaded,
+    required TResult Function() monsterAttack,
+    required TResult Function() playerAttack,
+    required TResult Function() gameOver,
+    required TResult Function() victory,
+  }) {
+    return gameOver();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(double currentPlayersHealthPoints,
+            double currentMonsterHealthPoints, int currentPlayerIndex)?
+        loaded,
+    TResult? Function()? monsterAttack,
+    TResult? Function()? playerAttack,
+    TResult? Function()? gameOver,
+    TResult? Function()? victory,
+  }) {
+    return gameOver?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(double currentPlayersHealthPoints,
+            double currentMonsterHealthPoints, int currentPlayerIndex)?
+        loaded,
+    TResult Function()? monsterAttack,
+    TResult Function()? playerAttack,
+    TResult Function()? gameOver,
+    TResult Function()? victory,
+    required TResult orElse(),
+  }) {
+    if (gameOver != null) {
+      return gameOver();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Loaded value) loaded,
+    required TResult Function(_MonsterAttack value) monsterAttack,
+    required TResult Function(_PlayerAttack value) playerAttack,
+    required TResult Function(_GameOver value) gameOver,
+    required TResult Function(_Victory value) victory,
+  }) {
+    return gameOver(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Loaded value)? loaded,
+    TResult? Function(_MonsterAttack value)? monsterAttack,
+    TResult? Function(_PlayerAttack value)? playerAttack,
+    TResult? Function(_GameOver value)? gameOver,
+    TResult? Function(_Victory value)? victory,
+  }) {
+    return gameOver?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Loaded value)? loaded,
+    TResult Function(_MonsterAttack value)? monsterAttack,
+    TResult Function(_PlayerAttack value)? playerAttack,
+    TResult Function(_GameOver value)? gameOver,
+    TResult Function(_Victory value)? victory,
+    required TResult orElse(),
+  }) {
+    if (gameOver != null) {
+      return gameOver(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _GameOver implements BattleState {
+  const factory _GameOver() = _$GameOverImpl;
+}
+
+/// @nodoc
+abstract class _$$VictoryImplCopyWith<$Res> {
+  factory _$$VictoryImplCopyWith(
+          _$VictoryImpl value, $Res Function(_$VictoryImpl) then) =
+      __$$VictoryImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$VictoryImplCopyWithImpl<$Res>
+    extends _$BattleStateCopyWithImpl<$Res, _$VictoryImpl>
+    implements _$$VictoryImplCopyWith<$Res> {
+  __$$VictoryImplCopyWithImpl(
+      _$VictoryImpl _value, $Res Function(_$VictoryImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$VictoryImpl implements _Victory {
+  const _$VictoryImpl();
+
+  @override
+  String toString() {
+    return 'BattleState.victory()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$VictoryImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(double currentPlayersHealthPoints,
+            double currentMonsterHealthPoints, int currentPlayerIndex)
+        loaded,
+    required TResult Function() monsterAttack,
+    required TResult Function() playerAttack,
+    required TResult Function() gameOver,
+    required TResult Function() victory,
+  }) {
+    return victory();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(double currentPlayersHealthPoints,
+            double currentMonsterHealthPoints, int currentPlayerIndex)?
+        loaded,
+    TResult? Function()? monsterAttack,
+    TResult? Function()? playerAttack,
+    TResult? Function()? gameOver,
+    TResult? Function()? victory,
+  }) {
+    return victory?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(double currentPlayersHealthPoints,
+            double currentMonsterHealthPoints, int currentPlayerIndex)?
+        loaded,
+    TResult Function()? monsterAttack,
+    TResult Function()? playerAttack,
+    TResult Function()? gameOver,
+    TResult Function()? victory,
+    required TResult orElse(),
+  }) {
+    if (victory != null) {
+      return victory();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Loaded value) loaded,
+    required TResult Function(_MonsterAttack value) monsterAttack,
+    required TResult Function(_PlayerAttack value) playerAttack,
+    required TResult Function(_GameOver value) gameOver,
+    required TResult Function(_Victory value) victory,
+  }) {
+    return victory(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Loaded value)? loaded,
+    TResult? Function(_MonsterAttack value)? monsterAttack,
+    TResult? Function(_PlayerAttack value)? playerAttack,
+    TResult? Function(_GameOver value)? gameOver,
+    TResult? Function(_Victory value)? victory,
+  }) {
+    return victory?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Loaded value)? loaded,
+    TResult Function(_MonsterAttack value)? monsterAttack,
+    TResult Function(_PlayerAttack value)? playerAttack,
+    TResult Function(_GameOver value)? gameOver,
+    TResult Function(_Victory value)? victory,
+    required TResult orElse(),
+  }) {
+    if (victory != null) {
+      return victory(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _Victory implements BattleState {
+  const factory _Victory() = _$VictoryImpl;
 }

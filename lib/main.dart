@@ -1,18 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/level_enum.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/players_entity.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/battle_screen.dart';
-import 'package:lg_flutter_hackathon/constants/colors.dart';
 import 'package:lg_flutter_hackathon/dependencies.dart';
 import 'package:lg_flutter_hackathon/main_menu/main_menu_screen.dart';
 import 'package:lg_flutter_hackathon/utils/window_manager_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart';
-
-import 'package:lg_flutter_hackathon/battle/presentation/battle_screen.dart';
-import 'package:lg_flutter_hackathon/main_menu/main_menu_screen.dart';
 
 import 'app_lifecycle/app_lifecycle.dart';
 import 'audio/audio_controller.dart';
@@ -53,6 +50,8 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Bloc.observer = AppBlocObserver();
+
     return AppLifecycleObserver(
       child: MultiProvider(
         providers: [
@@ -94,5 +93,31 @@ class App extends StatelessWidget {
         }),
       ),
     );
+  }
+}
+
+class AppBlocObserver extends BlocObserver {
+  @override
+  void onCreate(BlocBase bloc) {
+    super.onCreate(bloc);
+    debugPrint('onCreate -- ${bloc.runtimeType}');
+  }
+
+  @override
+  void onChange(BlocBase bloc, Change change) {
+    super.onChange(bloc, change);
+    debugPrint('onChange -- ${bloc.runtimeType}, $change');
+  }
+
+  @override
+  void onError(BlocBase bloc, Object error, StackTrace stackTrace) {
+    debugPrint('onError -- ${bloc.runtimeType}, $error');
+    super.onError(bloc, error, stackTrace);
+  }
+
+  @override
+  void onClose(BlocBase bloc) {
+    super.onClose(bloc);
+    debugPrint('onClose -- ${bloc.runtimeType}');
   }
 }

@@ -36,15 +36,19 @@ class BattleScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => BattleCubit(level, players),
-      child: _BattleScreenBody(level),
+      child: _BattleScreenBody(level, players),
     );
   }
 }
 
 class _BattleScreenBody extends StatefulWidget {
-  const _BattleScreenBody(this.level);
+  const _BattleScreenBody(
+    this.level,
+    this.players,
+  );
 
   final LevelEnum level;
+  final PlayersEntity players;
 
   @override
   State<_BattleScreenBody> createState() => __BattleScreenBodyState();
@@ -88,12 +92,13 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
     final screenHeight = MediaQuery.sizeOf(context).height;
     final screenWidth = MediaQuery.sizeOf(context).width;
 
-
     return BlocConsumer<BattleCubit, BattleState>(
       listener: (context, state) {
         state.mapOrNull(
-          monsterAttack: (damage) => updatePlayersHealthBar(damage),
-          playerAttack: (damage) => updateMonsterHealthBar(damage),
+          monsterAttack: (_) => _monsterAttackAnimation(),
+          playerAttack: (_) => _playersAttackAnimation(),
+          gameOver: (_) => _openGameOverScreen(),
+          victory: (_) => _openVictoryScreen(),
         );
       },
       builder: (context, state) {
@@ -115,6 +120,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
               children: [
                 _buildBackground(),
                 _buildPlayerHealthBar(screenHeight, screenWidth),
+                _buildPlayerIndicator(screenHeight, screenWidth),
                 _buildEnemyHealthBar(screenHeight, screenWidth),
                 _buildPlayer(screenHeight, screenWidth),
                 _buildEnemy(screenHeight, screenWidth),
@@ -150,9 +156,35 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
     return Positioned(
       left: screenWidth / DesignConsts.playerHealthBarLeftFactor,
       top: screenHeight / DesignConsts.heightDivision32,
-      child: HealthBar(
-        currentHealth: currentHealth,
-        incomingHealth: incomingHealth,
+      child: BlocBuilder<BattleCubit, BattleState>(
+        buildWhen: (previous, current) => previous.runtimeType == previous.runtimeType,
+        builder: (context, state) {
+          return state.maybeMap(
+            loaded: (result) => HealthBar(
+              maxHealthPoints: widget.players.healthPoints,
+              newHealthPoints: result.currentPlayersHealthPoints,
+            ),
+            orElse: () => const FlutterLogo(),
+          );
+        },
+      ),
+    );
+  }
+
+  _buildPlayerIndicator(double screenHeight, double screenWidth) {
+    return Positioned(
+      left: screenWidth / DesignConsts.playerHealthBarLeftFactor,
+      top: screenHeight / DesignConsts.heightDivision32 + 120,
+      child: BlocBuilder<BattleCubit, BattleState>(
+        buildWhen: (previous, current) => previous.runtimeType == previous.runtimeType,
+        builder: (context, state) {
+          return state.maybeMap(
+            loaded: (result) => Text(
+              'Current player number = ${result.currentPlayerIndex + 1}',
+            ),
+            orElse: () => const FlutterLogo(),
+          );
+        },
       ),
     );
   }
@@ -161,9 +193,17 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
     return Positioned(
       right: screenWidth / DesignConsts.enemyHealthBarRightFactor,
       top: screenHeight / DesignConsts.heightDivision32,
-      child: HealthBar(
-        currentHealth: currentHealth,
-        incomingHealth: incomingHealth,
+      child: BlocBuilder<BattleCubit, BattleState>(
+        buildWhen: (previous, current) => previous.runtimeType == previous.runtimeType,
+        builder: (context, state) {
+          return state.maybeMap(
+            loaded: (result) => HealthBar(
+              maxHealthPoints: widget.level.monster.healthPoints,
+              newHealthPoints: result.currentMonsterHealthPoints,
+            ),
+            orElse: () => const FlutterLogo(),
+          );
+        },
       ),
     );
   }
@@ -186,7 +226,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
           isDrawing = false;
           showAccuracyAnimation = true;
         });
-        info("Drawing completed with accuracy: ${details.accuracy}");
+        info("Drawing completed with accuracy: ${details.toString()}");
 
         context.read<BattleCubit>().playerAttack(accuracy: details.accuracy);
       },
@@ -285,15 +325,26 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
     super.dispose();
   }
 
-  updatePlayersHealthBar(damage) {
-    // TODO: Update players health bar
-    print('TODO: Update players health bar');
+  Future<void> _monsterAttackAnimation() async {
+    // TODO: Run monster attack animation
+    print('TODO: Run monster attack animation');
+
+    // TODO: Wait for monster attack animation
+    Future.delayed(const Duration(seconds: 2)).then((val) {
+      //context.read<BattleCubit>().gameOver();
+    });
   }
 
-  updateMonsterHealthBar(damage) {
-    // TODO: Update players health bar
-    print('TODO: Update monster health bar');
+  Future<void> _playersAttackAnimation() async {
+    // TODO: Run players attack animation
+    print('TODO: Run players attack animation');
+
+    // TODO: Wait for player attack animation
+    Future.delayed(const Duration(seconds: 2)).then((val) {
+      //context.read<BattleCubit>().victory();
+    });
   }
+
   void _simulateDrawRune() {
     setState(() {
       isDrawing = true;
@@ -316,5 +367,13 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
       incomingHealth = min(100, currentHealth + random.nextInt(20) + 5);
       currentHealth = incomingHealth;
     });
+  }
+
+  void _openGameOverScreen() {
+    // TODO: Create game over screen
+  }
+
+  _openVictoryScreen() {
+    // TODO: Create victory over screen
   }
 }

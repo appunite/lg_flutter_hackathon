@@ -5,7 +5,7 @@ enum LevelEnum {
     MonsterEntity(
       speed: 4,
       healthPoints: 7 * 15,
-      damage: 5,
+      damage: 25,
       background: 'goblin-background',
       attackAnimation: 'goblin-attack',
     ),

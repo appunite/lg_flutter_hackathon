@@ -16,7 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$PlayersEntity {
-  int get healthPoints => throw _privateConstructorUsedError;
+  double get healthPoints => throw _privateConstructorUsedError;
   int get numberOfPlayers => throw _privateConstructorUsedError;
   int get damage => throw _privateConstructorUsedError;
 
@@ -31,7 +31,7 @@ abstract class $PlayersEntityCopyWith<$Res> {
           PlayersEntity value, $Res Function(PlayersEntity) then) =
       _$PlayersEntityCopyWithImpl<$Res, PlayersEntity>;
   @useResult
-  $Res call({int healthPoints, int numberOfPlayers, int damage});
+  $Res call({double healthPoints, int numberOfPlayers, int damage});
 }
 
 /// @nodoc
@@ -55,7 +55,7 @@ class _$PlayersEntityCopyWithImpl<$Res, $Val extends PlayersEntity>
       healthPoints: null == healthPoints
           ? _value.healthPoints
           : healthPoints // ignore: cast_nullable_to_non_nullable
-              as int,
+              as double,
       numberOfPlayers: null == numberOfPlayers
           ? _value.numberOfPlayers
           : numberOfPlayers // ignore: cast_nullable_to_non_nullable
@@ -76,7 +76,7 @@ abstract class _$$PlayersEntityImplCopyWith<$Res>
       __$$PlayersEntityImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int healthPoints, int numberOfPlayers, int damage});
+  $Res call({double healthPoints, int numberOfPlayers, int damage});
 }
 
 /// @nodoc
@@ -98,7 +98,7 @@ class __$$PlayersEntityImplCopyWithImpl<$Res>
       healthPoints: null == healthPoints
           ? _value.healthPoints
           : healthPoints // ignore: cast_nullable_to_non_nullable
-              as int,
+              as double,
       numberOfPlayers: null == numberOfPlayers
           ? _value.numberOfPlayers
           : numberOfPlayers // ignore: cast_nullable_to_non_nullable
@@ -120,7 +120,7 @@ class _$PlayersEntityImpl implements _PlayersEntity {
       required this.damage});
 
   @override
-  final int healthPoints;
+  final double healthPoints;
   @override
   final int numberOfPlayers;
   @override
@@ -156,12 +156,12 @@ class _$PlayersEntityImpl implements _PlayersEntity {
 
 abstract class _PlayersEntity implements PlayersEntity {
   const factory _PlayersEntity(
-      {required final int healthPoints,
+      {required final double healthPoints,
       required final int numberOfPlayers,
       required final int damage}) = _$PlayersEntityImpl;
 
   @override
-  int get healthPoints;
+  double get healthPoints;
   @override
   int get numberOfPlayers;
   @override

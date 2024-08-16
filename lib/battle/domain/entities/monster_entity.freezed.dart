@@ -17,7 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$MonsterEntity {
   int get speed => throw _privateConstructorUsedError;
-  int get healthPoints => throw _privateConstructorUsedError;
+  double get healthPoints => throw _privateConstructorUsedError;
   int get damage => throw _privateConstructorUsedError;
   String get background => throw _privateConstructorUsedError;
   String get attackAnimation => throw _privateConstructorUsedError;
@@ -35,7 +35,7 @@ abstract class $MonsterEntityCopyWith<$Res> {
   @useResult
   $Res call(
       {int speed,
-      int healthPoints,
+      double healthPoints,
       int damage,
       String background,
       String attackAnimation});
@@ -68,7 +68,7 @@ class _$MonsterEntityCopyWithImpl<$Res, $Val extends MonsterEntity>
       healthPoints: null == healthPoints
           ? _value.healthPoints
           : healthPoints // ignore: cast_nullable_to_non_nullable
-              as int,
+              as double,
       damage: null == damage
           ? _value.damage
           : damage // ignore: cast_nullable_to_non_nullable
@@ -95,7 +95,7 @@ abstract class _$$MonsterEntityImplCopyWith<$Res>
   @useResult
   $Res call(
       {int speed,
-      int healthPoints,
+      double healthPoints,
       int damage,
       String background,
       String attackAnimation});
@@ -126,7 +126,7 @@ class __$$MonsterEntityImplCopyWithImpl<$Res>
       healthPoints: null == healthPoints
           ? _value.healthPoints
           : healthPoints // ignore: cast_nullable_to_non_nullable
-              as int,
+              as double,
       damage: null == damage
           ? _value.damage
           : damage // ignore: cast_nullable_to_non_nullable
@@ -156,7 +156,7 @@ class _$MonsterEntityImpl implements _MonsterEntity {
   @override
   final int speed;
   @override
-  final int healthPoints;
+  final double healthPoints;
   @override
   final int damage;
   @override
@@ -198,7 +198,7 @@ class _$MonsterEntityImpl implements _MonsterEntity {
 abstract class _MonsterEntity implements MonsterEntity {
   const factory _MonsterEntity(
       {required final int speed,
-      required final int healthPoints,
+      required final double healthPoints,
       required final int damage,
       required final String background,
       required final String attackAnimation}) = _$MonsterEntityImpl;
@@ -206,7 +206,7 @@ abstract class _MonsterEntity implements MonsterEntity {
   @override
   int get speed;
   @override
-  int get healthPoints;
+  double get healthPoints;
   @override
   int get damage;
   @override

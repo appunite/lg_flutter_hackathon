@@ -2,17 +2,17 @@ part of 'battle_cubit.dart';
 
 @freezed
 class BattleState with _$BattleState {
-  const factory BattleState.initial() = _Initial;
-
   const factory BattleState.loaded({
-    required int playersHealthPoints,
+    required double currentPlayersHealthPoints,
+    required double currentMonsterHealthPoints,
+    required int currentPlayerIndex,
   }) = _Loaded;
 
-  const factory BattleState.monsterAttack({
-    required int damage,
-  }) = _MonsterAttack;
+  const factory BattleState.monsterAttack() = _MonsterAttack;
 
-  const factory BattleState.playerAttack({
-    required int damage,
-  }) = _PlayerAttack;
+  const factory BattleState.playerAttack() = _PlayerAttack;
+
+  const factory BattleState.gameOver() = _GameOver;
+
+  const factory BattleState.victory() = _Victory;
 }
