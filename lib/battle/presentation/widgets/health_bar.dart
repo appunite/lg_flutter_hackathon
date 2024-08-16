@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lg_flutter_hackathon/animations/animations_manager.dart';
+import 'package:lg_flutter_hackathon/constants/colors.dart';
+import 'package:lg_flutter_hackathon/constants/design_consts.dart';
 import 'package:lg_flutter_hackathon/constants/image_assets.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
@@ -19,139 +22,98 @@ class HealthBar extends StatefulWidget {
 }
 
 class _HealthBarState extends State<HealthBar> with TickerProviderStateMixin {
-  late AnimationController _shakeController;
-  late Animation<double> _shakeAnimation;
-  late AnimationController _healthChangeController;
-  late Animation<double> _healthAnimation;
+  late AnimationManager animationManager;
 
   @override
   void initState() {
     super.initState();
 
-    _shakeController = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
+    animationManager = AnimationManager(vsync: this);
+    animationManager.initializeShakeAnimation();
+    animationManager.initializeGrowAnimation();
+    animationManager.initializeHealthChangeAnimation(widget.currentHealth, widget.incomingHealth);
 
-    _shakeAnimation = Tween<double>(begin: 0, end: 10)
-        .chain(
-          CurveTween(
-            curve: Curves.elasticIn,
-          ),
-        )
-        .animate(
-          _shakeController,
-        )..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          _shakeController.reverse();
-        }
-      });
-
-    _healthChangeController = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
-
-    _healthAnimation = Tween<double>(
-      begin: widget.currentHealth,
-      end: widget.incomingHealth,
-    ).animate(_healthChangeController)
-      ..addListener(() {
-        setState(() {});
-      });
-
-    _healthChangeController.forward();
+    animationManager.healthChangeController.forward();
   }
 
   @override
   void didUpdateWidget(HealthBar oldWidget) {
     super.didUpdateWidget(oldWidget);
-
     if (oldWidget.incomingHealth != widget.incomingHealth) {
-      _healthAnimation = Tween<double>(
-        begin: oldWidget.currentHealth,
-        end: widget.incomingHealth,
-      ).animate(_healthChangeController);
-
-      _shakeController.reset();
-      _healthChangeController.reset();
-
-      _shakeController.forward();
-      _healthChangeController.forward();
+      animationManager.updateHealthAnimation(oldWidget.currentHealth, widget.incomingHealth);
     }
   }
 
   @override
   void dispose() {
-    _shakeController.dispose();
-    _healthChangeController.dispose();
+    animationManager.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.sizeOf(context).width;
-    final healthBarWidth = screenWidth / 4;
-    final foregroundWidth = healthBarWidth * 0.8;
+    final healthBarWidth = screenWidth / DesignConsts.healthBarWidthFactor;
+    final foregroundWidth = healthBarWidth * DesignConsts.healthBarForegroundWidthFactor;
     const padding = 16.0;
 
     final maxHealthBarWidth = foregroundWidth - 2 * padding;
 
-    Gradient healthGradient = _healthAnimation.value <= 50
-        ? const LinearGradient(
-            colors: [Color(0xFFB65E2C), Color(0xFFE57C3D)],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-          )
-        : const LinearGradient(
-            colors: [Color(0xFFB62C2C), Color(0xFFE53D3D)],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-          );
+    Gradient healthGradient;
+    if (animationManager.healthAnimation.value > 60) {
+      healthGradient = AppColors.healthBarGreen;
+    } else if (animationManager.healthAnimation.value > 25) {
+      healthGradient = AppColors.healthBarOrange;
+    } else {
+      healthGradient = AppColors.healthBarRed;
+    }
 
     return AnimatedBuilder(
-      animation: _shakeAnimation,
+      animation: Listenable.merge([animationManager.shakeAnimation, animationManager.growAnimation]),
       builder: (context, child) {
         return Transform.translate(
-          offset: Offset(_shakeAnimation.value, 0),
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              SvgPicture.asset(
-                ImageAssets.healthBarBackground,
-                width: healthBarWidth,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: padding),
-                child: Stack(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: padding),
-                      child: Align(
-                        alignment: AlignmentDirectional.center,
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(56),
-                            gradient: healthGradient,
+          offset: Offset(animationManager.shakeAnimation.value, 0),
+          child: Transform.scale(
+            scale: animationManager.growAnimation.value,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                SvgPicture.asset(
+                  ImageAssets.healthBarBackground,
+                  width: healthBarWidth,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: padding),
+                  child: Stack(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(left: padding),
+                        child: Align(
+                          alignment: AlignmentDirectional.center,
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(56),
+                              gradient: healthGradient,
+                            ),
+                            width: maxHealthBarWidth * (animationManager.healthAnimation.value / 100),
+                            height: MediaQuery.sizeOf(context).height / DesignConsts.healthBarHeightDivision,
                           ),
-                          width: maxHealthBarWidth * (_healthAnimation.value / 100),
-                          height: MediaQuery.sizeOf(context).height / 28,
                         ),
                       ),
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: SvgPicture.asset(
-                        ImageAssets.healthBarForeground,
-                        width: foregroundWidth,
+                      Align(
+                        alignment: Alignment.center,
+                        child: SvgPicture.asset(
+                          ImageAssets.healthBarForeground,
+                          width: foregroundWidth,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
