@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -7,9 +9,12 @@ import 'package:lg_flutter_hackathon/battle/domain/entities/level_enum.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/players_entity.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/cubit/battle_cubit.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/accuracy_animated_text.dart';
+import 'package:lg_flutter_hackathon/battle/presentation/widgets/debug_bar.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/drawing_overlay.dart';
+import 'package:lg_flutter_hackathon/battle/presentation/widgets/health_bar.dart';
 import 'package:lg_flutter_hackathon/components/confirmation_pop_up.dart';
 import 'package:lg_flutter_hackathon/components/tool_tip.dart';
+import 'package:lg_flutter_hackathon/constants/design_consts.dart';
 import 'package:lg_flutter_hackathon/constants/image_assets.dart';
 import 'package:lg_flutter_hackathon/constants/strings.dart';
 import 'package:lg_flutter_hackathon/logger.dart';
@@ -55,6 +60,9 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   double overlayOpacity = 0.0;
   bool showAccuracyAnimation = false;
 
+  double currentHealth = 100;
+  double incomingHealth = 100;
+
   @override
   void initState() {
     super.initState();
@@ -77,6 +85,10 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.sizeOf(context).height;
+    final screenWidth = MediaQuery.sizeOf(context).width;
+
+
     return BlocConsumer<BattleCubit, BattleState>(
       listener: (context, state) {
         state.mapOrNull(
@@ -102,10 +114,11 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
             body: Stack(
               children: [
                 _buildBackground(),
-                _buildPlayer(),
-                _buildEnemy(),
+                _buildPlayerHealthBar(screenHeight, screenWidth),
+                _buildEnemyHealthBar(screenHeight, screenWidth),
+                _buildPlayer(screenHeight, screenWidth),
+                _buildEnemy(screenHeight, screenWidth),
                 _buildSettingsButton(context),
-                _buildCentralButton(context),
                 AnimatedOpacity(
                   opacity: overlayOpacity,
                   duration: const Duration(milliseconds: 500),
@@ -113,18 +126,45 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
                 ),
                 if (showAccuracyAnimation && accuracy != null)
                   Positioned(
-                    top: MediaQuery.of(context).size.height * 0.2,
+                    top: screenHeight * 0.2,
                     left: 0,
                     right: 0,
                     child: Center(
                       child: AnimatedAccuracyText(accuracy: accuracy),
                     ),
                   ),
+                DebugBar(
+                  onSimulateDamage: _simulateDamage,
+                  onDrawRune: _simulateDrawRune,
+                  onSimulateHealthGain: _simulateHealthGain,
+                ),
               ],
             ),
           ),
         );
       },
+    );
+  }
+
+  Widget _buildPlayerHealthBar(double screenHeight, double screenWidth) {
+    return Positioned(
+      left: screenWidth / DesignConsts.playerHealthBarLeftFactor,
+      top: screenHeight / DesignConsts.heightDivision32,
+      child: HealthBar(
+        currentHealth: currentHealth,
+        incomingHealth: incomingHealth,
+      ),
+    );
+  }
+
+  Widget _buildEnemyHealthBar(double screenHeight, double screenWidth) {
+    return Positioned(
+      right: screenWidth / DesignConsts.enemyHealthBarRightFactor,
+      top: screenHeight / DesignConsts.heightDivision32,
+      child: HealthBar(
+        currentHealth: currentHealth,
+        incomingHealth: incomingHealth,
+      ),
     );
   }
 
@@ -156,37 +196,39 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
     );
   }
 
-  Widget _buildPlayer() => Positioned(
-        bottom: MediaQuery.sizeOf(context).height / 8,
-        left: MediaQuery.sizeOf(context).width / 5,
-        child: OverlayTooltipItem(
-          displayIndex: 0,
-          tooltip: (controller) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: MTooltip(
-                title: 'this is the player!',
-                controller: controller,
-              ),
-            );
-          },
-          child: SvgPicture.asset(
-            height: MediaQuery.sizeOf(context).height / 2,
-            ImageAssets.players,
-            fit: BoxFit.cover,
-            placeholderBuilder: (BuildContext context) => const SizedBox(
-              width: 50,
-              height: 50,
-              child: CircularProgressIndicator(),
+  Widget _buildPlayer(double screenHeight, double screenWidth) {
+    return Positioned(
+      bottom: screenHeight / DesignConsts.playerBottomPositionFactor,
+      left: screenWidth / DesignConsts.widthDivisionForPlayer,
+      child: OverlayTooltipItem(
+        displayIndex: 0,
+        tooltip: (controller) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: MTooltip(
+              title: 'this is the player!',
+              controller: controller,
             ),
+          );
+        },
+        child: SvgPicture.asset(
+          height: screenHeight / 2,
+          ImageAssets.players,
+          fit: BoxFit.cover,
+          placeholderBuilder: (BuildContext context) => const SizedBox(
+            width: 50,
+            height: 50,
+            child: CircularProgressIndicator(),
           ),
         ),
-      );
+      ),
+    );
+  }
 
-  Widget _buildEnemy() {
+  Widget _buildEnemy(double screenHeight, double screenWidth) {
     return Positioned(
-      bottom: MediaQuery.sizeOf(context).height / 8,
-      right: MediaQuery.sizeOf(context).width / 5,
+      bottom: screenHeight / DesignConsts.playerBottomPositionFactor,
+      right: screenWidth / DesignConsts.widthDivisionForPlayer,
       child: OverlayTooltipItem(
         displayIndex: 2,
         tooltip: (controller) {
@@ -196,7 +238,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
           );
         },
         child: SvgPicture.asset(
-          height: MediaQuery.sizeOf(context).height / 4,
+          height: screenHeight / 4,
           ImageAssets.trollEnemy,
           fit: BoxFit.cover,
           placeholderBuilder: (BuildContext context) => const SizedBox(
@@ -217,7 +259,10 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
           title: Strings.exitConfirmation,
         ),
       ),
-      icon: const Icon(Icons.settings),
+      icon: const Icon(
+        Icons.settings,
+        color: Colors.white,
+      ),
     );
   }
 
@@ -248,5 +293,28 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   updateMonsterHealthBar(damage) {
     // TODO: Update players health bar
     print('TODO: Update monster health bar');
+  }
+  void _simulateDrawRune() {
+    setState(() {
+      isDrawing = true;
+      overlayOpacity = 1.0;
+      showAccuracyAnimation = false;
+    });
+  }
+
+  void _simulateDamage() {
+    setState(() {
+      final random = Random();
+      incomingHealth = max(0, currentHealth - random.nextInt(20) - 5);
+      currentHealth = incomingHealth;
+    });
+  }
+
+  void _simulateHealthGain() {
+    setState(() {
+      final random = Random();
+      incomingHealth = min(100, currentHealth + random.nextInt(20) + 5);
+      currentHealth = incomingHealth;
+    });
   }
 }
