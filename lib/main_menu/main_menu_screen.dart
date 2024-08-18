@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lg_flutter_hackathon/components/loading_screen.dart';
 import 'package:lg_flutter_hackathon/components/pushable_button.dart';
 import 'package:lg_flutter_hackathon/constants/design_consts.dart';
 import 'package:lg_flutter_hackathon/constants/image_assets.dart';
@@ -168,7 +169,18 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                           ),
                           SizedBox(height: screenHeight / DesignConsts.acceptButtonSpacingFactor),
                           PushableButton(
-                            onPressed: () => Navigator.pushNamed(context, '/battle'),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const LoadingScreen(),
+                                ),
+                              );
+
+                              Future.delayed(const Duration(seconds: 20), () {
+                                Navigator.pushReplacementNamed(context, '/battle');
+                              });
+                            },
                             child: SvgPicture.asset(
                               ImageAssets.pickPlayersAcceptButton,
                               fit: BoxFit.contain,
