@@ -24,4 +24,5 @@ class ImageAssets {
   static const String loaderContainer = 'assets/ilustrations/loader_container.svg';
   static const String loader = 'assets/ilustrations/loader.svg';
   static const String loaderBackground = 'assets/ilustrations/loader_background.svg';
+  static const String boardBackground = 'assets/ilustrations/board_background.svg';
 }

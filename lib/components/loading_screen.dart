@@ -20,7 +20,7 @@ class _LoadingScreenState extends State<LoadingScreen> with TickerProviderStateM
   int _tipIndex = 0;
 
   final List<String> _backgroundImages = [
-    ImageAssets.battleBackground,
+    ImageAssets.boardBackground,
     ImageAssets.loaderBackground,
   ];
 
