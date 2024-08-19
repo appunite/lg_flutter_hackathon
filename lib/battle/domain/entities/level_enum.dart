@@ -25,9 +25,9 @@ enum LevelEnum {
     ),
     'wolf-background',
      [
-      BonusEntity(type: BonusEnum.health, strength: 1),
-      BonusEntity(type: BonusEnum.damage, strength: 1),
-      BonusEntity(type: BonusEnum.time, strength: 1),
+      BonusEntity(type: BonusEnum.health, strength: 2),
+      BonusEntity(type: BonusEnum.damage, strength: 2),
+      BonusEntity(type: BonusEnum.time, strength: 2),
     ],
   ),
   third(
@@ -39,9 +39,9 @@ enum LevelEnum {
     ),
     'bugbear-background',
      [
-      BonusEntity(type: BonusEnum.health, strength: 1),
-      BonusEntity(type: BonusEnum.damage, strength: 1),
-      BonusEntity(type: BonusEnum.time, strength: 1),
+      BonusEntity(type: BonusEnum.health, strength: 3),
+      BonusEntity(type: BonusEnum.damage, strength: 3),
+      BonusEntity(type: BonusEnum.time, strength: 3),
     ],
   ),
   fourth(

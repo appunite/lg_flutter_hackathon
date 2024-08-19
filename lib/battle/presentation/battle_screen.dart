@@ -28,7 +28,7 @@ class BattleScreen extends StatelessWidget {
     super.key,
     required this.level,
     required this.players,
-    this.chosenBonus
+    this.chosenBonus,
   });
 
   final LevelEnum level;
