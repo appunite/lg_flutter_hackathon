@@ -258,7 +258,11 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
               MaterialPageRoute(
                 builder: (context) => const BonusesScreen(
                   level: LevelEnum.first,
-                  players: PlayersEntity(healthPoints: 100, numberOfPlayers: 4, damage: 5),
+                  players: PlayersEntity(
+                    healthPoints: 100,
+                    numberOfPlayers: 4,
+                    damage: 10,
+                  ),
                 ),
               ),
             );
