@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:lg_flutter_hackathon/battle/domain/glyph_entity.dart';
+import 'package:lg_flutter_hackathon/battle/domain/entities/glyph_entity.dart';
 
 class DrawingUtils {
   GlyphEntity getRandomGlyphEntity() {

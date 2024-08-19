@@ -25,4 +25,12 @@ class ImageAssets {
   static const String loader = 'assets/ilustrations/loader.svg';
   static const String loaderBackground = 'assets/ilustrations/loader_background.svg';
   static const String boardBackground = 'assets/ilustrations/board_background.svg';
+  static const String gameStatsBackground = 'assets/ilustrations/game_stats_background.svg';
+  static const String gameStatsPlayer1 = 'assets/ilustrations/game_stats_player_1.svg';
+  static const String gameStatsPlayer2 = 'assets/ilustrations/game_stats_player_2.svg';
+  static const String gameStatsPlayer3 = 'assets/ilustrations/game_stats_player_3.svg';
+  static const String gameStatsPlayer4 = 'assets/ilustrations/game_stats_player_4.svg';
+  static const String gameStatsPointFirstRow = 'assets/ilustrations/game_stats_point_first_row.svg';
+  static const String gameStatsPointSecondRow = 'assets/ilustrations/game_stats_point_second_row.svg';
+  static const String gameResultHolder = 'assets/ilustrations/game_result_holder.svg';
 }

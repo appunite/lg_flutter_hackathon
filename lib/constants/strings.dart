@@ -30,5 +30,10 @@ class Strings {
     "Always loot the chest, even if it glows ominously.",
   ];
 
-  static const String loading = 'LOADING...';
+  static const String loading = 'Loading...';
+  static const String gameOver = 'Game Over';
+  static const String victory = 'Victory';
+  static const String player = 'Player';
+  static const String avgAccuracy = 'Avg. Accuracy';
+  static const String attacks = 'Attacks';
 }
