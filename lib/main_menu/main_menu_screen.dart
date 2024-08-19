@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lg_flutter_hackathon/battle/domain/entities/level_enum.dart';
+import 'package:lg_flutter_hackathon/battle/domain/entities/players_entity.dart';
+import 'package:lg_flutter_hackathon/battle/presentation/battle_screen.dart';
 import 'package:lg_flutter_hackathon/components/loading_screen.dart';
 import 'package:lg_flutter_hackathon/components/pushable_button.dart';
 import 'package:lg_flutter_hackathon/constants/design_consts.dart';
@@ -179,7 +182,15 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                               );
 
                               Future.delayed(const Duration(seconds: 5), () {
-                                Navigator.pushReplacementNamed(context, '/battle');
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => BattleScreen(
+                                      level: LevelEnum.first,
+                                      players: PlayersEntity(healthPoints: 100, numberOfPlayers: 4, damage: 10),
+                                    ),
+                                  ),
+                                );
                               });
                             },
                             child: SvgPicture.asset(
