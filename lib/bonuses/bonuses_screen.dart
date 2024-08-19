@@ -75,27 +75,32 @@ class _BonusesScreenState extends State<BonusesScreen> {
     return SvgPicture.asset(
       ImageAssets.bonusesStand,
       fit: BoxFit.contain,
-      width: screenWidth / DesignConsts.containerWidthFactor,
-      height: screenHeight / DesignConsts.containerHeightFactor,
+      width: screenWidth / DesignConsts.standWidthFactor,
+      height: screenHeight / DesignConsts.standHeightFactor,
     );
   }
 
   Positioned _bonusesCarousel(double screenHeight, double screenWidth) {
     return Positioned(
-      bottom: screenWidth / DesignConsts.bonusCarouselHeightFactor,
+      bottom: screenWidth / DesignConsts.bonusCarouselHeightFactor + 5,
       child: SizedBox(
-        height: 300,
+        height: screenHeight / 3,
         width: screenWidth / DesignConsts.bonusesWidthFactor,
         child: CarouselSlider(
           carouselController: _carouselController,
           items: widget.level.bonuses
               .map(
                 (bonus) => Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                  margin: const EdgeInsets.symmetric(horizontal: 5),
                   child: Stack(
                     alignment: Alignment.centerRight,
                     children: [
-                      SvgPicture.asset(bonus.type.imagePath),
+                      SvgPicture.asset(
+                        bonus.type.imagePath,
+                        alignment: Alignment.bottomCenter,
+                        height: screenHeight / 4,
+                        width: screenWidth / 4,
+                      ),
                       if (_currentBonus == bonus)
                         Text(
                           '+${bonus.strength}',
@@ -111,11 +116,11 @@ class _BonusesScreenState extends State<BonusesScreen> {
               )
               .toList(),
           options: CarouselOptions(
-            viewportFraction: 0.4,
+            viewportFraction: 0.35,
             enableInfiniteScroll: true,
-            aspectRatio: 0.8,
+            aspectRatio: 1 / 2,
             enlargeCenterPage: true,
-            enlargeFactor: 0.6,
+            enlargeFactor: 0.5,
             onPageChanged: (index, reason) {
               setState(() {
                 _currentBonus = widget.level.bonuses[index];
@@ -129,7 +134,7 @@ class _BonusesScreenState extends State<BonusesScreen> {
 
   Positioned _bonusDescription(double screenHeight, double screenWidth) {
     return Positioned(
-      bottom: screenHeight / DesignConsts.bonusStandHeightFactor + 20,
+      bottom: screenHeight / DesignConsts.bonusDescriptionHeightFactor - 5,
       child: Text(
         '+${_currentBonus.strength}${_currentBonus.type.description}',
         textAlign: TextAlign.center,
@@ -144,7 +149,7 @@ class _BonusesScreenState extends State<BonusesScreen> {
 
   Positioned _arrowButtons(double screenHeight, double screenWidth) {
     return Positioned(
-      bottom: screenHeight / DesignConsts.bonusStandHeightFactor,
+      bottom: screenHeight / DesignConsts.bonusArrowsHeightFactor,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
