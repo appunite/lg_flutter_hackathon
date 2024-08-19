@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lg_flutter_hackathon/animations/animations_manager.dart';
 import 'package:lg_flutter_hackathon/constants/colors.dart';
 import 'package:lg_flutter_hackathon/constants/design_consts.dart';
 import 'package:lg_flutter_hackathon/constants/image_assets.dart';
 
-import 'package:flutter_svg/flutter_svg.dart';
-
 class HealthBar extends StatefulWidget {
-  final double currentHealth;
-  final double incomingHealth;
+  final double maxHealthPoints;
+  final double newHealthPoints;
 
   const HealthBar({
     super.key,
-    required this.currentHealth,
-    required this.incomingHealth,
+    required this.maxHealthPoints,
+    required this.newHealthPoints,
   });
 
   @override
@@ -22,31 +21,32 @@ class HealthBar extends StatefulWidget {
 }
 
 class _HealthBarState extends State<HealthBar> with TickerProviderStateMixin {
-  late AnimationManager animationManager;
+  late AnimationManager _animationManager;
 
   @override
   void initState() {
     super.initState();
 
-    animationManager = AnimationManager(vsync: this);
-    animationManager.initializeShakeAnimation();
-    animationManager.initializeGrowAnimation();
-    animationManager.initializeHealthChangeAnimation(widget.currentHealth, widget.incomingHealth);
+    _animationManager = AnimationManager(vsync: this);
+    _animationManager.initializeShakeAnimation();
+    _animationManager.initializeGrowAnimation();
+    _animationManager.initializeHealthChangeAnimation(widget.maxHealthPoints, widget.newHealthPoints);
 
-    animationManager.healthChangeController.forward();
+    _animationManager.healthChangeController.forward();
   }
 
   @override
   void didUpdateWidget(HealthBar oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.incomingHealth != widget.incomingHealth) {
-      animationManager.updateHealthAnimation(oldWidget.currentHealth, widget.incomingHealth);
+
+    if (oldWidget.newHealthPoints != widget.newHealthPoints) {
+      _animationManager.updateHealthAnimation(oldWidget.newHealthPoints, widget.newHealthPoints);
     }
   }
 
   @override
   void dispose() {
-    animationManager.dispose();
+    _animationManager.dispose();
     super.dispose();
   }
 
@@ -60,21 +60,21 @@ class _HealthBarState extends State<HealthBar> with TickerProviderStateMixin {
     final maxHealthBarWidth = foregroundWidth - 2 * padding;
 
     Gradient healthGradient;
-    if (animationManager.healthAnimation.value > 60) {
+    if (_animationManager.healthAnimation.value > 60) {
       healthGradient = AppColors.healthBarGreen;
-    } else if (animationManager.healthAnimation.value > 25) {
+    } else if (_animationManager.healthAnimation.value > 25) {
       healthGradient = AppColors.healthBarOrange;
     } else {
       healthGradient = AppColors.healthBarRed;
     }
 
     return AnimatedBuilder(
-      animation: Listenable.merge([animationManager.shakeAnimation, animationManager.growAnimation]),
+      animation: Listenable.merge([_animationManager.shakeAnimation, _animationManager.growAnimation]),
       builder: (context, child) {
         return Transform.translate(
-          offset: Offset(animationManager.shakeAnimation.value, 0),
+          offset: Offset(_animationManager.shakeAnimation.value, 0),
           child: Transform.scale(
-            scale: animationManager.growAnimation.value,
+            scale: _animationManager.growAnimation.value,
             child: Stack(
               alignment: Alignment.center,
               children: [
@@ -97,7 +97,7 @@ class _HealthBarState extends State<HealthBar> with TickerProviderStateMixin {
                               borderRadius: DesignConsts.healthBarRadius,
                               gradient: healthGradient,
                             ),
-                            width: maxHealthBarWidth * (animationManager.healthAnimation.value / 100),
+                            width: maxHealthBarWidth * (_animationManager.healthAnimation.value / 100),
                             height: MediaQuery.sizeOf(context).height / DesignConsts.healthBarHeightDivision,
                           ),
                         ),
