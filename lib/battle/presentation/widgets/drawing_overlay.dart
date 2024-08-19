@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lg_flutter_hackathon/audio/audio_controller.dart';
+import 'package:lg_flutter_hackathon/audio/sounds.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/drawing_details_entity.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/drawing_mode_enum.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/glyph_entity.dart';
@@ -12,6 +14,7 @@ import 'package:lg_flutter_hackathon/battle/presentation/widgets/drawing_painter
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/overlay_widget.dart';
 import 'package:lg_flutter_hackathon/constants/design_consts.dart';
 import 'package:lg_flutter_hackathon/constants/image_assets.dart';
+import 'package:provider/provider.dart';
 
 class DrawingOverlay extends StatefulWidget {
   final ValueChanged<DrawingDetails> onDrawingCompleted;
@@ -193,6 +196,7 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
     final double drawingBoardSize = widget.drawingAreaSize * 2;
     final double glyphSize = widget.drawingAreaSize;
     final screenWidth = MediaQuery.sizeOf(context).width;
+    final audioController = context.watch<AudioController>();
 
     return Stack(
       alignment: Alignment.center,
@@ -223,12 +227,12 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
                   height: drawingBoardSize,
                 ),
                 Center(
-                  //TODO: Add a drawing sound effect, based on currentPenPosition changes
                   child: GestureDetector(
                     onPanStart: (details) => setState(() {
                       _currentPenPosition = details.localPosition;
                     }),
                     onPanUpdate: (details) => setState(() {
+                      audioController.playSfx(SfxType.drawing);
                       Offset localPosition = details.localPosition;
                       _points.add(localPosition);
                       if (_points.length > 1 && _points[_points.length - 2] != null) {}
