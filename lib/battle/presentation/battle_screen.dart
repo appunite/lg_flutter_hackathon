@@ -58,6 +58,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   final TooltipController _controller = TooltipController();
   bool done = false;
   PausableTimer? _timer;
+  bool _shouldMonsterAttack = false;
 
   bool isDrawing = false;
   double? accuracy;
@@ -81,7 +82,8 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
     _timer ??= PausableTimer.periodic(
       Duration(seconds: monsterSpeed),
       () {
-        context.read<BattleCubit>().monsterAttack();
+        _shouldMonsterAttack = true;
+        _timer?.pause();
       },
     );
     _timer!.start();
@@ -226,6 +228,14 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
         info("Drawing completed with accuracy: ${details.toString()}");
 
         context.read<BattleCubit>().playerAttack(accuracy: details.accuracy);
+
+        if (_shouldMonsterAttack) {
+          context.read<BattleCubit>().monsterAttack();
+          _timer?.start();
+          setState(() {
+            _shouldMonsterAttack = false;
+          });
+        }
       },
       thresholdPercentage: 0.9,
       glyphAsset: DrawingUtils().getRandomGlyphEntity(),

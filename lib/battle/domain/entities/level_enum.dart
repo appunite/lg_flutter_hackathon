@@ -3,7 +3,7 @@ import 'package:lg_flutter_hackathon/battle/domain/entities/monster_entity.dart'
 enum LevelEnum {
   first(
     MonsterEntity(
-      speed: 4,
+      speed: 25,
       healthPoints: 7 * 15,
       damage: 25,
       attackAnimation: 'goblin-attack',
