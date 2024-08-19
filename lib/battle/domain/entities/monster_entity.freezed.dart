@@ -22,23 +22,19 @@ mixin _$MonsterEntity {
   String get attackAnimation => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $MonsterEntityCopyWith<MonsterEntity> get copyWith =>
-      throw _privateConstructorUsedError;
+  $MonsterEntityCopyWith<MonsterEntity> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $MonsterEntityCopyWith<$Res> {
-  factory $MonsterEntityCopyWith(
-          MonsterEntity value, $Res Function(MonsterEntity) then) =
+  factory $MonsterEntityCopyWith(MonsterEntity value, $Res Function(MonsterEntity) then) =
       _$MonsterEntityCopyWithImpl<$Res, MonsterEntity>;
   @useResult
-  $Res call(
-      {int speed, double healthPoints, int damage, String attackAnimation});
+  $Res call({int speed, double healthPoints, int damage, String attackAnimation});
 }
 
 /// @nodoc
-class _$MonsterEntityCopyWithImpl<$Res, $Val extends MonsterEntity>
-    implements $MonsterEntityCopyWith<$Res> {
+class _$MonsterEntityCopyWithImpl<$Res, $Val extends MonsterEntity> implements $MonsterEntityCopyWith<$Res> {
   _$MonsterEntityCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -76,23 +72,18 @@ class _$MonsterEntityCopyWithImpl<$Res, $Val extends MonsterEntity>
 }
 
 /// @nodoc
-abstract class _$$MonsterEntityImplCopyWith<$Res>
-    implements $MonsterEntityCopyWith<$Res> {
-  factory _$$MonsterEntityImplCopyWith(
-          _$MonsterEntityImpl value, $Res Function(_$MonsterEntityImpl) then) =
+abstract class _$$MonsterEntityImplCopyWith<$Res> implements $MonsterEntityCopyWith<$Res> {
+  factory _$$MonsterEntityImplCopyWith(_$MonsterEntityImpl value, $Res Function(_$MonsterEntityImpl) then) =
       __$$MonsterEntityImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int speed, double healthPoints, int damage, String attackAnimation});
+  $Res call({int speed, double healthPoints, int damage, String attackAnimation});
 }
 
 /// @nodoc
-class __$$MonsterEntityImplCopyWithImpl<$Res>
-    extends _$MonsterEntityCopyWithImpl<$Res, _$MonsterEntityImpl>
+class __$$MonsterEntityImplCopyWithImpl<$Res> extends _$MonsterEntityCopyWithImpl<$Res, _$MonsterEntityImpl>
     implements _$$MonsterEntityImplCopyWith<$Res> {
-  __$$MonsterEntityImplCopyWithImpl(
-      _$MonsterEntityImpl _value, $Res Function(_$MonsterEntityImpl) _then)
+  __$$MonsterEntityImplCopyWithImpl(_$MonsterEntityImpl _value, $Res Function(_$MonsterEntityImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -128,10 +119,7 @@ class __$$MonsterEntityImplCopyWithImpl<$Res>
 
 class _$MonsterEntityImpl implements _MonsterEntity {
   const _$MonsterEntityImpl(
-      {required this.speed,
-      required this.healthPoints,
-      required this.damage,
-      required this.attackAnimation});
+      {required this.speed, required this.healthPoints, required this.damage, required this.attackAnimation});
 
   @override
   final int speed;
@@ -153,16 +141,13 @@ class _$MonsterEntityImpl implements _MonsterEntity {
         (other.runtimeType == runtimeType &&
             other is _$MonsterEntityImpl &&
             (identical(other.speed, speed) || other.speed == speed) &&
-            (identical(other.healthPoints, healthPoints) ||
-                other.healthPoints == healthPoints) &&
+            (identical(other.healthPoints, healthPoints) || other.healthPoints == healthPoints) &&
             (identical(other.damage, damage) || other.damage == damage) &&
-            (identical(other.attackAnimation, attackAnimation) ||
-                other.attackAnimation == attackAnimation));
+            (identical(other.attackAnimation, attackAnimation) || other.attackAnimation == attackAnimation));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, speed, healthPoints, damage, attackAnimation);
+  int get hashCode => Object.hash(runtimeType, speed, healthPoints, damage, attackAnimation);
 
   @JsonKey(ignore: true)
   @override
@@ -188,6 +173,5 @@ abstract class _MonsterEntity implements MonsterEntity {
   String get attackAnimation;
   @override
   @JsonKey(ignore: true)
-  _$$MonsterEntityImplCopyWith<_$MonsterEntityImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$MonsterEntityImplCopyWith<_$MonsterEntityImpl> get copyWith => throw _privateConstructorUsedError;
 }

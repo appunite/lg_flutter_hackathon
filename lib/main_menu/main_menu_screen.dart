@@ -1,72 +1,224 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
-import 'package:lg_flutter_hackathon/buttons/primary_button.dart';
-import 'package:lg_flutter_hackathon/components/confirmation_pop_up.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:lg_flutter_hackathon/battle/domain/entities/level_enum.dart';
+import 'package:lg_flutter_hackathon/battle/domain/entities/players_entity.dart';
+import 'package:lg_flutter_hackathon/battle/presentation/battle_screen.dart';
+import 'package:lg_flutter_hackathon/components/loading_screen.dart';
+import 'package:lg_flutter_hackathon/components/pushable_button.dart';
+import 'package:lg_flutter_hackathon/constants/design_consts.dart';
+import 'package:lg_flutter_hackathon/constants/image_assets.dart';
 import 'package:lg_flutter_hackathon/constants/strings.dart';
 import 'package:provider/provider.dart';
 import '../settings/settings.dart';
 
-class MainMenuScreen extends StatelessWidget {
+import 'package:flutter_svg/flutter_svg.dart';
+
+class MainMenuScreen extends StatefulWidget {
   const MainMenuScreen({super.key});
 
   @override
+  State<MainMenuScreen> createState() => _MainMenuScreenState();
+}
+
+class _MainMenuScreenState extends State<MainMenuScreen> {
+  int _numberOfPlayers = 2;
+
+  final List<bool> _isPlayerVisible = [true, true, false, false];
+
+  void _incrementPlayers() {
+    if (_numberOfPlayers < 4) {
+      setState(() {
+        _numberOfPlayers++;
+        _isPlayerVisible[_numberOfPlayers - 1] = true;
+      });
+    }
+  }
+
+  void _decrementPlayers() {
+    if (_numberOfPlayers > 2) {
+      setState(() {
+        _isPlayerVisible[_numberOfPlayers - 1] = false;
+        _numberOfPlayers--;
+      });
+    }
+  }
+
+  List<Widget> _buildPlayersIcons(double width, double height) {
+    List<String> playerAssets = [
+      ImageAssets.playerRed,
+      ImageAssets.playerYellow,
+      ImageAssets.playerGreen,
+      ImageAssets.playerBlue,
+    ];
+
+    return List<Widget>.generate(4, (index) {
+      return AnimatedOpacity(
+        opacity: _isPlayerVisible[index] ? 1.0 : 0.0,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        child: SvgPicture.asset(
+          playerAssets[index],
+          width: width / DesignConsts.playerIconWidthFactor,
+          height: height / DesignConsts.playerIconHeightFactor,
+        ),
+      );
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final screenHeight = MediaQuery.sizeOf(context).height;
+
     final settingsController = context.watch<SettingsController>();
 
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
-        body: SafeArea(
-          child: Column(
-            children: [
-              soundSettings(settingsController),
-              const Spacer(),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+        body: Stack(
+          children: [
+            SvgPicture.asset(
+              ImageAssets.pickPlayersBackground,
+              fit: BoxFit.cover,
+            ),
+            Positioned(
+              bottom: screenHeight / DesignConsts.screenBottomPositionFactor,
+              left: screenWidth / DesignConsts.screenLeftRightPositionFactor,
+              right: screenWidth / DesignConsts.screenLeftRightPositionFactor,
+              child: Column(
                 children: [
-                  PrimaryButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/battle');
-                    },
-                    child: const Text(Strings.twoPlayers),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: _buildPlayersIcons(screenWidth, screenHeight),
                   ),
-                  const Gap(10),
-                  PrimaryButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/battle');
-                    },
-                    child: const Text(Strings.threePlayers),
-                  ),
-                  const Gap(10),
-                  PrimaryButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/battle');
-                    },
-                    child: const Text(Strings.fourPlayers),
-                  ),
-                  const Gap(10),
-                  PrimaryButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return const ConfirmationPopUp(title: Strings.exitConfirmation);
-                        },
-                      );
-                    },
-                    child: const Text('Quit'),
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        ImageAssets.pickPlayersContainer,
+                        fit: BoxFit.contain,
+                        width: screenWidth / DesignConsts.containerWidthFactor,
+                        height: screenHeight / DesignConsts.containerHeightFactor,
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            Strings.numberOfPlayers,
+                            style: TextStyle(
+                              fontFamily: DesignConsts.fontFamily,
+                              fontSize: screenWidth / DesignConsts.titleFontSizeFactor,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              PushableButton(
+                                onPressed: _numberOfPlayers > 2 ? _decrementPlayers : () {},
+                                child: Opacity(
+                                  opacity: _numberOfPlayers > 2 ? 1.0 : 0.5,
+                                  child: SvgPicture.asset(
+                                    ImageAssets.pickPlayersLeftButton,
+                                    fit: BoxFit.contain,
+                                    width: screenWidth / DesignConsts.buttonWidthFactor,
+                                    height: screenHeight / DesignConsts.buttonHeightFactor,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: screenWidth / DesignConsts.buttonSpacingFactor),
+                              Column(
+                                children: [
+                                  Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      SvgPicture.asset(
+                                        ImageAssets.pickPlayersNumbersContainer,
+                                        fit: BoxFit.contain,
+                                        width: screenWidth / DesignConsts.playerNumberContainerWidthFactor,
+                                        height: screenHeight / DesignConsts.playerNumberContainerHeightFactor,
+                                      ),
+                                      Transform.translate(
+                                        offset: const Offset(0, -6),
+                                        child: Text(
+                                          '$_numberOfPlayers',
+                                          style: TextStyle(
+                                            fontFamily: DesignConsts.fontFamily,
+                                            fontSize: screenWidth / DesignConsts.numberFontSizeFactor,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              SizedBox(width: screenWidth / DesignConsts.buttonSpacingFactor),
+                              PushableButton(
+                                onPressed: _numberOfPlayers < 4 ? _incrementPlayers : () {},
+                                child: Opacity(
+                                  opacity: _numberOfPlayers < 4 ? 1.0 : 0.5,
+                                  child: SvgPicture.asset(
+                                    ImageAssets.pickPlayersRightButton,
+                                    fit: BoxFit.contain,
+                                    width: screenWidth / DesignConsts.buttonWidthFactor,
+                                    height: screenHeight / DesignConsts.buttonHeightFactor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: screenHeight / DesignConsts.acceptButtonSpacingFactor),
+                          //TODO: Change to use overlay over battle screen instead of future delayed
+                          PushableButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const LoadingScreen(),
+                                ),
+                              );
+
+                              Future.delayed(const Duration(seconds: 5), () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const BattleScreen(
+                                      level: LevelEnum.first,
+                                      players: PlayersEntity(healthPoints: 100, numberOfPlayers: 4, damage: 10),
+                                    ),
+                                  ),
+                                );
+                              });
+                            },
+                            child: SvgPicture.asset(
+                              ImageAssets.pickPlayersAcceptButton,
+                              fit: BoxFit.contain,
+                              width: screenWidth / DesignConsts.acceptButtonWidthFactor,
+                              height: screenHeight / DesignConsts.acceptButtonHeightFactor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ],
               ),
-              const Spacer(),
-            ],
-          ),
+            ),
+            Positioned(
+              top: screenHeight / 40,
+              left: screenWidth / 40,
+              child: soundSettings(settingsController, screenWidth),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget soundSettings(SettingsController settingsController) {
+  Widget soundSettings(SettingsController settingsController, double screenWidth) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -75,16 +227,25 @@ class MainMenuScreen extends StatelessWidget {
           builder: (context, musicOn, child) {
             return IconButton(
               onPressed: settingsController.toggleMusicOn,
-              icon: Icon(musicOn ? Icons.volume_up : Icons.volume_off),
+              icon: Icon(
+                musicOn ? Icons.volume_up : Icons.volume_off,
+                size: screenWidth / DesignConsts.iconSizeFactor,
+              ),
+              color: Colors.white,
             );
           },
         ),
+        const SizedBox(width: 32),
         ValueListenableBuilder<bool>(
           valueListenable: settingsController.soundsOn,
           builder: (context, soundsOn, child) {
             return IconButton(
               onPressed: settingsController.toggleSoundsOn,
-              icon: Icon(soundsOn ? Icons.music_note : Icons.music_off),
+              icon: Icon(
+                soundsOn ? Icons.music_note : Icons.music_off,
+                size: screenWidth / DesignConsts.iconSizeFactor,
+              ),
+              color: Colors.white,
             );
           },
         ),
