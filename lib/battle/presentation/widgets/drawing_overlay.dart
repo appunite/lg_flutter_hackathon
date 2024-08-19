@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:lg_flutter_hackathon/battle/domain/drawing_details_entity.dart';
+import 'package:lg_flutter_hackathon/battle/domain/entities/drawing_details_entity.dart';
 import 'dart:ui' as ui;
-import 'package:lg_flutter_hackathon/battle/domain/glyph_entity.dart';
+import 'package:lg_flutter_hackathon/battle/domain/entities/glyph_entity.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/drawing_painter.dart';
 import 'package:lg_flutter_hackathon/constants/image_assets.dart';
 

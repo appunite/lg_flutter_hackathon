@@ -1,14 +1,14 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:lg_flutter_hackathon/battle/domain/drawing_details_entity.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/bonus_entity.dart';
+import 'package:lg_flutter_hackathon/battle/domain/entities/drawing_details_entity.dart';
+import 'package:lg_flutter_hackathon/battle/domain/entities/game_results_player_entity.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/level_enum.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/players_entity.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/cubit/battle_cubit.dart';
+import 'package:lg_flutter_hackathon/battle/presentation/ending_screen.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/accuracy_animated_text.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/debug_bar.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/drawing_overlay.dart';
@@ -145,9 +145,19 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
                     ),
                   ),
                 DebugBar(
-                  onSimulateDamage: _simulateDamage,
                   onDrawRune: _simulateDrawRune,
-                  onSimulateHealthGain: _simulateHealthGain,
+                  onGameEnd: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EndGameScreen(
+                        isVictory: true,
+                        gameResults: [
+                          GameResultPlayer(accuracies: [85.0, 90.0, 78.0]), // Player 1
+                          GameResultPlayer(accuracies: [50.0, 60.0, 55.0]), // Player 2
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -349,22 +359,6 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
       isDrawing = true;
       overlayOpacity = 1.0;
       showAccuracyAnimation = false;
-    });
-  }
-
-  void _simulateDamage() {
-    setState(() {
-      final random = Random();
-      incomingHealth = max(0, currentHealth - random.nextInt(20) - 5);
-      currentHealth = incomingHealth;
-    });
-  }
-
-  void _simulateHealthGain() {
-    setState(() {
-      final random = Random();
-      incomingHealth = min(100, currentHealth + random.nextInt(20) + 5);
-      currentHealth = incomingHealth;
     });
   }
 

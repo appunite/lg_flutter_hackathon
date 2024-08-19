@@ -3,14 +3,12 @@ import 'package:flutter/material.dart';
 class DebugBar extends StatelessWidget {
   const DebugBar({
     super.key,
-    required this.onSimulateDamage,
     required this.onDrawRune,
-    required this.onSimulateHealthGain,
+    required this.onGameEnd,
   });
 
-  final VoidCallback onSimulateDamage;
   final VoidCallback onDrawRune;
-  final VoidCallback onSimulateHealthGain;
+  final VoidCallback onGameEnd;
 
   @override
   Widget build(BuildContext context) {
@@ -25,16 +23,12 @@ class DebugBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             ElevatedButton(
-              onPressed: onSimulateDamage,
-              child: const Text('Simulate Damage'),
-            ),
-            ElevatedButton(
               onPressed: onDrawRune,
               child: const Text('Draw Rune'),
             ),
             ElevatedButton(
-              onPressed: onSimulateHealthGain,
-              child: const Text('Simulate Health Gain'),
+              onPressed: onGameEnd,
+              child: const Text('End Game'),
             ),
           ],
         ),
