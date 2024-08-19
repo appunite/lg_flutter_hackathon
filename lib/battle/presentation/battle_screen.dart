@@ -313,19 +313,6 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
     );
   }
 
-  Widget _buildCentralButton(BuildContext context) => Center(
-        child: ElevatedButton(
-          onPressed: () {
-            setState(() {
-              isDrawing = true;
-              overlayOpacity = 1.0;
-              showAccuracyAnimation = false;
-            });
-          },
-          child: const Text('Draw Rune'),
-        ),
-      );
-
   @override
   void dispose() {
     _timer?.cancel();
@@ -334,6 +321,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
 
   Future<void> _monsterAttackAnimation() async {
     // TODO: Run monster attack animation
+    // ignore: avoid_print
     print('TODO: Run monster attack animation');
 
     // TODO: Wait for monster attack animation
@@ -344,6 +332,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
 
   Future<void> _playersAttackAnimation() async {
     // TODO: Run players attack animation
+    // ignore: avoid_print
     print('TODO: Run players attack animation');
 
     // TODO: Wait for player attack animation
