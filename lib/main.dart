@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/level_enum.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/players_entity.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/battle_screen.dart';
+import 'package:lg_flutter_hackathon/bonuses/bonuses_screen.dart';
 import 'package:lg_flutter_hackathon/dependencies.dart';
 import 'package:lg_flutter_hackathon/main_menu/main_menu_screen.dart';
 import 'package:lg_flutter_hackathon/utils/window_manager_utils.dart';
@@ -85,6 +86,10 @@ class App extends StatelessWidget {
             routes: {
               '/': (context) => const MainMenuScreen(),
               '/battle': (context) => const BattleScreen(
+                    level: LevelEnum.first,
+                    players: PlayersEntity(healthPoints: 100, numberOfPlayers: 4, damage: 10),
+                  ),
+              '/bonuses': (context) => const BonusesScreen(
                     level: LevelEnum.first,
                     players: PlayersEntity(healthPoints: 100, numberOfPlayers: 4, damage: 10),
                   ),

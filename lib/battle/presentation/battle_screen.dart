@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lg_flutter_hackathon/battle/domain/drawing_details_entity.dart';
+import 'package:lg_flutter_hackathon/battle/domain/entities/bonus_entity.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/level_enum.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/players_entity.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/cubit/battle_cubit.dart';
@@ -27,10 +28,12 @@ class BattleScreen extends StatelessWidget {
     super.key,
     required this.level,
     required this.players,
+    this.chosenBonus
   });
 
   final LevelEnum level;
   final PlayersEntity players;
+  final BonusEntity? chosenBonus;
 
   @override
   Widget build(BuildContext context) {

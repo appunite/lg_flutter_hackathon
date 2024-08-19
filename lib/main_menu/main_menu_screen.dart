@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/level_enum.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/players_entity.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/battle_screen.dart';
+import 'package:lg_flutter_hackathon/bonuses/bonuses_screen.dart';
 import 'package:lg_flutter_hackathon/components/loading_screen.dart';
 import 'package:lg_flutter_hackathon/components/pushable_button.dart';
 import 'package:lg_flutter_hackathon/constants/design_consts.dart';
@@ -107,7 +108,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                             Strings.numberOfPlayers,
                             style: TextStyle(
                               fontFamily: DesignConsts.fontFamily,
-                              fontSize: screenWidth / DesignConsts.titleFontSizeFactor,
+                              fontSize: screenWidth / DesignConsts.bonusTitleFontSizeFactor,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
@@ -248,6 +249,21 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
               color: Colors.white,
             );
           },
+        ),
+        //TODO: remove later
+        ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const BonusesScreen(
+                  level: LevelEnum.first,
+                  players: PlayersEntity(healthPoints: 100, numberOfPlayers: 4, damage: 5),
+                ),
+              ),
+            );
+          },
+          child: const Text('Bonuses'),
         ),
       ],
     );
