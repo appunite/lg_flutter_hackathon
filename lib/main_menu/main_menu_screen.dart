@@ -23,21 +23,21 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
   final List<bool> _isPlayerVisible = [true, true, false, false];
 
   void _incrementPlayers() {
-    setState(() {
-      if (_numberOfPlayers < 4) {
+    if (_numberOfPlayers < 4) {
+      setState(() {
         _numberOfPlayers++;
         _isPlayerVisible[_numberOfPlayers - 1] = true;
-      }
-    });
+      });
+    }
   }
 
   void _decrementPlayers() {
-    setState(() {
-      if (_numberOfPlayers > 2) {
+    if (_numberOfPlayers > 2) {
+      setState(() {
         _isPlayerVisible[_numberOfPlayers - 1] = false;
         _numberOfPlayers--;
-      }
-    });
+      });
+    }
   }
 
   List<Widget> _buildPlayersIcons(double width, double height) {
@@ -199,7 +199,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
             Positioned(
               top: screenHeight / 40,
               left: screenWidth / 40,
-              child: soundSettings(settingsController),
+              child: soundSettings(settingsController, screenWidth),
             ),
           ],
         ),
@@ -207,9 +207,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
     );
   }
 
-  Widget soundSettings(SettingsController settingsController) {
-    final screenWidth = MediaQuery.sizeOf(context).width;
-
+  Widget soundSettings(SettingsController settingsController, double screenWidth) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
