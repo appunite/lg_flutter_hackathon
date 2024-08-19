@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lg_flutter_hackathon/components/loading_screen.dart';
 import 'package:lg_flutter_hackathon/components/pushable_button.dart';
 import 'package:lg_flutter_hackathon/constants/design_consts.dart';
 import 'package:lg_flutter_hackathon/constants/image_assets.dart';
@@ -102,7 +103,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                           Text(
                             Strings.numberOfPlayers,
                             style: TextStyle(
-                              fontFamily: 'Knewave',
+                              fontFamily: DesignConsts.fontFamily,
                               fontSize: screenWidth / DesignConsts.titleFontSizeFactor,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
@@ -140,7 +141,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                                         child: Text(
                                           '$_numberOfPlayers',
                                           style: TextStyle(
-                                            fontFamily: 'Knewave',
+                                            fontFamily: DesignConsts.fontFamily,
                                             fontSize: screenWidth / DesignConsts.numberFontSizeFactor,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.white,
@@ -167,8 +168,20 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                             ],
                           ),
                           SizedBox(height: screenHeight / DesignConsts.acceptButtonSpacingFactor),
+                          //TODO: Change to use overlay over battle screen instead of future delayed
                           PushableButton(
-                            onPressed: () => Navigator.pushNamed(context, '/battle'),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const LoadingScreen(),
+                                ),
+                              );
+
+                              Future.delayed(const Duration(seconds: 5), () {
+                                Navigator.pushReplacementNamed(context, '/battle');
+                              });
+                            },
                             child: SvgPicture.asset(
                               ImageAssets.pickPlayersAcceptButton,
                               fit: BoxFit.contain,

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 class DesignConsts {
+  //FONT
+  static const String fontFamily = 'Knewave';
+
   static const double heightDivision32 = 32;
 
   //BATTLE SCREEN
