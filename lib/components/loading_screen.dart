@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lg_flutter_hackathon/constants/design_consts.dart';
 import 'package:lg_flutter_hackathon/constants/image_assets.dart';
 import 'package:lg_flutter_hackathon/constants/strings.dart';
 
@@ -54,7 +55,7 @@ class _LoadingScreenState extends State<LoadingScreen> with TickerProviderStateM
 
     _controller.addListener(() {
       if (_controller.value >= 0.5) {
-        if (_controller.value >= 0.5 && _controller.value < 0.51) {
+        if (_controller.value < 0.51) {
           _changeTip();
         }
 
@@ -115,7 +116,7 @@ class _LoadingScreenState extends State<LoadingScreen> with TickerProviderStateM
               Text(
                 Strings.loading,
                 style: TextStyle(
-                  fontFamily: 'Knewave',
+                  fontFamily: DesignConsts.fontFamily,
                   fontSize: screenWidth / 30,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
