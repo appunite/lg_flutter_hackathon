@@ -157,32 +157,30 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
       left: screenWidth / DesignConsts.playerHealthBarLeftFactor,
       top: screenHeight / DesignConsts.heightDivision32,
       child: BlocBuilder<BattleCubit, BattleState>(
-        buildWhen: (previous, current) => previous.runtimeType == previous.runtimeType,
         builder: (context, state) {
           return state.maybeMap(
             loaded: (result) => HealthBar(
               maxHealthPoints: widget.players.healthPoints,
               newHealthPoints: result.currentPlayersHealthPoints,
             ),
-            orElse: () => const FlutterLogo(),
+            orElse: () => const SizedBox.shrink(),
           );
         },
       ),
     );
   }
 
-  _buildPlayerIndicator(double screenHeight, double screenWidth) {
+  Widget _buildPlayerIndicator(double screenHeight, double screenWidth) {
     return Positioned(
       left: screenWidth / DesignConsts.playerHealthBarLeftFactor,
       top: screenHeight / DesignConsts.heightDivision32 + 120,
       child: BlocBuilder<BattleCubit, BattleState>(
-        buildWhen: (previous, current) => previous.runtimeType == previous.runtimeType,
         builder: (context, state) {
           return state.maybeMap(
             loaded: (result) => Text(
               'Current player number = ${result.currentPlayerIndex + 1}',
             ),
-            orElse: () => const FlutterLogo(),
+            orElse: () => const SizedBox.shrink(),
           );
         },
       ),
@@ -194,14 +192,13 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
       right: screenWidth / DesignConsts.enemyHealthBarRightFactor,
       top: screenHeight / DesignConsts.heightDivision32,
       child: BlocBuilder<BattleCubit, BattleState>(
-        buildWhen: (previous, current) => previous.runtimeType == previous.runtimeType,
         builder: (context, state) {
           return state.maybeMap(
             loaded: (result) => HealthBar(
               maxHealthPoints: widget.level.monster.healthPoints,
               newHealthPoints: result.currentMonsterHealthPoints,
             ),
-            orElse: () => const FlutterLogo(),
+            orElse: () => const SizedBox.shrink(),
           );
         },
       ),

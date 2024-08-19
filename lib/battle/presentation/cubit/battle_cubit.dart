@@ -9,17 +9,17 @@ part 'battle_state.dart';
 class BattleCubit extends Cubit<BattleState> {
   BattleCubit(
     this._level,
-    this.players,
+    this._players,
   ) : super(
           BattleState.loaded(
             currentMonsterHealthPoints: _level.monster.healthPoints,
-            currentPlayersHealthPoints: players.healthPoints,
+            currentPlayersHealthPoints: _players.healthPoints,
             currentPlayerIndex: 0,
           ),
         );
 
   final LevelEnum _level;
-  final PlayersEntity players;
+  final PlayersEntity _players;
 
   void monsterAttack() {
     state.mapOrNull(
@@ -42,14 +42,15 @@ class BattleCubit extends Cubit<BattleState> {
       loaded: (result) {
         emit(const BattleState.playerAttack());
 
-        final damage = players.damage * (accuracy / ~100);
-        final monsterHealthPointsAfterHit = result.currentMonsterHealthPoints - damage;
+        final damage = _players.damage * (accuracy / ~100);
+        final monsterHealthPointsAfterDamage = result.currentMonsterHealthPoints - damage;
         final nextPlayerIndex =
-            result.currentPlayerIndex == players.numberOfPlayers - 1 ? 0 : result.currentPlayerIndex + 1;
+            result.currentPlayerIndex == _players.numberOfPlayers - 1 ? 0 : result.currentPlayerIndex + 1;
+        final monsterHealthPointsAfterHit = monsterHealthPointsAfterDamage <= 0 ? 0.0 : monsterHealthPointsAfterDamage;
 
         emit(
           result.copyWith(
-            currentMonsterHealthPoints: monsterHealthPointsAfterHit <= 0 ? 0 : monsterHealthPointsAfterHit,
+            currentMonsterHealthPoints: monsterHealthPointsAfterHit,
             currentPlayerIndex: nextPlayerIndex,
           ),
         );
