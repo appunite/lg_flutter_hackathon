@@ -168,6 +168,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                             ],
                           ),
                           SizedBox(height: screenHeight / DesignConsts.acceptButtonSpacingFactor),
+                          //TODO: Change to use overlay over battle screen instead of future delayed
                           PushableButton(
                             onPressed: () {
                               Navigator.push(
@@ -177,7 +178,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                                 ),
                               );
 
-                              Future.delayed(const Duration(seconds: 20), () {
+                              Future.delayed(const Duration(seconds: 5), () {
                                 Navigator.pushReplacementNamed(context, '/battle');
                               });
                             },
