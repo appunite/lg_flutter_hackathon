@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lg_flutter_hackathon/audio/audio_controller.dart';
+import 'package:lg_flutter_hackathon/audio/sounds.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/drawing_details_entity.dart';
 import 'dart:ui' as ui;
 import 'package:lg_flutter_hackathon/battle/domain/entities/glyph_entity.dart';
@@ -10,6 +12,7 @@ import 'package:lg_flutter_hackathon/battle/presentation/widgets/drawing_painter
 import 'package:lg_flutter_hackathon/constants/image_assets.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class DrawingOverlay extends StatefulWidget {
   final ValueChanged<DrawingDetails> onDrawingCompleted;
@@ -188,6 +191,7 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
   Widget build(BuildContext context) {
     final double drawingBoardSize = widget.drawingAreaSize * 2;
     final double glyphSize = widget.drawingAreaSize;
+    final audioController = context.watch<AudioController>();
 
     return Stack(
       alignment: Alignment.center,
@@ -209,12 +213,12 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
                   height: drawingBoardSize,
                 ),
                 Center(
-                  //TODO: Add a drawing sound effect, based on currentPenPosition changes
                   child: GestureDetector(
                     onPanStart: (details) => setState(() {
                       currentPenPosition = details.localPosition;
                     }),
                     onPanUpdate: (details) => setState(() {
+                      audioController.playSfx(SfxType.drawing);
                       Offset localPosition = details.localPosition;
                       points.add(localPosition);
                       if (points.length > 1 && points[points.length - 2] != null) {}
