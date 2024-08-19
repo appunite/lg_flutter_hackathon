@@ -103,7 +103,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                           Text(
                             Strings.numberOfPlayers,
                             style: TextStyle(
-                              fontFamily: 'Knewave',
+                              fontFamily: DesignConsts.fontFamily,
                               fontSize: screenWidth / DesignConsts.titleFontSizeFactor,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
@@ -141,7 +141,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                                         child: Text(
                                           '$_numberOfPlayers',
                                           style: TextStyle(
-                                            fontFamily: 'Knewave',
+                                            fontFamily: DesignConsts.fontFamily,
                                             fontSize: screenWidth / DesignConsts.numberFontSizeFactor,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.white,
