@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lg_flutter_hackathon/constants/design_consts.dart';
 import 'package:lg_flutter_hackathon/constants/strings.dart';
 
 class AnimatedAccuracyText extends StatefulWidget {
@@ -86,7 +87,7 @@ class _AnimatedAccuracyTextState extends State<AnimatedAccuracyText> with Single
                 child: Text(
                   displayText,
                   style: TextStyle(
-                    fontFamily: 'Knewave',
+                    fontFamily: DesignConsts.fontFamily,
                     fontSize: _sizeAnimation.value,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
