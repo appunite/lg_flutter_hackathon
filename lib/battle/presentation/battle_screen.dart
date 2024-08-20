@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
+
 import 'package:lg_flutter_hackathon/battle/domain/entities/bonus_entity.dart';
+import 'package:lg_flutter_hackathon/audio/audio_controller.dart';
+import 'package:lg_flutter_hackathon/audio/sounds.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/drawing_details_entity.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/drawing_mode_enum.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/level_enum.dart';
@@ -113,13 +116,17 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
     final screenHeight = MediaQuery.sizeOf(context).height;
     final screenWidth = MediaQuery.sizeOf(context).width;
 
+    final audioController = context.watch<AudioController>();
+
+    audioController.setSong(audioController.forestBattleSong);
+
     return BlocConsumer<BattleCubit, BattleState>(
       listener: (context, state) {
         state.mapOrNull(
-          monsterAttack: (_) => _monsterAttackAnimation(),
-          playerAttack: (_) => _playersAttackAnimation(),
-          gameOver: (_) => _openGameOverScreen(),
-          victory: (_) => _openVictoryScreen(),
+          monsterAttack: (_) => _monsterAttackAnimation(audioController),
+          playerAttack: (_) => _playersAttackAnimation(audioController),
+          gameOver: (_) => _openGameOverScreen(audioController),
+          victory: (_) => _openVictoryScreen(audioController),
         );
       },
       builder: (context, state) {
@@ -354,7 +361,9 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
     super.dispose();
   }
 
-  Future<void> _monsterAttackAnimation() async {
+  Future<void> _monsterAttackAnimation(AudioController audioController) async {
+    enemyRoars.shuffle();
+    audioController.playSfx(enemyRoars.first);
     // TODO: Run monster attack animation
     // ignore: avoid_print
     print('TODO: Run monster attack animation');
@@ -373,7 +382,9 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
     });
   }
 
-  Future<void> _playersAttackAnimation() async {
+  Future<void> _playersAttackAnimation(AudioController audioController) async {
+    playerShouts.shuffle();
+    audioController.playSfx(playerShouts.first);
     // TODO: Run players attack animation
     // ignore: avoid_print
     print('TODO: Run players attack animation');
@@ -414,11 +425,15 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
     });
   }
 
-  void _openGameOverScreen() {
+  void _openGameOverScreen(AudioController audioController) {
+    audioController.playSfx(SfxType.gameOver);
+    audioController.setSong(audioController.gameoverSong);
     // TODO: Create game over screen
   }
 
-  void _openVictoryScreen() {
+  void _openVictoryScreen(AudioController audioController) {
+    audioController.setSong(audioController.victorySong);
+
     // TODO: Create victory over screen
   }
 }
