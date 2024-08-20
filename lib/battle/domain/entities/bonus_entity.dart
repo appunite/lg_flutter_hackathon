@@ -11,11 +11,10 @@ class BonusEntity with _$BonusEntity {
   }) = _BonusEntity;
 }
 
-//TODO update description
 enum BonusEnum {
   health(
     imagePath: ImageAssets.healthBonus,
-    description: ' to your health,\nincreasing chances of survival',
+    description: ' to your Life,\nletting you take more hits',
   ),
   damage(
     imagePath: ImageAssets.attackBonus,
@@ -23,7 +22,7 @@ enum BonusEnum {
   ),
   time(
     imagePath: ImageAssets.timeBonus,
-    description: ' sec to slown down\nthe monster\'s attack',
+    description: ' to monster speed,\nslowing down their attacks',
   );
 
   const BonusEnum({

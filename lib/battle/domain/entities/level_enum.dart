@@ -1,6 +1,7 @@
 import 'package:lg_flutter_hackathon/battle/domain/entities/bonus_entity.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/monster_entity.dart';
 
+// TODO: set bonus strength
 enum LevelEnum {
   first(
     MonsterEntity(
@@ -18,7 +19,7 @@ enum LevelEnum {
   ),
   second(
     MonsterEntity(
-      speed: 50,
+      speed: 5,
       healthPoints: 37 * 14,
       damage: 11,
       attackAnimation: 'wolf-attack',

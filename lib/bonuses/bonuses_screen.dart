@@ -103,7 +103,7 @@ class _BonusesScreenState extends State<BonusesScreen> {
                       ),
                       if (_currentBonus == bonus)
                         Text(
-                          '+${bonus.strength}',
+                          '${_getSign()}${bonus.strength}',
                           style: const TextStyle(
                             fontFamily: DesignConsts.fontFamily,
                             color: Colors.white,
@@ -136,7 +136,7 @@ class _BonusesScreenState extends State<BonusesScreen> {
     return Positioned(
       bottom: screenHeight / DesignConsts.bonusDescriptionHeightFactor - 5,
       child: Text(
-        '+${_currentBonus.strength}${_currentBonus.type.description}',
+        '${_getSign()}${_currentBonus.strength}${_currentBonus.type.description}',
         textAlign: TextAlign.center,
         style: TextStyle(
           fontFamily: DesignConsts.fontFamily,
@@ -226,4 +226,6 @@ class _BonusesScreenState extends State<BonusesScreen> {
       ),
     );
   }
+
+  String _getSign() => _currentBonus.type == BonusEnum.time ? '-' : '+';
 }
