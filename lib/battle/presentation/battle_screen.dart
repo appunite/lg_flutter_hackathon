@@ -337,16 +337,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
     Future.delayed(
       const Duration(seconds: 2),
           () {
-        if (_shouldMonsterAttack) {
-          _drawRune(DrawingModeEnum.defence);
-
-          _timer?.start();
-          setState(() {
-            _shouldMonsterAttack = false;
-          });
-        } else {
-          _drawRune(DrawingModeEnum.attack);
-        }
+        _nextTurn();
       },
     );
 
@@ -365,16 +356,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
     Future.delayed(
       const Duration(seconds: 2),
       () {
-        if (_shouldMonsterAttack) {
-          _drawRune(DrawingModeEnum.defence);
-
-          _timer?.start();
-          setState(() {
-            _shouldMonsterAttack = false;
-          });
-        } else {
-          _drawRune(DrawingModeEnum.attack);
-        }
+        _nextTurn();
       },
     );
 
@@ -382,6 +364,19 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
     Future.delayed(const Duration(seconds: 2)).then((val) {
       //context.read<BattleCubit>().victory();
     });
+  }
+
+  void _nextTurn() {
+    if (_shouldMonsterAttack) {
+      _drawRune(DrawingModeEnum.defence);
+
+      _timer?.start();
+      setState(() {
+        _shouldMonsterAttack = false;
+      });
+    } else {
+      _drawRune(DrawingModeEnum.attack);
+    }
   }
 
   void _drawRune(DrawingModeEnum drawingMode) {
