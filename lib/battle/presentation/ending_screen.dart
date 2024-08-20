@@ -109,12 +109,7 @@ class _EndGameScreenState extends State<EndGameScreen> with SingleTickerProvider
             child: PushableButton(
               onPressed: () {
                 sl<GameResultPlayerStorage>().clear();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const MainMenuScreen(),
-                  ),
-                );
+                Navigator.popUntil(context, (route) => route.isFirst);
               },
               child: SvgPicture.asset(
                 ImageAssets.pickPlayersAcceptButton,
