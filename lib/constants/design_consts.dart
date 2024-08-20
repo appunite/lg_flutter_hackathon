@@ -39,8 +39,20 @@ class DesignConsts {
   static const double playerNumberContainerWidthFactor = 10;
   static const double playerNumberContainerHeightFactor = 10;
   static const double titleFontSizeFactor = 50;
+  static const double bonusTitleFontSizeFactor = 30;
   static const double numberFontSizeFactor = 50;
   static const double iconSizeFactor = 50;
+  static const double bonusStandHeightFactor = 7;
+  static const double bonusesWidthFactor = 2.5;
+  static const double bonusesButtonsSpaceFactor = 4;
+  static const double bonusButtonFactor = 9;
+  static const double bonusOkButtonFactor = 12;
+  static const double bonusDescriptionFontSizeFactor = 80;
+  static const double bonusCarouselHeightFactor = 6.5;
+  static const double standWidthFactor = 1.3;
+  static const double standHeightFactor = 2.5;
+  static const double bonusDescriptionHeightFactor = 5;
+  static const double bonusArrowsHeightFactor = 6;
 
   // END GAME SCREEN
   static const double buttonStartAgainBottomPositionFactor = 8;

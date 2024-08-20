@@ -1,10 +1,13 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/level_enum.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/players_entity.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/battle_screen.dart';
+import 'package:lg_flutter_hackathon/bonuses/bonuses_screen.dart';
 import 'package:lg_flutter_hackathon/dependencies.dart';
 import 'package:lg_flutter_hackathon/main_menu/main_menu_screen.dart';
 import 'package:lg_flutter_hackathon/utils/window_manager_utils.dart';
@@ -20,23 +23,26 @@ void main() async {
     () async {
       WidgetsFlutterBinding.ensureInitialized();
 
-      await windowManager.ensureInitialized();
+      if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
+        await windowManager.ensureInitialized();
+
+        WindowOptions windowOptions = const WindowOptions(
+          size: Size(1280, 720),
+          minimumSize: Size(1280, 720),
+          maximumSize: Size(3840, 2160),
+          center: true,
+        );
+
+        windowManager.waitUntilReadyToShow(windowOptions, () async {
+          await windowManager.show();
+          await windowManager.focus();
+
+          windowManager.addListener(WindowManagerListener());
+        });
+      }
 
       setupDependencies();
 
-      WindowOptions windowOptions = const WindowOptions(
-        size: Size(1280, 720),
-        minimumSize: Size(1280, 720),
-        maximumSize: Size(3840, 2160),
-        center: true,
-      );
-
-      windowManager.waitUntilReadyToShow(windowOptions, () async {
-        await windowManager.show();
-        await windowManager.focus();
-
-        windowManager.addListener(WindowManagerListener());
-      });
       runApp(const App());
     },
     (e, st) {
@@ -85,6 +91,10 @@ class App extends StatelessWidget {
             routes: {
               '/': (context) => const MainMenuScreen(),
               '/battle': (context) => const BattleScreen(
+                    level: LevelEnum.first,
+                    players: PlayersEntity(healthPoints: 100, numberOfPlayers: 4, damage: 10),
+                  ),
+              '/bonuses': (context) => const BonusesScreen(
                     level: LevelEnum.first,
                     players: PlayersEntity(healthPoints: 100, numberOfPlayers: 4, damage: 10),
                   ),

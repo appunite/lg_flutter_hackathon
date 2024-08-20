@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lg_flutter_hackathon/battle/domain/entities/bonus_entity.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/drawing_details_entity.dart';
+import 'package:lg_flutter_hackathon/battle/domain/entities/drawing_mode_enum.dart';
+import 'package:lg_flutter_hackathon/battle/domain/entities/game_results_player_entity.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/level_enum.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/players_entity.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/cubit/battle_cubit.dart';
@@ -26,16 +29,26 @@ class BattleScreen extends StatelessWidget {
     super.key,
     required this.level,
     required this.players,
+    this.chosenBonus,
   });
 
   final LevelEnum level;
   final PlayersEntity players;
+  final BonusEntity? chosenBonus;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => BattleCubit(level, players),
-      child: _BattleScreenBody(level, players),
+      create: (context) => BattleCubit(
+        level,
+        players.copyWith(
+          healthPoints: chosenBonus?.type == BonusEnum.health
+              ? players.healthPoints + chosenBonus!.strength
+              : players.healthPoints,
+          damage: chosenBonus?.type == BonusEnum.damage ? players.damage + chosenBonus!.strength : players.damage,
+        ),
+      ),
+      child: _BattleScreenBody(level, players, chosenBonus),
     );
   }
 }
@@ -44,10 +57,12 @@ class _BattleScreenBody extends StatefulWidget {
   const _BattleScreenBody(
     this.level,
     this.players,
+    this.chosenBonus,
   );
 
   final LevelEnum level;
   final PlayersEntity players;
+  final BonusEntity? chosenBonus;
 
   @override
   State<_BattleScreenBody> createState() => __BattleScreenBodyState();
@@ -59,13 +74,11 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   PausableTimer? _timer;
   bool _shouldMonsterAttack = false;
 
-  bool isDrawing = false;
-  double? accuracy;
-  double overlayOpacity = 0.0;
-  bool showAccuracyAnimation = false;
-
-  double currentHealth = 100;
-  double incomingHealth = 100;
+  bool _isDrawing = false;
+  double? _accuracy;
+  double _overlayOpacity = 0.0;
+  bool _showAccuracyAnimation = false;
+  DrawingModeEnum _currentDrawingMode = DrawingModeEnum.attack;
 
   @override
   void initState() {
@@ -74,12 +87,19 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
       () => setState(() => done = true),
     );
 
-    _startTimer(widget.level.monster.speed);
+    _startTimer(widget.level.monster.speed, widget.chosenBonus);
   }
 
-  void _startTimer(int monsterSpeed) {
+  void _startTimer(int monsterSpeed, BonusEntity? bonus) {
+    int seconds = monsterSpeed;
+
+    // apply time bonus
+    if (bonus != null && bonus.type == BonusEnum.time) {
+      seconds += bonus.strength;
+    }
+
     _timer ??= PausableTimer.periodic(
-      Duration(seconds: monsterSpeed),
+      Duration(seconds: seconds),
       () {
         _shouldMonsterAttack = true;
         _timer?.pause();
@@ -127,21 +147,21 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
                 _buildEnemy(screenHeight, screenWidth),
                 _buildSettingsButton(context),
                 AnimatedOpacity(
-                  opacity: overlayOpacity,
+                  opacity: _overlayOpacity,
                   duration: const Duration(milliseconds: 500),
-                  child: isDrawing ? _buildDrawingOverlayContent(context, 250) : const SizedBox.shrink(),
+                  child: _isDrawing ? _buildDrawingOverlayContent(context, 250) : const SizedBox.shrink(),
                 ),
-                if (showAccuracyAnimation && accuracy != null)
+                if (_showAccuracyAnimation && _accuracy != null)
                   Positioned(
                     top: screenHeight * 0.2,
                     left: 0,
                     right: 0,
                     child: Center(
-                      child: AnimatedAccuracyText(accuracy: accuracy),
+                      child: AnimatedAccuracyText(accuracy: _accuracy),
                     ),
                   ),
                 DebugBar(
-                  onDrawRune: _simulateDrawRune,
+                  onDrawRune: () => _drawRune(DrawingModeEnum.attack),
                   onGameEnd: () => Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -164,10 +184,19 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
       child: BlocBuilder<BattleCubit, BattleState>(
         builder: (context, state) {
           return state.maybeMap(
-            loaded: (result) => HealthBar(
-              maxHealthPoints: widget.players.healthPoints,
-              newHealthPoints: result.currentPlayersHealthPoints,
-            ),
+            loaded: (result) {
+              double healthPoints = widget.players.healthPoints;
+
+              // apply health bonus
+              if (widget.chosenBonus?.type == BonusEnum.health) {
+                healthPoints += widget.chosenBonus!.strength.toDouble();
+              }
+
+              return HealthBar(
+                maxHealthPoints: healthPoints,
+                newHealthPoints: result.currentPlayersHealthPoints,
+              );
+            },
             orElse: () => const SizedBox.shrink(),
           );
         },
@@ -219,30 +248,30 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
     );
   }
 
-  Widget _buildDrawingOverlayContent(BuildContext context, double glyphSize) {
+  Widget _buildDrawingOverlayContent(
+    BuildContext context,
+    double glyphSize,
+  ) {
     return DrawingOverlay(
       onDrawingCompleted: (DrawingDetails details) {
         setState(() {
-          accuracy = details.accuracy;
-          overlayOpacity = 0.0;
-          isDrawing = false;
-          showAccuracyAnimation = true;
+          _accuracy = details.accuracy;
+          _overlayOpacity = 0.0;
+          _isDrawing = false;
+          _showAccuracyAnimation = true;
         });
         info("Drawing completed with accuracy: ${details.toString()}");
 
-        context.read<BattleCubit>().playerAttack(accuracy: details.accuracy);
-
-        if (_shouldMonsterAttack) {
-          context.read<BattleCubit>().monsterAttack();
-          _timer?.start();
-          setState(() {
-            _shouldMonsterAttack = false;
-          });
+        if (_currentDrawingMode == DrawingModeEnum.attack) {
+          context.read<BattleCubit>().playerAttack(accuracy: details.accuracy);
+        } else {
+          context.read<BattleCubit>().monsterAttack(accuracy: details.accuracy);
         }
       },
       thresholdPercentage: 0.9,
       glyphAsset: DrawingUtils().getRandomGlyphEntity(),
       drawingAreaSize: glyphSize,
+      drawingMode: _currentDrawingMode,
     );
   }
 
@@ -327,6 +356,14 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
     // ignore: avoid_print
     print('TODO: Run monster attack animation');
 
+    print('TODO: Wait for monster attack animation end');
+    Future.delayed(
+      const Duration(seconds: 2),
+          () {
+        _nextTurn();
+      },
+    );
+
     // TODO: Wait for monster attack animation
     Future.delayed(const Duration(seconds: 2)).then((val) {
       //context.read<BattleCubit>().gameOver();
@@ -338,17 +375,39 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
     // ignore: avoid_print
     print('TODO: Run players attack animation');
 
+    print('TODO: Wait for players attack animation end');
+    Future.delayed(
+      const Duration(seconds: 2),
+      () {
+        _nextTurn();
+      },
+    );
+
     // TODO: Wait for player attack animation
     Future.delayed(const Duration(seconds: 2)).then((val) {
       //context.read<BattleCubit>().victory();
     });
   }
 
-  void _simulateDrawRune() {
+  void _nextTurn() {
+    if (_shouldMonsterAttack) {
+      _drawRune(DrawingModeEnum.defence);
+
+      _timer?.start();
+      setState(() {
+        _shouldMonsterAttack = false;
+      });
+    } else {
+      _drawRune(DrawingModeEnum.attack);
+    }
+  }
+
+  void _drawRune(DrawingModeEnum drawingMode) {
     setState(() {
-      isDrawing = true;
-      overlayOpacity = 1.0;
-      showAccuracyAnimation = false;
+      _isDrawing = true;
+      _overlayOpacity = 1.0;
+      _showAccuracyAnimation = false;
+      _currentDrawingMode = drawingMode;
     });
   }
 
