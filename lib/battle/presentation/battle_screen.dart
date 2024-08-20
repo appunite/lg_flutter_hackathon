@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lg_flutter_hackathon/battle/domain/entities/bonus_entity.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/drawing_details_entity.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/drawing_mode_enum.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/game_results_player_entity.dart';
@@ -28,16 +29,26 @@ class BattleScreen extends StatelessWidget {
     super.key,
     required this.level,
     required this.players,
+    this.chosenBonus,
   });
 
   final LevelEnum level;
   final PlayersEntity players;
+  final BonusEntity? chosenBonus;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => BattleCubit(level, players),
-      child: _BattleScreenBody(level, players),
+      create: (context) => BattleCubit(
+        level,
+        players.copyWith(
+          healthPoints: chosenBonus?.type == BonusEnum.health
+              ? players.healthPoints + chosenBonus!.strength
+              : players.healthPoints,
+          damage: chosenBonus?.type == BonusEnum.damage ? players.damage + chosenBonus!.strength : players.damage,
+        ),
+      ),
+      child: _BattleScreenBody(level, players, chosenBonus),
     );
   }
 }
@@ -46,10 +57,12 @@ class _BattleScreenBody extends StatefulWidget {
   const _BattleScreenBody(
     this.level,
     this.players,
+    this.chosenBonus,
   );
 
   final LevelEnum level;
   final PlayersEntity players;
+  final BonusEntity? chosenBonus;
 
   @override
   State<_BattleScreenBody> createState() => __BattleScreenBodyState();
@@ -74,12 +87,19 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
       () => setState(() => done = true),
     );
 
-    _startTimer(widget.level.monster.speed);
+    _startTimer(widget.level.monster.speed, widget.chosenBonus);
   }
 
-  void _startTimer(int monsterSpeed) {
+  void _startTimer(int monsterSpeed, BonusEntity? bonus) {
+    int seconds = monsterSpeed;
+
+    // apply time bonus
+    if (bonus != null && bonus.type == BonusEnum.time) {
+      seconds += bonus.strength;
+    }
+
     _timer ??= PausableTimer.periodic(
-      Duration(seconds: monsterSpeed),
+      Duration(seconds: seconds),
       () {
         _shouldMonsterAttack = true;
         _timer?.pause();
@@ -170,10 +190,19 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
       child: BlocBuilder<BattleCubit, BattleState>(
         builder: (context, state) {
           return state.maybeMap(
-            loaded: (result) => HealthBar(
-              maxHealthPoints: widget.players.healthPoints,
-              newHealthPoints: result.currentPlayersHealthPoints,
-            ),
+            loaded: (result) {
+              double healthPoints = widget.players.healthPoints;
+
+              // apply health bonus
+              if (widget.chosenBonus?.type == BonusEnum.health) {
+                healthPoints += widget.chosenBonus!.strength.toDouble();
+              }
+
+              return HealthBar(
+                maxHealthPoints: healthPoints,
+                newHealthPoints: result.currentPlayersHealthPoints,
+              );
+            },
             orElse: () => const SizedBox.shrink(),
           );
         },

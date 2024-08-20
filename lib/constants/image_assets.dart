@@ -25,6 +25,12 @@ class ImageAssets {
   static const String loader = 'assets/ilustrations/loader.svg';
   static const String loaderBackground = 'assets/ilustrations/loader_background.svg';
   static const String boardBackground = 'assets/ilustrations/board_background.svg';
+  static const String bonusesBackground = 'assets/ilustrations/bonuses_background.svg';
+  static const String bonusesStand = 'assets/ilustrations/bonus_stand.svg';
+  static const String healthBonus = 'assets/ilustrations/green_elixir.svg';
+  static const String attackBonus = 'assets/ilustrations/red_elixir.svg';
+  static const String timeBonus = 'assets/ilustrations/hourglass.svg';
+  static const String okButton = 'assets/ilustrations/ok_button.svg';
   static const String gameStatsBackground = 'assets/ilustrations/game_stats_background.svg';
   static const String gameStatsPlayer1 = 'assets/ilustrations/game_stats_player_1.svg';
   static const String gameStatsPlayer2 = 'assets/ilustrations/game_stats_player_2.svg';
