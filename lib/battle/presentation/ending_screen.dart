@@ -8,7 +8,6 @@ import 'package:lg_flutter_hackathon/constants/image_assets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lg_flutter_hackathon/constants/strings.dart';
 import 'package:lg_flutter_hackathon/dependencies.dart';
-import 'package:lg_flutter_hackathon/main_menu/main_menu_screen.dart';
 import 'package:lg_flutter_hackathon/utils/storage.dart';
 
 class EndGameScreen extends StatefulWidget {
