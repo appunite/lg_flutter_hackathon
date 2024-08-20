@@ -41,4 +41,8 @@ class DesignConsts {
   static const double titleFontSizeFactor = 50;
   static const double numberFontSizeFactor = 50;
   static const double iconSizeFactor = 50;
+
+  // END GAME SCREEN
+  static const double buttonStartAgainBottomPositionFactor = 8;
+  static const double buttonStartAgainLeftRightPositionFactor = 6;
 }

@@ -1,9 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:lg_flutter_hackathon/battle/domain/entities/game_results_player_entity.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/level_enum.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/players_entity.dart';
+import 'package:lg_flutter_hackathon/dependencies.dart';
+import 'package:lg_flutter_hackathon/utils/storage.dart';
 
 part 'battle_cubit.freezed.dart';
+
 part 'battle_state.dart';
 
 class BattleCubit extends Cubit<BattleState> {
@@ -37,16 +41,20 @@ class BattleCubit extends Cubit<BattleState> {
     );
   }
 
+  final gameResultPlayerStorage = sl<GameResultPlayerStorage>();
+
   void playerAttack({required double accuracy}) {
     state.mapOrNull(
-      loaded: (result) {
+      loaded: (result) async {
         emit(const BattleState.playerAttack());
 
-        final damage = _players.damage * (accuracy / 100);
+        final damage = _players.damage * accuracy / 100;
         final monsterHealthPointsAfterDamage = result.currentMonsterHealthPoints - damage;
         final nextPlayerIndex =
             result.currentPlayerIndex == _players.numberOfPlayers - 1 ? 0 : result.currentPlayerIndex + 1;
         final monsterHealthPointsAfterHit = monsterHealthPointsAfterDamage <= 0 ? 0.0 : monsterHealthPointsAfterDamage;
+
+        updateStats(result, accuracy);
 
         emit(
           result.copyWith(
@@ -56,6 +64,21 @@ class BattleCubit extends Cubit<BattleState> {
         );
       },
     );
+  }
+
+  Future<void> updateStats(result, double accuracy) async {
+    final stats = await gameResultPlayerStorage.getGameResultPlayer;
+    final playerStat = stats.firstWhere((stat) => stat.playerId == result.currentPlayerIndex,
+        orElse: () => GameResultPlayer(playerId: result.currentPlayerIndex, accuracies: []));
+
+    final updatedPlayerStat =
+        GameResultPlayer(playerId: result.currentPlayerIndex, accuracies: [...playerStat.accuracies, accuracy]);
+
+    final newStats = [
+      ...stats..removeWhere((el) => el.playerId == result.currentPlayerIndex),
+    ]..insert(result.currentPlayerIndex, updatedPlayerStat);
+
+    gameResultPlayerStorage.setGameResultPlayer(newStats);
   }
 
   void victory() {

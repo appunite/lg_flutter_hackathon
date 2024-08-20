@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/drawing_details_entity.dart';
-import 'package:lg_flutter_hackathon/battle/domain/entities/game_results_player_entity.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/level_enum.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/players_entity.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/cubit/battle_cubit.dart';
@@ -146,13 +145,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
                   onGameEnd: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => EndGameScreen(
-                        isVictory: true,
-                        gameResults: [
-                          GameResultPlayer(accuracies: [85.0, 90.0, 78.0]), // Player 1
-                          GameResultPlayer(accuracies: [50.0, 60.0, 55.0]), // Player 2
-                        ],
-                      ),
+                      builder: (context) => const EndGameScreen(isVictory: true),
                     ),
                   ),
                 ),
