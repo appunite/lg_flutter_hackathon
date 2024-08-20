@@ -173,7 +173,7 @@ class _LoadingScreenState extends State<LoadingScreen> with TickerProviderStateM
                     'TIP: ${Strings.gameTips[_tipIndex]}',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontFamily: 'Knewave',
+                      fontFamily: DesignConsts.fontFamily,
                       fontSize: screenWidth / 30,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,

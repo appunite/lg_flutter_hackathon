@@ -9,6 +9,7 @@ import 'package:lg_flutter_hackathon/battle/domain/entities/drawing_details_enti
 import 'package:lg_flutter_hackathon/battle/domain/entities/drawing_mode_enum.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/glyph_entity.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/drawing_painter.dart';
+import 'package:lg_flutter_hackathon/constants/design_consts.dart';
 import 'package:lg_flutter_hackathon/constants/image_assets.dart';
 
 class DrawingOverlay extends StatefulWidget {
@@ -206,7 +207,7 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
             'Time for ${widget.drawingMode.name}!',
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontFamily: 'Knewave',
+              fontFamily: DesignConsts.fontFamily,
               fontSize: screenWidth / 30,
               fontWeight: FontWeight.bold,
               color: Colors.white,
