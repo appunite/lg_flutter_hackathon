@@ -370,6 +370,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
     // ignore: avoid_print
     print('TODO: Run monster attack animation');
 
+    // ignore: avoid_print
     print('TODO: Wait for monster attack animation end');
     Future.delayed(
       const Duration(seconds: 2),
@@ -391,6 +392,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
     // ignore: avoid_print
     print('TODO: Run players attack animation');
 
+    // ignore: avoid_print
     print('TODO: Wait for players attack animation end');
     Future.delayed(
       const Duration(seconds: 2),
