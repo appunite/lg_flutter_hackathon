@@ -9,39 +9,40 @@ import 'package:lg_flutter_hackathon/constants/image_assets.dart';
 class HealthBar extends StatefulWidget {
   final double maxHealthPoints;
   final double newHealthPoints;
-
   const HealthBar({
     super.key,
     required this.maxHealthPoints,
     required this.newHealthPoints,
   });
-
   @override
   State<HealthBar> createState() => _HealthBarState();
 }
 
 class _HealthBarState extends State<HealthBar> with TickerProviderStateMixin {
   late AnimationManager _animationManager;
-
   @override
   void initState() {
     super.initState();
-
+    double normalizedHealthPoints = _normalizeToPercentage(widget.newHealthPoints);
     _animationManager = AnimationManager(vsync: this);
     _animationManager.initializeShakeAnimation();
     _animationManager.initializeGrowAnimation();
-    _animationManager.initializeHealthChangeAnimation(widget.maxHealthPoints, widget.newHealthPoints);
-
+    _animationManager.initializeHealthChangeAnimation(100, normalizedHealthPoints);
     _animationManager.healthChangeController.forward();
   }
 
   @override
   void didUpdateWidget(HealthBar oldWidget) {
     super.didUpdateWidget(oldWidget);
-
     if (oldWidget.newHealthPoints != widget.newHealthPoints) {
-      _animationManager.updateHealthAnimation(oldWidget.newHealthPoints, widget.newHealthPoints);
+      double normalizedOldHealth = _normalizeToPercentage(oldWidget.newHealthPoints);
+      double normalizedNewHealth = _normalizeToPercentage(widget.newHealthPoints);
+      _animationManager.updateHealthAnimation(normalizedOldHealth, normalizedNewHealth);
     }
+  }
+
+  double _normalizeToPercentage(double healthPoints) {
+    return (healthPoints / widget.maxHealthPoints) * 100;
   }
 
   @override
@@ -56,9 +57,7 @@ class _HealthBarState extends State<HealthBar> with TickerProviderStateMixin {
     final healthBarWidth = screenWidth / DesignConsts.healthBarWidthFactor;
     final foregroundWidth = healthBarWidth * DesignConsts.healthBarForegroundWidthFactor;
     const padding = 16.0;
-
     final maxHealthBarWidth = foregroundWidth - 2 * padding;
-
     Gradient healthGradient;
     if (_animationManager.healthAnimation.value > 60) {
       healthGradient = AppColors.healthBarGreen;
@@ -67,7 +66,6 @@ class _HealthBarState extends State<HealthBar> with TickerProviderStateMixin {
     } else {
       healthGradient = AppColors.healthBarRed;
     }
-
     return AnimatedBuilder(
       animation: Listenable.merge([_animationManager.shakeAnimation, _animationManager.growAnimation]),
       builder: (context, child) {

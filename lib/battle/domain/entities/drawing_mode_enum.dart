@@ -1,0 +1,4 @@
+enum DrawingModeEnum {
+  attack,
+  defence,
+}

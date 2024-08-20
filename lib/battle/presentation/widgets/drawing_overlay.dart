@@ -1,17 +1,18 @@
 import 'dart:async';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lg_flutter_hackathon/audio/audio_controller.dart';
 import 'package:lg_flutter_hackathon/audio/sounds.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/drawing_details_entity.dart';
-import 'dart:ui' as ui;
+import 'package:lg_flutter_hackathon/battle/domain/entities/drawing_mode_enum.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/glyph_entity.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/drawing_painter.dart';
+import 'package:lg_flutter_hackathon/constants/design_consts.dart';
 import 'package:lg_flutter_hackathon/constants/image_assets.dart';
-
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class DrawingOverlay extends StatefulWidget {
@@ -19,6 +20,7 @@ class DrawingOverlay extends StatefulWidget {
   final double thresholdPercentage;
   final GlyphEntity glyphAsset;
   final double drawingAreaSize;
+  final DrawingModeEnum drawingMode;
 
   const DrawingOverlay({
     super.key,
@@ -26,6 +28,7 @@ class DrawingOverlay extends StatefulWidget {
     required this.thresholdPercentage,
     required this.glyphAsset,
     required this.drawingAreaSize,
+    required this.drawingMode,
   });
 
   @override
@@ -33,12 +36,12 @@ class DrawingOverlay extends StatefulWidget {
 }
 
 class _DrawingOverlayState extends State<DrawingOverlay> {
-  List<Offset?> points = [];
-  Offset? currentPenPosition;
+  final List<Offset?> _points = [];
+  Offset? _currentPenPosition;
 
-  Uint8List? drawnImageBytes;
-  ui.Image? backgroundImage;
-  double strokeWidth = 16;
+  Uint8List? _drawnImageBytes;
+  ui.Image? _backgroundImage;
+  final double _strokeWidth = 16;
 
   @override
   void initState() {
@@ -50,7 +53,7 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
     final ByteData data = await rootBundle.load(widget.glyphAsset.glyphPresentation);
     final codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
     final frame = await codec.getNextFrame();
-    setState(() => backgroundImage = frame.image);
+    setState(() => _backgroundImage = frame.image);
   }
 
   Future<DrawingDetails> _saveAndCompareDrawing() async {
@@ -62,16 +65,16 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
       Paint()..color = Colors.white,
     );
 
-    final painter = DrawPainter(points, null, strokeWidth);
+    final painter = DrawPainter(_points, null, _strokeWidth);
     painter.paint(canvas, Size(widget.drawingAreaSize, widget.drawingAreaSize));
     final picture = recorder.endRecording();
     final imgBytes = await (await picture.toImage(widget.drawingAreaSize.toInt(), widget.drawingAreaSize.toInt()))
         .toByteData(format: ui.ImageByteFormat.png);
 
-    drawnImageBytes = imgBytes!.buffer.asUint8List();
+    _drawnImageBytes = imgBytes!.buffer.asUint8List();
 
     final resizedDrawnImage =
-        await _resizeImageAndConvertToBW(drawnImageBytes!, backgroundImage!.width, backgroundImage!.height);
+        await _resizeImageAndConvertToBW(_drawnImageBytes!, _backgroundImage!.width, _backgroundImage!.height);
 
     return await _compareImages(widget.glyphAsset.glyphCompare, resizedDrawnImage);
   }
@@ -177,7 +180,7 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
     }
 
     return DrawingDetails(
-      points: points,
+      points: _points,
       drawnImageBytes: drawnImage,
       accuracy: accuracy,
       totalBlackPixels: blackPixelNeededFromOriginalImage,
@@ -192,6 +195,7 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
     final double drawingBoardSize = widget.drawingAreaSize * 2;
     final double glyphSize = widget.drawingAreaSize;
     final audioController = context.watch<AudioController>();
+    final screenWidth = MediaQuery.sizeOf(context).width;
 
     return Stack(
       alignment: Alignment.center,
@@ -200,6 +204,19 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
           width: double.infinity,
           height: double.infinity,
           color: Colors.black.withOpacity(0.9),
+        ),
+        Positioned(
+          top: 64,
+          child: Text(
+            'Time for ${widget.drawingMode.name}!',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: DesignConsts.fontFamily,
+              fontSize: screenWidth / 30,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
         ),
         Center(
           child: SizedBox(
@@ -215,35 +232,35 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
                 Center(
                   child: GestureDetector(
                     onPanStart: (details) => setState(() {
-                      currentPenPosition = details.localPosition;
+                      _currentPenPosition = details.localPosition;
                     }),
                     onPanUpdate: (details) => setState(() {
                       audioController.playSfx(SfxType.drawing);
                       Offset localPosition = details.localPosition;
-                      points.add(localPosition);
-                      if (points.length > 1 && points[points.length - 2] != null) {}
-                      currentPenPosition = localPosition;
+                      _points.add(localPosition);
+                      if (_points.length > 1 && _points[_points.length - 2] != null) {}
+                      _currentPenPosition = localPosition;
                     }),
                     onPanEnd: (details) async {
-                      points.add(null);
+                      _points.add(null);
                       DrawingDetails details = await _saveAndCompareDrawing();
                       widget.onDrawingCompleted(details);
                       setState(() {
-                        points.clear();
-                        currentPenPosition = null;
+                        _points.clear();
+                        _currentPenPosition = null;
                       });
                     },
                     child: SizedBox(
                       width: glyphSize,
                       height: glyphSize,
                       child: CustomPaint(
-                        painter: DrawPainter(points, backgroundImage, strokeWidth),
+                        painter: DrawPainter(_points, _backgroundImage, _strokeWidth),
                         size: Size.infinite,
                       ),
                     ),
                   ),
                 ),
-                if (currentPenPosition != null) _buildMagicPen(glyphSize),
+                if (_currentPenPosition != null) _buildMagicPen(glyphSize),
               ],
             ),
           ),
@@ -258,8 +275,8 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
     double offsetY = glyphSize * -0.25;
 
     return Positioned(
-      left: currentPenPosition!.dx - offsetX,
-      top: currentPenPosition!.dy - offsetY,
+      left: _currentPenPosition!.dx - offsetX,
+      top: _currentPenPosition!.dy - offsetY,
       child: Transform.rotate(
         angle: -45,
         child: SvgPicture.asset(

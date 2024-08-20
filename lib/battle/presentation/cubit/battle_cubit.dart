@@ -21,12 +21,15 @@ class BattleCubit extends Cubit<BattleState> {
   final LevelEnum _level;
   final PlayersEntity _players;
 
-  void monsterAttack() {
+  void monsterAttack({
+    required double accuracy,
+  }) {
     state.mapOrNull(
       loaded: (result) {
         emit(const BattleState.monsterAttack());
 
-        final playerHealthPointsAfterHit = result.currentPlayersHealthPoints - _level.monster.damage;
+        final damageAfterPlayerDefence = (_level.monster.damage * ((100 - accuracy) / 100));
+        final playerHealthPointsAfterHit = result.currentPlayersHealthPoints - damageAfterPlayerDefence;
 
         emit(
           result.copyWith(
@@ -41,7 +44,6 @@ class BattleCubit extends Cubit<BattleState> {
     state.mapOrNull(
       loaded: (result) {
         emit(const BattleState.playerAttack());
-
         final damage = _players.damage * (accuracy / 100);
         final monsterHealthPointsAfterDamage = result.currentMonsterHealthPoints - damage;
         final nextPlayerIndex =
