@@ -5,7 +5,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/bonus_entity.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/drawing_details_entity.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/drawing_mode_enum.dart';
-import 'package:lg_flutter_hackathon/battle/domain/entities/game_results_player_entity.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/level_enum.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/players_entity.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/cubit/battle_cubit.dart';
