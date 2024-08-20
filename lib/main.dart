@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/level_enum.dart';
@@ -21,23 +23,26 @@ void main() async {
     () async {
       WidgetsFlutterBinding.ensureInitialized();
 
-      await windowManager.ensureInitialized();
+      if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
+        await windowManager.ensureInitialized();
+
+        WindowOptions windowOptions = const WindowOptions(
+          size: Size(1280, 720),
+          minimumSize: Size(1280, 720),
+          maximumSize: Size(3840, 2160),
+          center: true,
+        );
+
+        windowManager.waitUntilReadyToShow(windowOptions, () async {
+          await windowManager.show();
+          await windowManager.focus();
+
+          windowManager.addListener(WindowManagerListener());
+        });
+      }
 
       setupDependencies();
 
-      WindowOptions windowOptions = const WindowOptions(
-        size: Size(1280, 720),
-        minimumSize: Size(1280, 720),
-        maximumSize: Size(3840, 2160),
-        center: true,
-      );
-
-      windowManager.waitUntilReadyToShow(windowOptions, () async {
-        await windowManager.show();
-        await windowManager.focus();
-
-        windowManager.addListener(WindowManagerListener());
-      });
       runApp(const App());
     },
     (e, st) {

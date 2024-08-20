@@ -24,13 +24,13 @@ class BonusesScreen extends StatefulWidget {
 }
 
 class _BonusesScreenState extends State<BonusesScreen> {
-  late final CarouselSliderController _carouselController;
+  late final CarouselController _carouselController;
   late BonusEntity _currentBonus = widget.level.bonuses.first;
 
   @override
   void initState() {
     super.initState();
-    _carouselController = CarouselSliderController();
+    _carouselController = CarouselController();
   }
 
   @override
