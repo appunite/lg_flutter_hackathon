@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/game_results_player_entity.dart';
+import 'package:lg_flutter_hackathon/components/pushable_button.dart';
 import 'package:lg_flutter_hackathon/constants/design_consts.dart';
 import 'package:lg_flutter_hackathon/constants/image_assets.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lg_flutter_hackathon/constants/strings.dart';
+import 'package:lg_flutter_hackathon/dependencies.dart';
+import 'package:lg_flutter_hackathon/utils/storage.dart';
 
 class EndGameScreen extends StatefulWidget {
   const EndGameScreen({
     super.key,
-    required this.gameResults,
     required this.isVictory,
   });
 
-  final List<GameResultPlayer> gameResults;
   final bool isVictory;
 
   @override
@@ -37,6 +38,8 @@ class _EndGameScreenState extends State<EndGameScreen> with SingleTickerProvider
   static const double _playerIconLeftPaddingFactor = 0.03;
   static const double _playerNumberRightPaddingFactor = 0.075;
 
+  List<GameResultPlayer> gameResults = [];
+
   @override
   void initState() {
     super.initState();
@@ -48,7 +51,7 @@ class _EndGameScreenState extends State<EndGameScreen> with SingleTickerProvider
 
     _colorAnimation = ColorTween(
       begin: Colors.white,
-      end: const Color(0x00f7a03f),
+      end: Colors.yellow,
     ).animate(_controller);
 
     _fontSizeAnimation = Tween<double>(
@@ -58,6 +61,14 @@ class _EndGameScreenState extends State<EndGameScreen> with SingleTickerProvider
       parent: _controller,
       curve: Curves.easeInOut,
     ));
+    loadGameResults();
+  }
+
+  Future<void> loadGameResults() async {
+    final results = await sl<GameResultPlayerStorage>().getGameResultPlayer;
+    setState(() {
+      gameResults = results;
+    });
   }
 
   @override
@@ -72,7 +83,7 @@ class _EndGameScreenState extends State<EndGameScreen> with SingleTickerProvider
     final screenHeight = MediaQuery.sizeOf(context).height;
     final containerWidth = screenWidth / 2;
 
-    final maxAccuracyIndex = _findMaxAccuracyIndex(widget.gameResults);
+    final maxAccuracyIndex = _findMaxAccuracyIndex(gameResults);
 
     return Scaffold(
       body: Stack(
@@ -88,6 +99,23 @@ class _EndGameScreenState extends State<EndGameScreen> with SingleTickerProvider
                 right: containerWidth / 1.65,
               ),
               child: _buildResultsTable(screenWidth, screenHeight, maxAccuracyIndex),
+            ),
+          ),
+          Positioned(
+            bottom: screenHeight / DesignConsts.buttonStartAgainBottomPositionFactor,
+            left: screenWidth / DesignConsts.buttonStartAgainLeftRightPositionFactor,
+            right: screenWidth / DesignConsts.buttonStartAgainLeftRightPositionFactor,
+            child: PushableButton(
+              onPressed: () {
+                sl<GameResultPlayerStorage>().clear();
+                Navigator.popUntil(context, (route) => route.isFirst);
+              },
+              child: SvgPicture.asset(
+                ImageAssets.pickPlayersAcceptButton,
+                fit: BoxFit.contain,
+                width: screenWidth / DesignConsts.acceptButtonWidthFactor,
+                height: screenHeight / DesignConsts.acceptButtonHeightFactor,
+              ),
             ),
           ),
         ],
@@ -163,8 +191,7 @@ class _EndGameScreenState extends State<EndGameScreen> with SingleTickerProvider
       },
       children: [
         _buildTableHeader(screenHeight),
-        for (int i = 0; i < widget.gameResults.length; i++)
-          _buildTableRow(i, screenWidth, screenHeight, maxAccuracyIndex),
+        for (int i = 0; i < gameResults.length; i++) _buildTableRow(i, screenWidth, screenHeight, maxAccuracyIndex),
       ],
     );
   }
@@ -176,13 +203,13 @@ class _EndGameScreenState extends State<EndGameScreen> with SingleTickerProvider
         _buildStatCell(
           index,
           screenHeight,
-          '${widget.gameResults[index].averageAccuracy.toStringAsFixed(2)}%',
+          '${gameResults[index].averageAccuracy.toStringAsFixed(2)}%',
           isHighlighted: index == maxAccuracyIndex,
         ),
         _buildStatCell(
           index,
           screenHeight,
-          '${widget.gameResults[index].attackCount}',
+          '${gameResults[index].attackCount}',
           isHighlighted: false,
         ),
       ],

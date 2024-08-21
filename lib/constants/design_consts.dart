@@ -53,4 +53,8 @@ class DesignConsts {
   static const double standHeightFactor = 2.5;
   static const double bonusDescriptionHeightFactor = 5;
   static const double bonusArrowsHeightFactor = 6;
+
+  // END GAME SCREEN
+  static const double buttonStartAgainBottomPositionFactor = 8;
+  static const double buttonStartAgainLeftRightPositionFactor = 6;
 }
