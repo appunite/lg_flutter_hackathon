@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lg_flutter_hackathon/audio/sounds.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/level_enum.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/players_entity.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/battle_screen.dart';
@@ -117,7 +118,8 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               PushableButton(
-                                onPressed: _numberOfPlayers > 2 ? _decrementPlayers : () {},
+                                onPressed: _numberOfPlayers > 2 ? _decrementPlayers : null,
+                                sfxType: SfxType.deletePlayerPop,
                                 child: Opacity(
                                   opacity: _numberOfPlayers > 2 ? 1.0 : 0.5,
                                   child: SvgPicture.asset(
@@ -158,7 +160,8 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                               ),
                               SizedBox(width: screenWidth / DesignConsts.buttonSpacingFactor),
                               PushableButton(
-                                onPressed: _numberOfPlayers < 4 ? _incrementPlayers : () {},
+                                onPressed: _numberOfPlayers < 4 ? _incrementPlayers : null,
+                                sfxType: SfxType.addPlayerPop,
                                 child: Opacity(
                                   opacity: _numberOfPlayers < 4 ? 1.0 : 0.5,
                                   child: SvgPicture.asset(

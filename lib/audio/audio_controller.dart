@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:collection';
 import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
@@ -19,23 +18,28 @@ class AudioController with ReporterMixin {
 
   int _currentSfxPlayer = 0;
 
-  final Queue<Song> _playlist;
-
   final Random _random = Random();
 
   SettingsController? _settings;
 
   ValueNotifier<AppLifecycleState>? _lifecycleNotifier;
 
+  String? _currentSong;
+
+  final themeSong = songs.firstWhere((song) => song.name.contains('Main Screen')).filename;
+  final victorySong = songs.firstWhere((song) => song.name.contains('Victory Screen')).filename;
+  final gameoverSong = songs.firstWhere((song) => song.name.contains('Gameover')).filename;
+  final caveBattleSong = songs.firstWhere((song) => song.name.contains('Cave battle')).filename;
+  final forestBattleSong = songs.firstWhere((song) => song.name.contains('Forest battle')).filename;
+
   /// Use [polyphony] to configure the number of sound effects (SFX) that can
   /// play at the same time. A [polyphony] of `1` will always only play one
   /// sound (a new sound will stop the previous one).
-  AudioController({int polyphony = 2})
+  AudioController({int polyphony = 1})
       : assert(polyphony >= 1),
         _musicPlayer = AudioPlayer(playerId: 'musicPlayer'),
         _sfxPlayers =
-            Iterable.generate(polyphony, (i) => AudioPlayer(playerId: 'sfxPlayer#$i')).toList(growable: false),
-        _playlist = Queue.of(List<Song>.of(songs)..shuffle()) {
+            Iterable.generate(polyphony, (i) => AudioPlayer(playerId: 'sfxPlayer#$i')).toList(growable: false) {
     _musicPlayer.onPlayerComplete.listen(_handleSongFinished);
     unawaited(_preloadSfx());
   }
@@ -92,8 +96,20 @@ class AudioController with ReporterMixin {
 
     if (settingsController.musicOn.value) {
       if (!kIsWeb) {
-        _playCurrentSongInPlaylist();
+        _playMusic(themeSong);
       }
+    }
+  }
+
+  void setSong(String filename) {
+    if (_settings != null) {
+      if (_settings!.musicOn.value) {
+        _currentSong = filename;
+        _playMusic(filename);
+      }
+    } else {
+      _currentSong = filename;
+      _playMusic(filename);
     }
   }
 
@@ -105,7 +121,7 @@ class AudioController with ReporterMixin {
         _stopAllSound();
       case AppLifecycleState.resumed:
         if (_settings!.musicOn.value) {
-          _startOrResumeMusic();
+          _startOrResumeSong();
         }
       case AppLifecycleState.inactive:
         break;
@@ -113,23 +129,26 @@ class AudioController with ReporterMixin {
   }
 
   void _handleSongFinished(void _) {
-    _playlist.addLast(_playlist.removeFirst());
-    _playCurrentSongInPlaylist();
+    if (_currentSong != null) {
+      _playMusic(_currentSong!);
+    } else {
+      _startOrResumeSong();
+    }
   }
 
   void _musicOnHandler() {
     if (_settings!.musicOn.value) {
-      _startOrResumeMusic();
+      _startOrResumeSong();
     } else {
       _musicPlayer.pause();
     }
   }
 
-  Future<void> _playCurrentSongInPlaylist() async {
+  Future<void> _playMusic(String filename) async {
     try {
-      await _musicPlayer.play(AssetSource('/music/${_playlist.first.filename}'));
+      await _musicPlayer.play(AssetSource('/music/$filename'), volume: 0.5);
     } catch (e, st) {
-      logError(e, st, message: 'Could not play song ${_playlist.first}');
+      logError(e, st, message: 'Could not play music: $filename');
     }
   }
 
@@ -145,17 +164,16 @@ class AudioController with ReporterMixin {
     }
   }
 
-  void _startOrResumeMusic() async {
+  void _startOrResumeSong() async {
     if (_musicPlayer.source == null) {
-      await _playCurrentSongInPlaylist();
+      await _playMusic(_currentSong ?? themeSong);
       return;
     }
-
     try {
       _musicPlayer.resume();
     } catch (e, st) {
       logError(e, st, message: 'Error resuming music');
-      _playCurrentSongInPlaylist();
+      _playMusic(_currentSong ?? themeSong);
     }
   }
 
