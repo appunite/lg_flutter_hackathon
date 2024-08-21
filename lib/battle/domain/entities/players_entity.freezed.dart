@@ -21,19 +21,22 @@ mixin _$PlayersEntity {
   int get damage => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $PlayersEntityCopyWith<PlayersEntity> get copyWith => throw _privateConstructorUsedError;
+  $PlayersEntityCopyWith<PlayersEntity> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $PlayersEntityCopyWith<$Res> {
-  factory $PlayersEntityCopyWith(PlayersEntity value, $Res Function(PlayersEntity) then) =
+  factory $PlayersEntityCopyWith(
+          PlayersEntity value, $Res Function(PlayersEntity) then) =
       _$PlayersEntityCopyWithImpl<$Res, PlayersEntity>;
   @useResult
   $Res call({double healthPoints, int numberOfPlayers, int damage});
 }
 
 /// @nodoc
-class _$PlayersEntityCopyWithImpl<$Res, $Val extends PlayersEntity> implements $PlayersEntityCopyWith<$Res> {
+class _$PlayersEntityCopyWithImpl<$Res, $Val extends PlayersEntity>
+    implements $PlayersEntityCopyWith<$Res> {
   _$PlayersEntityCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -66,8 +69,10 @@ class _$PlayersEntityCopyWithImpl<$Res, $Val extends PlayersEntity> implements $
 }
 
 /// @nodoc
-abstract class _$$PlayersEntityImplCopyWith<$Res> implements $PlayersEntityCopyWith<$Res> {
-  factory _$$PlayersEntityImplCopyWith(_$PlayersEntityImpl value, $Res Function(_$PlayersEntityImpl) then) =
+abstract class _$$PlayersEntityImplCopyWith<$Res>
+    implements $PlayersEntityCopyWith<$Res> {
+  factory _$$PlayersEntityImplCopyWith(
+          _$PlayersEntityImpl value, $Res Function(_$PlayersEntityImpl) then) =
       __$$PlayersEntityImplCopyWithImpl<$Res>;
   @override
   @useResult
@@ -75,9 +80,11 @@ abstract class _$$PlayersEntityImplCopyWith<$Res> implements $PlayersEntityCopyW
 }
 
 /// @nodoc
-class __$$PlayersEntityImplCopyWithImpl<$Res> extends _$PlayersEntityCopyWithImpl<$Res, _$PlayersEntityImpl>
+class __$$PlayersEntityImplCopyWithImpl<$Res>
+    extends _$PlayersEntityCopyWithImpl<$Res, _$PlayersEntityImpl>
     implements _$$PlayersEntityImplCopyWith<$Res> {
-  __$$PlayersEntityImplCopyWithImpl(_$PlayersEntityImpl _value, $Res Function(_$PlayersEntityImpl) _then)
+  __$$PlayersEntityImplCopyWithImpl(
+      _$PlayersEntityImpl _value, $Res Function(_$PlayersEntityImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -107,7 +114,10 @@ class __$$PlayersEntityImplCopyWithImpl<$Res> extends _$PlayersEntityCopyWithImp
 /// @nodoc
 
 class _$PlayersEntityImpl implements _PlayersEntity {
-  const _$PlayersEntityImpl({required this.healthPoints, required this.numberOfPlayers, required this.damage});
+  const _$PlayersEntityImpl(
+      {required this.healthPoints,
+      required this.numberOfPlayers,
+      required this.damage});
 
   @override
   final double healthPoints;
@@ -126,13 +136,16 @@ class _$PlayersEntityImpl implements _PlayersEntity {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$PlayersEntityImpl &&
-            (identical(other.healthPoints, healthPoints) || other.healthPoints == healthPoints) &&
-            (identical(other.numberOfPlayers, numberOfPlayers) || other.numberOfPlayers == numberOfPlayers) &&
+            (identical(other.healthPoints, healthPoints) ||
+                other.healthPoints == healthPoints) &&
+            (identical(other.numberOfPlayers, numberOfPlayers) ||
+                other.numberOfPlayers == numberOfPlayers) &&
             (identical(other.damage, damage) || other.damage == damage));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, healthPoints, numberOfPlayers, damage);
+  int get hashCode =>
+      Object.hash(runtimeType, healthPoints, numberOfPlayers, damage);
 
   @JsonKey(ignore: true)
   @override
@@ -155,5 +168,6 @@ abstract class _PlayersEntity implements PlayersEntity {
   int get damage;
   @override
   @JsonKey(ignore: true)
-  _$$PlayersEntityImplCopyWith<_$PlayersEntityImpl> get copyWith => throw _privateConstructorUsedError;
+  _$$PlayersEntityImplCopyWith<_$PlayersEntityImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
