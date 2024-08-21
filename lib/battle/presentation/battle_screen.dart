@@ -362,7 +362,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
     print('TODO: Wait for monster attack animation end');
     Future.delayed(
       const Duration(seconds: 2),
-          () {
+      () {
         _nextTurn();
       },
     );

@@ -20,22 +20,19 @@ mixin _$BonusEntity {
   int get strength => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $BonusEntityCopyWith<BonusEntity> get copyWith =>
-      throw _privateConstructorUsedError;
+  $BonusEntityCopyWith<BonusEntity> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $BonusEntityCopyWith<$Res> {
-  factory $BonusEntityCopyWith(
-          BonusEntity value, $Res Function(BonusEntity) then) =
+  factory $BonusEntityCopyWith(BonusEntity value, $Res Function(BonusEntity) then) =
       _$BonusEntityCopyWithImpl<$Res, BonusEntity>;
   @useResult
   $Res call({BonusEnum type, int strength});
 }
 
 /// @nodoc
-class _$BonusEntityCopyWithImpl<$Res, $Val extends BonusEntity>
-    implements $BonusEntityCopyWith<$Res> {
+class _$BonusEntityCopyWithImpl<$Res, $Val extends BonusEntity> implements $BonusEntityCopyWith<$Res> {
   _$BonusEntityCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -63,10 +60,8 @@ class _$BonusEntityCopyWithImpl<$Res, $Val extends BonusEntity>
 }
 
 /// @nodoc
-abstract class _$$BonusEntityImplCopyWith<$Res>
-    implements $BonusEntityCopyWith<$Res> {
-  factory _$$BonusEntityImplCopyWith(
-          _$BonusEntityImpl value, $Res Function(_$BonusEntityImpl) then) =
+abstract class _$$BonusEntityImplCopyWith<$Res> implements $BonusEntityCopyWith<$Res> {
+  factory _$$BonusEntityImplCopyWith(_$BonusEntityImpl value, $Res Function(_$BonusEntityImpl) then) =
       __$$BonusEntityImplCopyWithImpl<$Res>;
   @override
   @useResult
@@ -74,11 +69,9 @@ abstract class _$$BonusEntityImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$BonusEntityImplCopyWithImpl<$Res>
-    extends _$BonusEntityCopyWithImpl<$Res, _$BonusEntityImpl>
+class __$$BonusEntityImplCopyWithImpl<$Res> extends _$BonusEntityCopyWithImpl<$Res, _$BonusEntityImpl>
     implements _$$BonusEntityImplCopyWith<$Res> {
-  __$$BonusEntityImplCopyWithImpl(
-      _$BonusEntityImpl _value, $Res Function(_$BonusEntityImpl) _then)
+  __$$BonusEntityImplCopyWithImpl(_$BonusEntityImpl _value, $Res Function(_$BonusEntityImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -121,8 +114,7 @@ class _$BonusEntityImpl implements _BonusEntity {
         (other.runtimeType == runtimeType &&
             other is _$BonusEntityImpl &&
             (identical(other.type, type) || other.type == type) &&
-            (identical(other.strength, strength) ||
-                other.strength == strength));
+            (identical(other.strength, strength) || other.strength == strength));
   }
 
   @override
@@ -136,9 +128,7 @@ class _$BonusEntityImpl implements _BonusEntity {
 }
 
 abstract class _BonusEntity implements BonusEntity {
-  const factory _BonusEntity(
-      {required final BonusEnum type,
-      required final int strength}) = _$BonusEntityImpl;
+  const factory _BonusEntity({required final BonusEnum type, required final int strength}) = _$BonusEntityImpl;
 
   @override
   BonusEnum get type;
@@ -146,6 +136,5 @@ abstract class _BonusEntity implements BonusEntity {
   int get strength;
   @override
   @JsonKey(ignore: true)
-  _$$BonusEntityImplCopyWith<_$BonusEntityImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$BonusEntityImplCopyWith<_$BonusEntityImpl> get copyWith => throw _privateConstructorUsedError;
 }

@@ -54,12 +54,11 @@ enum LevelEnum {
   ),
   fourth(
     MonsterEntity(
-      speed: 40,
-      healthPoints: 59 * 11,
-      damage: 13,
-      attackAnimation: 'ogre-attack',
-      monsterName: 'Leviathus, the Crusher of Souls'
-    ),
+        speed: 40,
+        healthPoints: 59 * 11,
+        damage: 13,
+        attackAnimation: 'ogre-attack',
+        monsterName: 'Leviathus, the Crusher of Souls'),
     'ogre-background',
     // we don't display bonus screen after the final boss
     [],
