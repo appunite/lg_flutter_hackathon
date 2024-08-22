@@ -1,19 +1,14 @@
 class ImageAssets {
   static const String battleBackground = 'assets/ilustrations/battle_background.svg';
-  static const String stoneDrawingHolder = 'assets/ilustrations/stone_drawing_holder.svg';
-  static const String glyphCompare = 'assets/ilustrations/glyphs/glyph_compare.png';
-  static const String glyphPresentation = 'assets/ilustrations/glyphs/glyph_presentation.png';
   static const String players = 'assets/ilustrations/players.svg';
   static const String trollEnemy = 'assets/ilustrations/troll_enemy.svg';
   static const String drawingBoard = 'assets/ilustrations/drawing_board.svg';
-  static const String backgroundLottie = 'assets/videos/background_movie.json';
   static const String magicPenSvg = 'assets/ilustrations/magic_pen.svg';
   static const String healthBarBackground = 'assets/ilustrations/health_bar_background.svg';
   static const String healthBarForeground = 'assets/ilustrations/health_bar_foreground.svg';
   static const String pickPlayersBackground = 'assets/ilustrations/pick_players_background.svg';
   static const String pickPlayersAcceptButton = 'assets/ilustrations/pick_players_accept_button.svg';
   static const String playAgainButton = 'assets/ilustrations/play_again.svg';
-  static const String startButton = 'assets/ilustrations/start.svg';
   static const String pickPlayersContainer = 'assets/ilustrations/pick_players_container.svg';
   static const String pickPlayersLeftButton = 'assets/ilustrations/pick_players_left_button.svg';
   static const String pickPlayersRightButton = 'assets/ilustrations/pick_players_right_button.svg';
@@ -26,7 +21,6 @@ class ImageAssets {
   static const String playerGreen = 'assets/ilustrations/player_green.svg';
   static const String playerRed = 'assets/ilustrations/player_red.svg';
   static const String playerYellow = 'assets/ilustrations/player_yellow.svg';
-  static const String loaderPointers = 'assets/ilustrations/loader_pointers.svg';
   static const String loaderContainer = 'assets/ilustrations/loader_container.svg';
   static const String loader = 'assets/ilustrations/loader.svg';
   static const String loaderBackground = 'assets/ilustrations/loader_background.svg';
@@ -71,3 +65,67 @@ class ImageAssets {
   static const String endingStory5 = 'assets/ilustrations/man.svg';
   static const String endingStory6 = 'assets/ilustrations/kitchen.svg';
 }
+
+List<String> assetsList = [
+  ImageAssets.battleBackground,
+  ImageAssets.players,
+  ImageAssets.trollEnemy,
+  ImageAssets.drawingBoard,
+  ImageAssets.magicPenSvg,
+  ImageAssets.healthBarBackground,
+  ImageAssets.healthBarForeground,
+  ImageAssets.pickPlayersBackground,
+  ImageAssets.pickPlayersAcceptButton,
+  ImageAssets.playAgainButton,
+  ImageAssets.pickPlayersContainer,
+  ImageAssets.pickPlayersLeftButton,
+  ImageAssets.pickPlayersRightButton,
+  ImageAssets.pickPlayersNumbersContainer,
+  ImageAssets.playerBlueName,
+  ImageAssets.playerGreenName,
+  ImageAssets.playerYellowName,
+  ImageAssets.playerRedName,
+  ImageAssets.playerBlue,
+  ImageAssets.playerGreen,
+  ImageAssets.playerRed,
+  ImageAssets.playerYellow,
+  ImageAssets.loaderContainer,
+  ImageAssets.loader,
+  ImageAssets.loaderBackground,
+  ImageAssets.boardBackground,
+  ImageAssets.bonusesBackground,
+  ImageAssets.bonusesStand,
+  ImageAssets.healthBonus,
+  ImageAssets.attackBonus,
+  ImageAssets.timeBonus,
+  ImageAssets.okButton,
+  ImageAssets.gameStatsBackground,
+  ImageAssets.gameStatsPlayer1,
+  ImageAssets.gameStatsPlayer2,
+  ImageAssets.gameStatsPlayer3,
+  ImageAssets.gameStatsPlayer4,
+  ImageAssets.gameStatsPointFirstRow,
+  ImageAssets.gameStatsPointSecondRow,
+  ImageAssets.gameResultHolder,
+  ImageAssets.round,
+  ImageAssets.openingStory1,
+  ImageAssets.openingStory2,
+  ImageAssets.openingStory3,
+  ImageAssets.openingStory4,
+  ImageAssets.openingStory5,
+  ImageAssets.openingStory6,
+  ImageAssets.openingStory7,
+  ImageAssets.openingStory8,
+  ImageAssets.openingStory9,
+  ImageAssets.openingStory10,
+  ImageAssets.openingStory11,
+  ImageAssets.openingStory12,
+  ImageAssets.openingStory13,
+  ImageAssets.buttonNext,
+  ImageAssets.endingStory1,
+  ImageAssets.endingStory2,
+  ImageAssets.endingStory3,
+  ImageAssets.endingStory4,
+  ImageAssets.endingStory5,
+  ImageAssets.endingStory6,
+];
