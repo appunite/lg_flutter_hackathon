@@ -1,5 +1,6 @@
 class ImageAssets {
   static const String battleBackground = 'assets/ilustrations/battle_background.svg';
+  static const String splashScreenBackground = 'assets/ilustrations/splash_background.svg';
   static const String players = 'assets/ilustrations/players.svg';
   static const String trollEnemy = 'assets/ilustrations/troll_enemy.svg';
   static const String drawingBoard = 'assets/ilustrations/drawing_board.svg';
@@ -128,4 +129,5 @@ List<String> assetsList = [
   ImageAssets.endingStory4,
   ImageAssets.endingStory5,
   ImageAssets.endingStory6,
+  ImageAssets.splashScreenBackground,
 ];
