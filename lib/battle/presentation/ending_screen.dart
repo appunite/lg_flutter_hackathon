@@ -111,10 +111,10 @@ class _EndGameScreenState extends State<EndGameScreen> with SingleTickerProvider
                 Navigator.popUntil(context, (route) => route.isFirst);
               },
               child: SvgPicture.asset(
-                ImageAssets.pickPlayersAcceptButton,
+                ImageAssets.playAgainButton,
                 fit: BoxFit.contain,
-                width: screenWidth / DesignConsts.acceptButtonWidthFactor,
-                height: screenHeight / DesignConsts.acceptButtonHeightFactor,
+                width: screenWidth / DesignConsts.playAgainWidthFactor,
+                height: screenHeight / DesignConsts.playAgainHeightFactor,
               ),
             ),
           ),
@@ -160,7 +160,7 @@ class _EndGameScreenState extends State<EndGameScreen> with SingleTickerProvider
                 ? ScaleTransition(
                     scale: _fontSizeAnimation,
                     child: Text(
-                      Strings.victory,
+                      Strings.congratulations,
                       style: TextStyle(
                         fontFamily: DesignConsts.fontFamily,
                         fontSize: screenHeight * 0.045,
