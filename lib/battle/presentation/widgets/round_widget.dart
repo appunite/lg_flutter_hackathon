@@ -48,12 +48,7 @@ class _RoundWidgetState extends State<RoundWidget> with SingleTickerProviderStat
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SvgPicture.asset(
-                ImageAssets.round,
-                width: screenWidth / 2,
-                height: screenHeight / 4,
-                fit: BoxFit.contain,
-              )
+              _roundText(screenWidth, screenHeight)
                   .animate()
                   .slideY(
                     curve: Curves.easeInOut,
@@ -64,12 +59,7 @@ class _RoundWidgetState extends State<RoundWidget> with SingleTickerProviderStat
                   .fadeIn(
                     duration: const Duration(milliseconds: 800),
                   ),
-              SvgPicture.asset(
-                widget.level.roundAsset,
-                width: screenWidth / 4,
-                height: screenHeight / 4,
-                fit: BoxFit.contain,
-              )
+              _roundNumber(screenWidth, screenHeight)
                   .animate()
                   .slideY(
                     curve: Curves.easeInOut,
@@ -83,14 +73,7 @@ class _RoundWidgetState extends State<RoundWidget> with SingleTickerProviderStat
                     delay: const Duration(milliseconds: 250),
                   ),
               SizedBox(height: screenHeight / 10),
-              Text(
-                widget.level.monster.monsterName,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: DesignConsts.fontFamily,
-                  fontSize: screenWidth / 40,
-                ),
-              ).animate().fadeIn(
+              _monsterName(screenWidth).animate().fadeIn(
                     delay: const Duration(milliseconds: 1500),
                     duration: const Duration(milliseconds: 1000),
                   ),
@@ -98,6 +81,35 @@ class _RoundWidgetState extends State<RoundWidget> with SingleTickerProviderStat
           ),
         ],
       ],
+    );
+  }
+
+  Widget _monsterName(double screenWidth) {
+    return Text(
+      widget.level.monster.monsterName,
+      style: TextStyle(
+        color: Colors.white,
+        fontFamily: DesignConsts.fontFamily,
+        fontSize: screenWidth / 40,
+      ),
+    );
+  }
+
+  Widget _roundNumber(double screenWidth, double screenHeight) {
+    return SvgPicture.asset(
+      widget.level.roundAsset,
+      width: screenWidth / 4,
+      height: screenHeight / 4,
+      fit: BoxFit.contain,
+    );
+  }
+
+  Widget _roundText(double screenWidth, double screenHeight) {
+    return SvgPicture.asset(
+      ImageAssets.round,
+      width: screenWidth / 2,
+      height: screenHeight / 4,
+      fit: BoxFit.contain,
     );
   }
 }
