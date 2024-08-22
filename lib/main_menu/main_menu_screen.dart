@@ -217,7 +217,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                     ),
                   );
 
-                  Future.delayed(const Duration(seconds: 1), () {
+                  Future.delayed(const Duration(seconds: 5), () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
