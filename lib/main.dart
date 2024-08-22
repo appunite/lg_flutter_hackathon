@@ -3,10 +3,12 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/level_enum.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/players_entity.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/battle_screen.dart';
 import 'package:lg_flutter_hackathon/bonuses/bonuses_screen.dart';
+import 'package:lg_flutter_hackathon/constants/image_assets.dart';
 import 'package:lg_flutter_hackathon/dependencies.dart';
 import 'package:lg_flutter_hackathon/main_menu/main_menu_screen.dart';
 import 'package:lg_flutter_hackathon/story/domain/ending_story_enum.dart';
@@ -26,9 +28,9 @@ void main() async {
     () async {
       WidgetsFlutterBinding.ensureInitialized();
 
-      if (kIsWeb) {
-        //TODO
-      } else if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      _precacheSvg();
+
+      if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
         await windowManager.ensureInitialized();
 
         WindowOptions windowOptions = const WindowOptions(
@@ -54,6 +56,13 @@ void main() async {
       debugPrintStack(stackTrace: st, label: e.toString());
     },
   );
+}
+
+void _precacheSvg() {
+  for (final asset in assetsList) {
+    final loader = SvgAssetLoader(asset);
+    svg.cache.putIfAbsent(loader.cacheKey(null), () => loader.loadBytes(null));
+  }
 }
 
 class App extends StatelessWidget {

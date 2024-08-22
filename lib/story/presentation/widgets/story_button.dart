@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lg_flutter_hackathon/components/pushable_button.dart';
 import 'package:lg_flutter_hackathon/constants/design_consts.dart';
 import 'package:lg_flutter_hackathon/constants/image_assets.dart';
 
@@ -17,15 +18,15 @@ class StoryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.sizeOf(context).width;
 
-    return GestureDetector(
-      onTap: onTap,
+    return PushableButton(
+      onPressed: onTap,
       child: Stack(
         alignment: Alignment.center,
         children: [
           SvgPicture.asset(
             ImageAssets.buttonNext,
-            width: 60,
-            height: 50,
+            width: screenWidth / 20,
+            height: screenWidth / 30,
           ),
           Text(
             text,
