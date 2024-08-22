@@ -21,25 +21,27 @@ class DesignConsts {
   static BorderRadius healthBarRadius = BorderRadius.circular(56);
 
   //MAIN SCREEN
-  static const double screenBottomPositionFactor = 4;
+  static const double screenBottomPositionFactor = 14;
   static const double screenLeftRightPositionFactor = 6;
-  static const double containerWidthFactor = 1.5;
-  static const double containerHeightFactor = 3;
+  static const double containerWidthFactor = 1;
+  static const double containerHeightFactor = 2.6;
   static const double playerIconWidthFactor = 5;
-  static const double playerIconHeightFactor = 5;
+  static const double playerIconHeightFactor = 4;
   static const double buttonWidthFactor = 15;
-  static const double buttonHeightFactor = 15;
+  static const double buttonHeightFactor = 8;
   static const double buttonSpacingFactor = 60;
-  static const double acceptButtonWidthFactor = 5;
-  static const double acceptButtonHeightFactor = 15;
-  static const double acceptButtonSpacingFactor = 120;
+  static const double acceptButtonWidthFactor = 8;
+  static const double acceptButtonHeightFactor = 8;
+  static const double acceptButtonSpacingFactor = 100;
+  static const double acceptButtonLeftFactor = 2.28;
+  static const double acceptButtonTopFactor = 2.05;
   static const double textSpacingFactor = 40;
   static const double soundSettingsTopPositionFactor = 60;
   static const double soundSettingsLeftPositionFactor = 20;
-  static const double playerNumberContainerWidthFactor = 10;
-  static const double playerNumberContainerHeightFactor = 10;
+  static const double playerNumberContainerWidthFactor = 5;
+  static const double playerNumberContainerHeightFactor = 13;
   static const double titleFontSizeFactor = 50;
-  static const double bonusTitleFontSizeFactor = 30;
+  static const double bonusTitleFontSizeFactor = 40;
   static const double numberFontSizeFactor = 50;
   static const double iconSizeFactor = 50;
   static const double bonusStandHeightFactor = 7;
@@ -55,6 +57,8 @@ class DesignConsts {
   static const double bonusArrowsHeightFactor = 6;
 
   // END GAME SCREEN
-  static const double buttonStartAgainBottomPositionFactor = 8;
+  static const double buttonStartAgainBottomPositionFactor = 14;
   static const double buttonStartAgainLeftRightPositionFactor = 6;
+  static const double playAgainWidthFactor = 7;
+  static const double playAgainHeightFactor = 7;
 }

@@ -12,10 +12,16 @@ class ImageAssets {
   static const String healthBarForeground = 'assets/ilustrations/health_bar_foreground.svg';
   static const String pickPlayersBackground = 'assets/ilustrations/pick_players_background.svg';
   static const String pickPlayersAcceptButton = 'assets/ilustrations/pick_players_accept_button.svg';
+  static const String playAgainButton = 'assets/ilustrations/play_again.svg';
+  static const String startButton = 'assets/ilustrations/start.svg';
   static const String pickPlayersContainer = 'assets/ilustrations/pick_players_container.svg';
   static const String pickPlayersLeftButton = 'assets/ilustrations/pick_players_left_button.svg';
   static const String pickPlayersRightButton = 'assets/ilustrations/pick_players_right_button.svg';
   static const String pickPlayersNumbersContainer = 'assets/ilustrations/pick_players_numbers_container.svg';
+  static const String playerBlueName = 'assets/ilustrations/player_name_blue.svg';
+  static const String playerGreenName = 'assets/ilustrations/player_name_green.svg';
+  static const String playerYellowName = 'assets/ilustrations/player_name_yellow.svg';
+  static const String playerRedName = 'assets/ilustrations/player_name_red.svg';
   static const String playerBlue = 'assets/ilustrations/player_blue.svg';
   static const String playerGreen = 'assets/ilustrations/player_green.svg';
   static const String playerRed = 'assets/ilustrations/player_red.svg';

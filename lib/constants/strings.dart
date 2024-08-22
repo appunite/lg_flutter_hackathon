@@ -32,7 +32,7 @@ class Strings {
 
   static const String loading = 'Loading...';
   static const String gameOver = 'Game Over';
-  static const String victory = 'Victory';
+  static const String congratulations = 'Congratulations!';
   static const String player = 'Player';
   static const String avgAccuracy = 'Avg. Accuracy';
   static const String attacks = 'Attacks';
