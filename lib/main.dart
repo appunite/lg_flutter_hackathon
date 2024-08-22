@@ -89,7 +89,10 @@ class App extends StatelessWidget {
             ),
             initialRoute: '/',
             routes: {
-              '/': (context) => const MainMenuScreen(),
+              '/': (context) => const  BattleScreen(
+                    level: LevelEnum.first,
+                    players: PlayersEntity(healthPoints: 100, numberOfPlayers: 4, damage: 10),
+                  ),
               '/battle': (context) => const BattleScreen(
                     level: LevelEnum.first,
                     players: PlayersEntity(healthPoints: 100, numberOfPlayers: 4, damage: 10),
