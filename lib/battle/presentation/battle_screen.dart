@@ -138,6 +138,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
           ),
           builder: (context) => Scaffold(
             body: RoundWidget(
+              level: widget.level,
               child: Stack(
                 children: [
                   _buildBackground(),

@@ -40,6 +40,10 @@ class ImageAssets {
   static const String gameStatsPointSecondRow = 'assets/ilustrations/game_stats_point_second_row.svg';
   static const String gameResultHolder = 'assets/ilustrations/game_result_holder.svg';
   static const String round = 'assets/ilustrations/round.svg';
+  static const String round1number = 'assets/ilustrations/round_1.svg';
+  static const String round2number = 'assets/ilustrations/round_2.svg';
+  static const String round3number = 'assets/ilustrations/round_3.svg';
+  static const String round4number = 'assets/ilustrations/round_4.svg';
 
   // opening story
   static const String openingStory1 = 'assets/ilustrations/castle.svg';
@@ -128,4 +132,9 @@ List<String> assetsList = [
   ImageAssets.endingStory4,
   ImageAssets.endingStory5,
   ImageAssets.endingStory6,
+  ImageAssets.round,
+  ImageAssets.round1number,
+  ImageAssets.round2number,
+  ImageAssets.round3number,
+  ImageAssets.round4number,
 ];

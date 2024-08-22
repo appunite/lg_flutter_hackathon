@@ -1,60 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lg_flutter_hackathon/battle/domain/entities/level_enum.dart';
+import 'package:lg_flutter_hackathon/battle/presentation/widgets/overlay_widget.dart';
+import 'package:lg_flutter_hackathon/constants/design_consts.dart';
 import 'package:lg_flutter_hackathon/constants/image_assets.dart';
 
 class RoundWidget extends StatefulWidget {
   const RoundWidget({
     super.key,
     required this.child,
+    required this.level,
   });
 
   final Widget child;
+  final LevelEnum level;
 
   @override
   State<RoundWidget> createState() => _RoundWidgetState();
 }
 
 class _RoundWidgetState extends State<RoundWidget> with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<Offset> _slideAnimation;
-  late Animation<double> _fadeAnimation;
-
   bool _displayRound = true;
 
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 1000),
-      vsync: this,
-    );
 
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0.0, 1.0),
-      end: Offset.zero,
-    ).animate(_animationController);
-
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(_animationController);
-
-    _animationController.forward();
-    _animationController.addListener(() {
-      if (_animationController.isCompleted) {
-        Future.delayed(const Duration(milliseconds: 1500), () {
-          setState(() {
-            _displayRound = false;
-          });
-        });
-      }
+    Future.delayed(const Duration(milliseconds: 3500), () {
+      setState(() {
+        _displayRound = false;
+      });
     });
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
   }
 
   @override
@@ -67,28 +44,57 @@ class _RoundWidgetState extends State<RoundWidget> with SingleTickerProviderStat
       children: [
         widget.child,
         if (_displayRound) ...[
-          Container(
-            width: double.infinity,
-            height: double.infinity,
-            color: Colors.black.withOpacity(.5),
-          ),
-          // const OverlayWidget(),
-          AnimatedBuilder(
-            animation: _animationController,
-            builder: (context, child) {
-              return SlideTransition(
-                position: _slideAnimation,
-                child: FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: SvgPicture.asset(
-                    ImageAssets.okButton,
-                    width: screenWidth / 2,
-                    height: screenHeight / 4,
-                    fit: BoxFit.contain,
+          const OverlayWidget(),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SvgPicture.asset(
+                ImageAssets.round,
+                width: screenWidth / 2,
+                height: screenHeight / 4,
+                fit: BoxFit.contain,
+              )
+                  .animate()
+                  .slideY(
+                    curve: Curves.easeInOut,
+                    begin: 0.5,
+                    end: 0.0,
+                    duration: const Duration(milliseconds: 800),
+                  )
+                  .fadeIn(
+                    duration: const Duration(milliseconds: 800),
                   ),
+              SvgPicture.asset(
+                widget.level.roundAsset,
+                width: screenWidth / 4,
+                height: screenHeight / 4,
+                fit: BoxFit.contain,
+              )
+                  .animate()
+                  .slideY(
+                    curve: Curves.easeInOut,
+                    begin: 0.5,
+                    end: 0.0,
+                    duration: const Duration(milliseconds: 800),
+                    delay: const Duration(milliseconds: 250),
+                  )
+                  .fadeIn(
+                    duration: const Duration(milliseconds: 800),
+                    delay: const Duration(milliseconds: 250),
+                  ),
+              SizedBox(height: screenHeight / 10),
+              Text(
+                widget.level.monster.monsterName,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontFamily: DesignConsts.fontFamily,
+                  fontSize: screenWidth / 40,
                 ),
-              );
-            },
+              ).animate().fadeIn(
+                    delay: const Duration(milliseconds: 1500),
+                    duration: const Duration(milliseconds: 1000),
+                  ),
+            ],
           ),
         ],
       ],
