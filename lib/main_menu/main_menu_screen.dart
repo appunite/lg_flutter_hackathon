@@ -51,10 +51,17 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
 
   List<Widget> _buildPlayersIcons(double width, double height) {
     List<String> playerAssets = [
-      ImageAssets.playerRed,
-      ImageAssets.playerYellow,
-      ImageAssets.playerGreen,
       ImageAssets.playerBlue,
+      ImageAssets.playerGreen,
+      ImageAssets.playerYellow,
+      ImageAssets.playerRed,
+    ];
+
+    List<String> nameAssets = [
+      ImageAssets.playerBlueName,
+      ImageAssets.playerGreenName,
+      ImageAssets.playerYellowName,
+      ImageAssets.playerRedName,
     ];
 
     return List<Widget>.generate(4, (index) {
@@ -62,10 +69,26 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
         opacity: _isPlayerVisible[index] ? 1.0 : 0.0,
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
-        child: SvgPicture.asset(
-          playerAssets[index],
-          width: width / DesignConsts.playerIconWidthFactor,
-          height: height / DesignConsts.playerIconHeightFactor,
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: width / 100),
+              child: SvgPicture.asset(
+                playerAssets[index],
+                // width: width / DesignConsts.playerIconWidthFactor,
+                height: height / 5,
+              ),
+            ),
+            SizedBox(height: height / 30),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: width / 100),
+              child: SvgPicture.asset(
+                nameAssets[index],
+                height: height / 20,
+              ),
+            ),
+            SizedBox(height: height / 20),
+          ],
         ),
       );
     });
@@ -118,6 +141,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                               color: Colors.white,
                             ),
                           ),
+                          SizedBox(height: screenHeight / DesignConsts.buttonSpacingFactor / 4),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -159,6 +183,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                                       ),
                                     ],
                                   ),
+                                  SizedBox(width: screenWidth / DesignConsts.buttonSpacingFactor),
                                 ],
                               ),
                               SizedBox(width: screenWidth / DesignConsts.buttonSpacingFactor),
@@ -176,41 +201,45 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                               ),
                             ],
                           ),
-                          SizedBox(height: screenHeight / DesignConsts.acceptButtonSpacingFactor),
-                          //TODO: Change to use overlay over battle screen instead of future delayed
-                          PushableButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const LoadingScreen(),
-                                ),
-                              );
-
-                              Future.delayed(const Duration(seconds: 5), () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const BattleScreen(
-                                      level: LevelEnum.first,
-                                      players: PlayersEntity(healthPoints: 100, numberOfPlayers: 4, damage: 10),
-                                    ),
-                                  ),
-                                );
-                              });
-                            },
-                            child: SvgPicture.asset(
-                              ImageAssets.pickPlayersAcceptButton,
-                              fit: BoxFit.contain,
-                              width: screenWidth / DesignConsts.acceptButtonWidthFactor,
-                              height: screenHeight / DesignConsts.acceptButtonHeightFactor,
-                            ),
-                          ),
+                          SizedBox(height: screenHeight / DesignConsts.buttonSpacingFactor),
                         ],
                       ),
                     ],
                   ),
                 ],
+              ),
+            ),
+            Positioned(
+              bottom: screenHeight / 22,
+              left: screenWidth / 2.3,
+              right: screenWidth / 2.3,
+              child: PushableButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LoadingScreen(),
+                    ),
+                  );
+
+                  Future.delayed(const Duration(seconds: 5), () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const BattleScreen(
+                          level: LevelEnum.first,
+                          players: PlayersEntity(healthPoints: 100, numberOfPlayers: 4, damage: 10),
+                        ),
+                      ),
+                    );
+                  });
+                },
+                child: SvgPicture.asset(
+                  ImageAssets.pickPlayersAcceptButton,
+                  fit: BoxFit.contain,
+                  width: screenWidth / DesignConsts.acceptButtonWidthFactor,
+                  height: screenHeight / DesignConsts.acceptButtonHeightFactor,
+                ),
               ),
             ),
             Positioned(
