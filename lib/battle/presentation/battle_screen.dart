@@ -68,7 +68,7 @@ class _BattleScreenBody extends StatefulWidget {
 }
 
 class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixin {
-  final TooltipController _controller = TooltipController();
+  final TooltipController _toolTipController = TooltipController();
   bool done = false;
   PausableTimer? _timer;
   bool _shouldMonsterAttack = false;
@@ -82,11 +82,11 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   @override
   void initState() {
     super.initState();
-    _controller.onDone(
+    _toolTipController.onDone(
       () => setState(() => done = true),
     );
-
-    _startTimer(widget.level.monster.speed, widget.chosenBonus);
+    _toolTipController.setStartWhen((initializedWidgetLength) async => initializedWidgetLength > 1);
+    // _startTimer(widget.level.monster.speed, widget.chosenBonus);
   }
 
   void _startTimer(int monsterSpeed, BonusEntity? bonus) {
@@ -123,12 +123,12 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
       },
       builder: (context, state) {
         return OverlayTooltipScaffold(
-          overlayColor: Colors.red.withOpacity(.4),
+          overlayColor: Colors.red.withOpacity(1),
           tooltipAnimationCurve: Curves.linear,
           tooltipAnimationDuration: const Duration(milliseconds: 1000),
-          controller: _controller,
+          controller: _toolTipController,
           preferredOverlay: GestureDetector(
-            onTap: () => _controller.next(),
+            onTap: () => _toolTipController.next(),
             child: Container(
               height: double.infinity,
               width: double.infinity,
@@ -140,6 +140,28 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
               children: [
                 _buildBackground(),
                 _buildPlayerHealthBar(screenHeight, screenWidth),
+                // OverlayTooltipItem(
+                //   displayIndex: 0,
+                //   tooltip: (controller) {
+                //     return Padding(
+                //       padding: const EdgeInsets.symmetric(horizontal: 15),
+                //       child: MTooltip(title: 'this is your health!', controller: controller),
+                //     );
+                //   },
+                //   tooltipHorizontalPosition: TooltipHorizontalPosition.RIGHT,
+                //   tooltipVerticalPosition: TooltipVerticalPosition.BOTTOM,
+                //   child: _buildPlayerHealthBar(screenHeight, screenWidth),
+                // ),
+                // OverlayTooltipItem(
+                //   displayIndex: 1,
+                //   child: _buildPlayerIndicator(screenHeight, screenWidth),
+                //   tooltip: (controller) {
+                //     return Padding(
+                //       padding: const EdgeInsets.symmetric(horizontal: 15),
+                //       child: MTooltip(title: 'this is you!!', controller: controller),
+                //     );
+                //   },
+                // ),
                 _buildPlayerIndicator(screenHeight, screenWidth),
                 _buildEnemyHealthBar(screenHeight, screenWidth),
                 _buildPlayer(screenHeight, screenWidth),
@@ -191,9 +213,20 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
                 healthPoints += widget.chosenBonus!.strength.toDouble();
               }
 
-              return HealthBar(
-                maxHealthPoints: healthPoints,
-                newHealthPoints: result.currentPlayersHealthPoints,
+              return OverlayTooltipItem(
+                displayIndex: 0,
+                tooltip: (controller) {
+                  // return Padding(
+                  // padding: const EdgeInsets.symmetric(horizontal: 15),
+                  // child:
+                  return MTooltip(title: 'this is your health!', controller: controller);
+                  // );
+                },
+                tooltipHorizontalPosition: TooltipHorizontalPosition.RIGHT,
+                child: HealthBar(
+                  maxHealthPoints: healthPoints,
+                  newHealthPoints: result.currentPlayersHealthPoints,
+                ),
               );
             },
             orElse: () => const SizedBox.shrink(),
@@ -279,7 +312,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
       bottom: screenHeight / DesignConsts.playerBottomPositionFactor,
       left: screenWidth / DesignConsts.widthDivisionForPlayer,
       child: OverlayTooltipItem(
-        displayIndex: 0,
+        displayIndex: 1,
         tooltip: (controller) {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -289,6 +322,8 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
             ),
           );
         },
+        tooltipHorizontalPosition: TooltipHorizontalPosition.RIGHT,
+        tooltipVerticalPosition: TooltipVerticalPosition.BOTTOM,
         child: SvgPicture.asset(
           height: screenHeight / 2,
           ImageAssets.players,
@@ -358,7 +393,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
     print('TODO: Wait for monster attack animation end');
     Future.delayed(
       const Duration(seconds: 2),
-          () {
+      () {
         _nextTurn();
       },
     );

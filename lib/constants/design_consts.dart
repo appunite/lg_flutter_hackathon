@@ -12,6 +12,8 @@ class DesignConsts {
   static const double playerBottomPositionFactor = 8;
   static const double playerHealthBarLeftFactor = 24;
   static const double enemyHealthBarRightFactor = 24;
+  static const double tutorialColumnSpacingFactor = 8;
+  static const double tutorialButtonSpacingFactor = 8;
 
   //HEALTH BAR
   static const double healthBarWidthFactor = 4.0;
@@ -40,7 +42,7 @@ class DesignConsts {
   static const double playerNumberContainerHeightFactor = 10;
   static const double titleFontSizeFactor = 50;
   static const double bonusTitleFontSizeFactor = 30;
-  static const double numberFontSizeFactor = 50;
+  static const double numberFontSizeFactor = 70;
   static const double iconSizeFactor = 50;
   static const double bonusStandHeightFactor = 7;
   static const double bonusesWidthFactor = 2.5;

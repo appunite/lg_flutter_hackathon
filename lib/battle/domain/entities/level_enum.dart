@@ -25,7 +25,7 @@ enum LevelEnum {
       attackAnimation: 'wolf-attack',
     ),
     'wolf-background',
-     [
+    [
       BonusEntity(type: BonusEnum.health, strength: 2),
       BonusEntity(type: BonusEnum.damage, strength: 2),
       BonusEntity(type: BonusEnum.time, strength: 2),
@@ -39,7 +39,7 @@ enum LevelEnum {
       attackAnimation: 'bugbear-attack',
     ),
     'bugbear-background',
-     [
+    [
       BonusEntity(type: BonusEnum.health, strength: 3),
       BonusEntity(type: BonusEnum.damage, strength: 3),
       BonusEntity(type: BonusEnum.time, strength: 3),
