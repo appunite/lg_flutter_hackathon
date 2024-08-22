@@ -39,4 +39,29 @@ class ImageAssets {
   static const String gameStatsPointFirstRow = 'assets/ilustrations/game_stats_point_first_row.svg';
   static const String gameStatsPointSecondRow = 'assets/ilustrations/game_stats_point_second_row.svg';
   static const String gameResultHolder = 'assets/ilustrations/game_result_holder.svg';
+  static const String round = 'assets/ilustrations/round.svg';
+
+  // opening story
+  static const String openingStory1 = 'assets/ilustrations/castle.svg';
+  static const String openingStory2 = 'assets/ilustrations/forest_trolls.svg';
+  static const String openingStory3 = 'assets/ilustrations/mashrooms.svg';
+  static const String openingStory4 = 'assets/ilustrations/coat.svg';
+  static const String openingStory5 = 'assets/ilustrations/coat_trolls.svg';
+  static const String openingStory6 = 'assets/ilustrations/findings.svg';
+  static const String openingStory7 = 'assets/ilustrations/keys.svg';
+  static const String openingStory8 = 'assets/ilustrations/drops.svg';
+  static const String openingStory9 = 'assets/ilustrations/wallet.svg';
+  static const String openingStory10 = 'assets/ilustrations/story_stick.svg';
+  static const String openingStory11 = 'assets/ilustrations/story_stick_troll.svg';
+  static const String openingStory12 = 'assets/ilustrations/palms.svg';
+  static const String openingStory13 = 'assets/ilustrations/underwood.svg';
+  static const String buttonNext = 'assets/ilustrations/button_next.svg';
+
+  // ending story
+  static const String endingStory1 = 'assets/ilustrations/fountain_trolls.svg';
+  static const String endingStory2 = 'assets/ilustrations/city.svg';
+  static const String endingStory3 = 'assets/ilustrations/cottage.svg';
+  static const String endingStory4 = 'assets/ilustrations/coat_floor.svg';
+  static const String endingStory5 = 'assets/ilustrations/man.svg';
+  static const String endingStory6 = 'assets/ilustrations/kitchen.svg';
 }

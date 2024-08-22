@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +9,10 @@ import 'package:lg_flutter_hackathon/battle/presentation/battle_screen.dart';
 import 'package:lg_flutter_hackathon/bonuses/bonuses_screen.dart';
 import 'package:lg_flutter_hackathon/dependencies.dart';
 import 'package:lg_flutter_hackathon/main_menu/main_menu_screen.dart';
+import 'package:lg_flutter_hackathon/story/domain/ending_story_enum.dart';
+import 'package:lg_flutter_hackathon/story/presentation/ending_story_screen.dart';
+import 'package:lg_flutter_hackathon/story/presentation/opening_story_screen.dart';
+import 'package:lg_flutter_hackathon/story/domain/opening_story_enum.dart';
 import 'package:lg_flutter_hackathon/utils/window_manager_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart';
@@ -23,7 +26,9 @@ void main() async {
     () async {
       WidgetsFlutterBinding.ensureInitialized();
 
-      if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
+      if (kIsWeb) {
+        //TODO
+      } else if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
         await windowManager.ensureInitialized();
 
         WindowOptions windowOptions = const WindowOptions(
@@ -97,6 +102,12 @@ class App extends StatelessWidget {
               '/bonuses': (context) => const BonusesScreen(
                     level: LevelEnum.first,
                     players: PlayersEntity(healthPoints: 100, numberOfPlayers: 4, damage: 10),
+                  ),
+              '/opening-story': (context) => OpeningStoryScreen(
+                    step: OpeningStoryStep.values.first,
+                  ),
+              '/ending-story': (context) => EndingStoryScreen(
+                    step: EndingStoryStep.values.first,
                   ),
             },
           );

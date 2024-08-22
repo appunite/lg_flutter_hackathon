@@ -20,7 +20,7 @@ class DesignConsts {
   static const double healthBarHeightDivision = 28.0;
   static BorderRadius healthBarRadius = BorderRadius.circular(56);
 
-  //MAIN SCREEN
+  // MAIN SCREEN
   static const double screenBottomPositionFactor = 4;
   static const double screenLeftRightPositionFactor = 6;
   static const double containerWidthFactor = 1.5;
@@ -53,6 +53,8 @@ class DesignConsts {
   static const double standHeightFactor = 2.5;
   static const double bonusDescriptionHeightFactor = 5;
   static const double bonusArrowsHeightFactor = 6;
+  static const double storyScreenBottomPositionFactor = 12;
+  static const double storyFontSizeFactor = 60;
 
   // END GAME SCREEN
   static const double buttonStartAgainBottomPositionFactor = 8;
