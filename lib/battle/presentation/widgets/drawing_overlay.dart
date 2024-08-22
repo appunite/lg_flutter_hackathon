@@ -9,6 +9,7 @@ import 'package:lg_flutter_hackathon/battle/domain/entities/drawing_details_enti
 import 'package:lg_flutter_hackathon/battle/domain/entities/drawing_mode_enum.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/glyph_entity.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/drawing_painter.dart';
+import 'package:lg_flutter_hackathon/battle/presentation/widgets/overlay_widget.dart';
 import 'package:lg_flutter_hackathon/constants/design_consts.dart';
 import 'package:lg_flutter_hackathon/constants/image_assets.dart';
 
@@ -196,11 +197,7 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
     return Stack(
       alignment: Alignment.center,
       children: [
-        Container(
-          width: double.infinity,
-          height: double.infinity,
-          color: Colors.black.withOpacity(0.9),
-        ),
+        const OverlayWidget(),
         Positioned(
           top: 64,
           child: Text(

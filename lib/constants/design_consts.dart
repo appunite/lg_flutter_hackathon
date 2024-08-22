@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
 
 class DesignConsts {
-  //FONT
+  // FONT
   static const String fontFamily = 'Knewave';
 
   static const double heightDivision32 = 32;
 
-  //BATTLE SCREEN
+  // BATTLE SCREEN
   static const double widthDivisionForHealthBar = 4;
   static const double widthDivisionForPlayer = 5;
   static const double playerBottomPositionFactor = 8;
   static const double playerHealthBarLeftFactor = 24;
   static const double enemyHealthBarRightFactor = 24;
 
-  //HEALTH BAR
+  // HEALTH BAR
   static const double healthBarWidthFactor = 4.0;
   static const double healthBarForegroundWidthFactor = 0.8;
   static const double healthBarMaxWidthFactor = 28.0;
   static const double healthBarHeightDivision = 28.0;
   static BorderRadius healthBarRadius = BorderRadius.circular(56);
 
-  //MAIN SCREEN
-  static const double screenBottomPositionFactor = 14;
+  // MAIN SCREEN
+  static const double screenBottomPositionFactor = 4;
   static const double screenLeftRightPositionFactor = 6;
   static const double containerWidthFactor = 1;
   static const double containerHeightFactor = 2.6;
@@ -55,6 +55,8 @@ class DesignConsts {
   static const double standHeightFactor = 2.5;
   static const double bonusDescriptionHeightFactor = 5;
   static const double bonusArrowsHeightFactor = 6;
+  static const double storyScreenBottomPositionFactor = 12;
+  static const double storyFontSizeFactor = 60;
 
   // END GAME SCREEN
   static const double buttonStartAgainBottomPositionFactor = 14;
