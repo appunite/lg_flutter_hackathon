@@ -20,6 +20,7 @@ import 'package:lg_flutter_hackathon/constants/design_consts.dart';
 import 'package:lg_flutter_hackathon/constants/image_assets.dart';
 import 'package:lg_flutter_hackathon/constants/strings.dart';
 import 'package:lg_flutter_hackathon/logger.dart';
+import 'package:lg_flutter_hackathon/settings/settings.dart';
 import 'package:lg_flutter_hackathon/utils/drawing_utils.dart';
 import 'package:overlay_tooltip/overlay_tooltip.dart';
 import 'package:pausable_timer/pausable_timer.dart';
@@ -70,7 +71,7 @@ class _BattleScreenBody extends StatefulWidget {
 
 class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixin {
   final TooltipController _toolTipController = TooltipController();
-  bool done = false;
+
   PausableTimer? _timer;
   bool _shouldMonsterAttack = false;
 
@@ -79,15 +80,26 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   double _overlayOpacity = 0.0;
   bool _showAccuracyAnimation = false;
   DrawingModeEnum _currentDrawingMode = DrawingModeEnum.attack;
+  bool _showtutorial = false;
 
   @override
   void initState() {
     super.initState();
     _toolTipController.onDone(
-      () => setState(() => done = true),
+      () {
+        _drawRune(DrawingModeEnum.attack);
+      },
     );
-    _toolTipController.setStartWhen((initializedWidgetLength) async => initializedWidgetLength > 1);
-    // _startTimer(widget.level.monster.speed, widget.chosenBonus);
+    if (!_showtutorial) {
+      _startTimer(widget.level.monster.speed, widget.chosenBonus);
+    }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (_showtutorial) {
+        await Future.delayed(const Duration(seconds: 4));
+        _toolTipController.start();
+      }
+    });
   }
 
   void _startTimer(int monsterSpeed, BonusEntity? bonus) {
@@ -112,69 +124,78 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.sizeOf(context).height;
     final screenWidth = MediaQuery.sizeOf(context).width;
+    final settingsController = context.watch<SettingsController>();
 
-    return BlocConsumer<BattleCubit, BattleState>(
-      listener: (context, state) {
-        state.mapOrNull(
-          monsterAttack: (_) => _monsterAttackAnimation(),
-          playerAttack: (_) => _playersAttackAnimation(),
-          gameOver: (_) => _openGameOverScreen(),
-          victory: (_) => _openVictoryScreen(),
-        );
-      },
-      builder: (context, state) {
-        return OverlayTooltipScaffold(
-          overlayColor: Colors.red.withOpacity(1),
-          tooltipAnimationCurve: Curves.linear,
-          tooltipAnimationDuration: const Duration(milliseconds: 1000),
-          controller: _toolTipController,
-          preferredOverlay: GestureDetector(
-            onTap: () => _toolTipController.next(),
-            child: Container(
-              height: double.infinity,
-              width: double.infinity,
-              color: Colors.blue.withOpacity(.2),
-            ),
-          ),
-          builder: (context) => Scaffold(
-            body: RoundWidget(
-              level: widget.level,
-              child: Stack(
-                children: [
-                  _buildBackground(),
-                  _buildPlayerHealthBar(screenHeight, screenWidth),
-                  _buildPlayerIndicator(screenHeight, screenWidth),
-                  _buildEnemyHealthBar(screenHeight, screenWidth),
-                  _buildPlayer(screenHeight, screenWidth),
-                  _buildEnemy(screenHeight, screenWidth),
-                  _buildSettingsButton(context),
-                  AnimatedOpacity(
-                    opacity: _overlayOpacity,
-                    duration: const Duration(milliseconds: 500),
-                    child: _isDrawing ? _buildDrawingOverlayContent(context, 250) : const SizedBox.shrink(),
-                  ),
-                  if (_showAccuracyAnimation && _accuracy != null)
-                    Positioned(
-                      top: screenHeight * 0.2,
-                      left: 0,
-                      right: 0,
-                      child: Center(
-                        child: AnimatedAccuracyText(accuracy: _accuracy),
-                      ),
-                    ),
-                  DebugBar(
-                    onDrawRune: () => _drawRune(DrawingModeEnum.attack),
-                    onGameEnd: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const EndGameScreen(isVictory: true),
-                      ),
-                    ),
-                  ),
-                ],
+    return ValueListenableBuilder<bool>(
+      valueListenable: settingsController.tutorial,
+      builder: (context, showTutorial, _) {
+        _showtutorial = showTutorial;
+        return BlocConsumer<BattleCubit, BattleState>(
+          listener: (context, state) {
+            state.mapOrNull(
+              monsterAttack: (_) => _monsterAttackAnimation(),
+              playerAttack: (_) => _playersAttackAnimation(),
+              gameOver: (_) => _openGameOverScreen(),
+              victory: (_) => _openVictoryScreen(),
+            );
+          },
+          builder: (context, state) {
+            return OverlayTooltipScaffold(
+              tooltipAnimationCurve: Curves.linear,
+              tooltipAnimationDuration: const Duration(milliseconds: 1000),
+              controller: _toolTipController,
+              preferredOverlay: GestureDetector(
+                onTap: () => _toolTipController.next(),
+                child: Container(
+                  height: double.infinity,
+                  width: double.infinity,
+                  color: Colors.black.withOpacity(0.7),
+                ),
               ),
-            ),
-          ),
+              builder: (context) => Scaffold(
+                body: RoundWidget(
+                  level: widget.level,
+                  child: Stack(
+                    children: [
+                      _buildBackground(),
+                      _buildPlayerHealthBar(screenHeight, screenWidth),
+                      _buildPlayerIndicator(screenHeight, screenWidth),
+                      _buildEnemyHealthBar(screenHeight, screenWidth),
+                      _buildPlayer(screenHeight, screenWidth),
+                      _buildEnemy(screenHeight, screenWidth),
+                      _buildSettingsButton(context),
+                      AnimatedOpacity(
+                        opacity: _overlayOpacity,
+                        duration: const Duration(milliseconds: 500),
+                        child: _isDrawing
+                            ? _buildDrawingOverlayContent(context, 250, _showtutorial, settingsController)
+                            : const SizedBox.shrink(),
+                      ),
+                      if (_showAccuracyAnimation && _accuracy != null)
+                        Positioned(
+                          top: screenHeight * 0.2,
+                          left: 0,
+                          right: 0,
+                          child: Center(
+                            child: AnimatedAccuracyText(accuracy: _accuracy),
+                          ),
+                        ),
+                      DebugBar(
+                        onDrawRune: () => _drawRune(DrawingModeEnum.attack),
+                        onGameEnd: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const EndGameScreen(isVictory: true),
+                          ),
+                        ),
+                        startTutorial: () => _toolTipController.start(),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
         );
       },
     );
@@ -198,13 +219,8 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
               return OverlayTooltipItem(
                 displayIndex: 0,
                 tooltip: (controller) {
-                  // return Padding(
-                  // padding: const EdgeInsets.symmetric(horizontal: 15),
-                  // child:
-                  return MTooltip(title: 'this is your health!', controller: controller);
-                  // );
+                  return MTooltip(title: 'Welcome to the tutorial! This is your health bar', controller: controller);
                 },
-                tooltipHorizontalPosition: TooltipHorizontalPosition.RIGHT,
                 child: HealthBar(
                   maxHealthPoints: healthPoints,
                   newHealthPoints: result.currentPlayersHealthPoints,
@@ -242,9 +258,15 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
       child: BlocBuilder<BattleCubit, BattleState>(
         builder: (context, state) {
           return state.maybeMap(
-            loaded: (result) => HealthBar(
-              maxHealthPoints: widget.level.monster.healthPoints,
-              newHealthPoints: result.currentMonsterHealthPoints,
+            loaded: (result) => OverlayTooltipItem(
+              displayIndex: 1,
+              tooltip: (controller) {
+                return MTooltip(title: 'And this is the enemies health bar!', controller: controller);
+              },
+              child: HealthBar(
+                maxHealthPoints: widget.level.monster.healthPoints,
+                newHealthPoints: result.currentMonsterHealthPoints,
+              ),
             ),
             orElse: () => const SizedBox.shrink(),
           );
@@ -265,6 +287,8 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   Widget _buildDrawingOverlayContent(
     BuildContext context,
     double glyphSize,
+    bool showTutorial,
+    SettingsController settingsController,
   ) {
     return DrawingOverlay(
       onDrawingCompleted: (DrawingDetails details) {
@@ -282,6 +306,18 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
           context.read<BattleCubit>().monsterAttack(accuracy: details.accuracy);
         }
       },
+      tutorialFinished: (value) async {
+        setState(() {
+          settingsController.showTutorial(false);
+          _showtutorial = false;
+          _isDrawing = false;
+          // start drawing after tutorial ends
+        });
+        _startTimer(widget.level.monster.speed, widget.chosenBonus);
+        await Future.delayed(const Duration(seconds: 1));
+        _drawRune(DrawingModeEnum.attack);
+      },
+      tutorial: showTutorial,
       thresholdPercentage: 0.9,
       glyphAsset: DrawingUtils().getRandomGlyphEntity(),
       drawingAreaSize: glyphSize,
@@ -294,18 +330,15 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
       bottom: screenHeight / DesignConsts.playerBottomPositionFactor,
       left: screenWidth / DesignConsts.widthDivisionForPlayer,
       child: OverlayTooltipItem(
-        displayIndex: 1,
+        displayIndex: 2,
+        tooltipVerticalPosition: TooltipVerticalPosition.TOP,
         tooltip: (controller) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: MTooltip(
-              title: 'this is the player!',
-              controller: controller,
-            ),
+          return MTooltip(
+            title:
+                'You will be taking turns on attacking the enemy! After each attack pass the remote to the next player',
+            controller: controller,
           );
         },
-        tooltipHorizontalPosition: TooltipHorizontalPosition.RIGHT,
-        tooltipVerticalPosition: TooltipVerticalPosition.BOTTOM,
         child: SvgPicture.asset(
           height: screenHeight / 2,
           ImageAssets.players,
@@ -325,13 +358,11 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
       bottom: screenHeight / DesignConsts.playerBottomPositionFactor,
       right: screenWidth / DesignConsts.widthDivisionForPlayer,
       child: OverlayTooltipItem(
-        displayIndex: 2,
+        displayIndex: 3,
         tooltip: (controller) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: MTooltip(title: 'kill dis!', controller: controller),
-          );
+          return MTooltip(title: 'You have to defeat him! he\'s blocking your way!', controller: controller);
         },
+        tooltipVerticalPosition: TooltipVerticalPosition.TOP,
         child: SvgPicture.asset(
           height: screenHeight / 4,
           ImageAssets.trollEnemy,
@@ -363,6 +394,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
 
   @override
   void dispose() {
+    _toolTipController.dispose();
     _timer?.cancel();
     super.dispose();
   }

@@ -19,62 +19,74 @@ class MTooltip extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentDisplayIndex = controller.nextPlayIndex + 1;
     final totalLength = controller.playWidgetLength;
-    final hasNextItem = currentDisplayIndex < totalLength;
     final hasPreviousItem = currentDisplayIndex != 1;
 
     final screenWidth = MediaQuery.sizeOf(context).width;
     final screenHeight = MediaQuery.sizeOf(context).height;
 
+    final containerWidth = screenWidth * 0.4;
+    final containerHeight = screenHeight * 0.3;
     return Stack(
       alignment: Alignment.center,
       children: [
         SvgPicture.asset(
           ImageAssets.tutorialContainer,
           fit: BoxFit.contain,
-          width: screenWidth / DesignConsts.containerWidthFactor,
-          height: screenHeight / DesignConsts.containerHeightFactor,
+          width: containerWidth,
+          height: containerHeight,
         ),
         Container(
           alignment: Alignment.center,
-          width: 400,
-          height: screenHeight / DesignConsts.containerHeightFactor,
+          width: containerWidth,
+          height: containerHeight,
+          padding: EdgeInsets.symmetric(
+                horizontal: containerWidth * 0.21,
+              ) +
+              EdgeInsets.only(top: containerHeight * 0.2, bottom: containerHeight * 0.1),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 30),
+              SizedBox(
+                height: containerHeight * 0.45,
                 child: Text(
                   title,
                   textAlign: TextAlign.start,
                   style: TextStyle(
                     fontFamily: DesignConsts.fontFamily,
-                    fontSize: screenWidth / DesignConsts.numberFontSizeFactor,
+                    fontSize: screenWidth / DesignConsts.tutorialFontSizeFactor,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
                 ),
               ),
-              SizedBox(height: screenHeight / DesignConsts.tutorialColumnSpacingFactor),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  PushableButton(
-                    onPressed: () {
-                      controller.dismiss();
-                    },
-                    child: Opacity(
-                      opacity: 1,
-                      child: SvgPicture.asset(
-                        hasPreviousItem ? ImageAssets.tutorialBackButton : ImageAssets.tutorialSkipButton,
-                        fit: BoxFit.contain,
-                        width: screenWidth / DesignConsts.buttonWidthFactor,
-                        height: screenHeight / DesignConsts.buttonHeightFactor,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: screenWidth / DesignConsts.tutorialButtonSpacingFactor),
+                  totalLength == 1
+                      ? const SizedBox()
+                      : PushableButton(
+                          onPressed: () {
+                            if (hasPreviousItem) {
+                              controller.previous();
+                            } else {
+                              controller.dismiss();
+                            }
+                          },
+                          child: Opacity(
+                            opacity: 1,
+                            child: SvgPicture.asset(
+                              hasPreviousItem ? ImageAssets.tutorialBackButton : ImageAssets.tutorialSkipButton,
+                              fit: BoxFit.contain,
+                              width: containerWidth * 0.2,
+                              height: containerHeight * 0.2,
+                            ),
+                          ),
+                        ),
+                  totalLength == 1
+                      ? const SizedBox()
+                      : SizedBox(width: screenWidth / DesignConsts.tutorialButtonSpacingFactor),
                   PushableButton(
                     onPressed: () {
                       controller.next();
@@ -82,10 +94,10 @@ class MTooltip extends StatelessWidget {
                     child: Opacity(
                       opacity: 1,
                       child: SvgPicture.asset(
-                        ImageAssets.tutorialNextButton,
+                        totalLength == 1 ? ImageAssets.tutorialStartButton : ImageAssets.tutorialNextButton,
                         fit: BoxFit.contain,
-                        width: screenWidth / DesignConsts.buttonWidthFactor,
-                        height: screenHeight / DesignConsts.buttonHeightFactor,
+                        width: containerWidth * 0.2,
+                        height: containerHeight * 0.2,
                       ),
                     ),
                   ),

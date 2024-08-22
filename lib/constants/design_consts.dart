@@ -12,8 +12,6 @@ class DesignConsts {
   static const double playerBottomPositionFactor = 8;
   static const double playerHealthBarLeftFactor = 24;
   static const double enemyHealthBarRightFactor = 24;
-  static const double tutorialColumnSpacingFactor = 8;
-  static const double tutorialButtonSpacingFactor = 8;
 
   // HEALTH BAR
   static const double healthBarWidthFactor = 4.0;
@@ -21,6 +19,18 @@ class DesignConsts {
   static const double healthBarMaxWidthFactor = 28.0;
   static const double healthBarHeightDivision = 28.0;
   static BorderRadius healthBarRadius = BorderRadius.circular(56);
+
+  // Tutorial
+  static const double tutorialColumnSpacingFactor = 6.5;
+  static const double tutorialButtonSpacingFactor = 10;
+  static const double tutorialButtonHeightFactor = 14;
+  static const double tutorialButtonWidthFactor = 14;
+  static const double tutorialFontSizeFactor = 80;
+  static const double tutorialContainerWidthFactor = 2.5;
+  static const double tutorialContainerHeightFactor = 2.6;
+  static const double tutorialPaddingTopFactor = 24.4;
+  static const double tutorialPaddingBottomFactor = 85.5;
+  static const double tutorialPaddingWidthFactor = 25.2;
 
   // MAIN SCREEN
   static const double screenBottomPositionFactor = 4;
