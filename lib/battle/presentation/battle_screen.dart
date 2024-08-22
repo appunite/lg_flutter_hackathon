@@ -13,6 +13,7 @@ import 'package:lg_flutter_hackathon/battle/presentation/widgets/accuracy_animat
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/debug_bar.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/drawing_overlay.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/health_bar.dart';
+import 'package:lg_flutter_hackathon/battle/presentation/widgets/round_widget.dart';
 import 'package:lg_flutter_hackathon/components/confirmation_pop_up.dart';
 import 'package:lg_flutter_hackathon/components/tool_tip.dart';
 import 'package:lg_flutter_hackathon/constants/design_consts.dart';
@@ -136,39 +137,42 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
             ),
           ),
           builder: (context) => Scaffold(
-            body: Stack(
-              children: [
-                _buildBackground(),
-                _buildPlayerHealthBar(screenHeight, screenWidth),
-                _buildPlayerIndicator(screenHeight, screenWidth),
-                _buildEnemyHealthBar(screenHeight, screenWidth),
-                _buildPlayer(screenHeight, screenWidth),
-                _buildEnemy(screenHeight, screenWidth),
-                _buildSettingsButton(context),
-                AnimatedOpacity(
-                  opacity: _overlayOpacity,
-                  duration: const Duration(milliseconds: 500),
-                  child: _isDrawing ? _buildDrawingOverlayContent(context, 250) : const SizedBox.shrink(),
-                ),
-                if (_showAccuracyAnimation && _accuracy != null)
-                  Positioned(
-                    top: screenHeight * 0.2,
-                    left: 0,
-                    right: 0,
-                    child: Center(
-                      child: AnimatedAccuracyText(accuracy: _accuracy),
+            body: RoundWidget(
+              level: widget.level,
+              child: Stack(
+                children: [
+                  _buildBackground(),
+                  _buildPlayerHealthBar(screenHeight, screenWidth),
+                  _buildPlayerIndicator(screenHeight, screenWidth),
+                  _buildEnemyHealthBar(screenHeight, screenWidth),
+                  _buildPlayer(screenHeight, screenWidth),
+                  _buildEnemy(screenHeight, screenWidth),
+                  _buildSettingsButton(context),
+                  AnimatedOpacity(
+                    opacity: _overlayOpacity,
+                    duration: const Duration(milliseconds: 500),
+                    child: _isDrawing ? _buildDrawingOverlayContent(context, 250) : const SizedBox.shrink(),
+                  ),
+                  if (_showAccuracyAnimation && _accuracy != null)
+                    Positioned(
+                      top: screenHeight * 0.2,
+                      left: 0,
+                      right: 0,
+                      child: Center(
+                        child: AnimatedAccuracyText(accuracy: _accuracy),
+                      ),
+                    ),
+                  DebugBar(
+                    onDrawRune: () => _drawRune(DrawingModeEnum.attack),
+                    onGameEnd: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const EndGameScreen(isVictory: true),
+                      ),
                     ),
                   ),
-                DebugBar(
-                  onDrawRune: () => _drawRune(DrawingModeEnum.attack),
-                  onGameEnd: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const EndGameScreen(isVictory: true),
-                    ),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );
