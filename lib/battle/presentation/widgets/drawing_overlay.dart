@@ -14,7 +14,7 @@ import 'package:lg_flutter_hackathon/battle/presentation/widgets/drawing_painter
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/overlay_widget.dart';
 import 'package:lg_flutter_hackathon/constants/design_consts.dart';
 import 'package:lg_flutter_hackathon/constants/image_assets.dart';
-import 'package:provider/provider.dart';
+import 'package:lg_flutter_hackathon/dependencies.dart';
 
 class DrawingOverlay extends StatefulWidget {
   final ValueChanged<DrawingDetails> onDrawingCompleted;
@@ -196,7 +196,7 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
     final double drawingBoardSize = widget.drawingAreaSize * 2;
     final double glyphSize = widget.drawingAreaSize;
     final screenWidth = MediaQuery.sizeOf(context).width;
-    final audioController = context.watch<AudioController>();
+    final audioController = sl.get<AudioController>();
 
     return Stack(
       alignment: Alignment.center,
@@ -229,10 +229,10 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
                 Center(
                   child: GestureDetector(
                     onPanStart: (details) => setState(() {
+                      audioController.playSfx(SfxType.drawing);
                       _currentPenPosition = details.localPosition;
                     }),
                     onPanUpdate: (details) => setState(() {
-                      audioController.playSfx(SfxType.drawing);
                       Offset localPosition = details.localPosition;
                       _points.add(localPosition);
                       if (_points.length > 1 && _points[_points.length - 2] != null) {}

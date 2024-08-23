@@ -75,14 +75,14 @@ class App extends StatelessWidget {
     return AppLifecycleObserver(
       child: MultiProvider(
         providers: [
-          Provider(create: (context) => SettingsController()),
-          ProxyProvider2<AppLifecycleStateNotifier, SettingsController, AudioController>(
-            create: (context) => AudioController(),
-            update: (context, lifecycleNotifier, settings, audio) {
-              audio!.attachDependencies(lifecycleNotifier, settings);
-              return audio;
+          // Provider(create: (context) => SettingsController()),
+          ProxyProvider<AppLifecycleStateNotifier, SettingsController>(
+            create: (context) => SettingsController(),
+            update: (context, lifecycleNotifier, settings) {
+              sl.get<AudioController>().attachDependencies(lifecycleNotifier, settings!);
+              return settings;
             },
-            dispose: (context, audio) => audio.dispose(),
+            dispose: (context, value) => sl.get<AudioController>().dispose(),
             lazy: false,
           ),
         ],

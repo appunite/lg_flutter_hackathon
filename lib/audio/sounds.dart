@@ -2,7 +2,7 @@ List<String> soundTypeToFilename(SfxType type) => switch (type) {
       SfxType.buttonTap => const ['sh1.mp3'],
       SfxType.addPlayerPop => const ['add_player_pop.mp3'],
       SfxType.deletePlayerPop => const ['delete_player_pop.mp3'],
-      SfxType.drawing => const ['drawingPen.mp3'],
+      SfxType.drawing => const ['drawing.mp3'],
       //TODO: add when eney attacks
       SfxType.punch => const ['punch.mp3'],
       SfxType.scratch => const ['scratch.mp3'],
@@ -43,9 +43,9 @@ double soundTypeToVolume(SfxType type) {
     case SfxType.cuteTroll4:
     case SfxType.monsterLaugh:
     case SfxType.monsterHeh:
-      return 1.0;
+      return 0.5;
     case SfxType.drawing:
-      return 3.0;
+      return 1.0;
   }
 }
 

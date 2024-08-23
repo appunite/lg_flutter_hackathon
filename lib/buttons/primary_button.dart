@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:lg_flutter_hackathon/audio/audio_controller.dart';
 import 'package:lg_flutter_hackathon/audio/sounds.dart';
-import 'package:provider/provider.dart';
+import 'package:lg_flutter_hackathon/dependencies.dart';
 
 class PrimaryButton extends StatefulWidget {
   final Widget child;
@@ -32,7 +32,7 @@ class _PrimaryButtonState extends State<PrimaryButton> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
-    final audioController = context.watch<AudioController>();
+    final audioController = sl.get<AudioController>();
 
     return MouseRegion(
       onEnter: (event) {

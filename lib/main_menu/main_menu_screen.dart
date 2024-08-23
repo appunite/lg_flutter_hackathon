@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lg_flutter_hackathon/audio/audio_controller.dart';
 import 'package:lg_flutter_hackathon/audio/sounds.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/level_enum.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/players_entity.dart';
@@ -10,6 +12,7 @@ import 'package:lg_flutter_hackathon/components/pushable_button.dart';
 import 'package:lg_flutter_hackathon/constants/design_consts.dart';
 import 'package:lg_flutter_hackathon/constants/image_assets.dart';
 import 'package:lg_flutter_hackathon/constants/strings.dart';
+import 'package:lg_flutter_hackathon/dependencies.dart';
 import 'package:lg_flutter_hackathon/story/domain/ending_story_enum.dart';
 import 'package:lg_flutter_hackathon/story/domain/opening_story_enum.dart';
 import 'package:lg_flutter_hackathon/story/presentation/ending_story_screen.dart';
@@ -20,17 +23,34 @@ import '../settings/settings.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 
-class MainMenuScreen extends StatefulWidget {
+class MainMenuScreen extends StatelessWidget {
   const MainMenuScreen({super.key});
 
   @override
-  State<MainMenuScreen> createState() => _MainMenuScreenState();
+  Widget build(BuildContext context) {
+    final settingsController = context.watch<SettingsController>();
+
+    return _MainMenuBody(settingsController: settingsController);
+  }
 }
 
-class _MainMenuScreenState extends State<MainMenuScreen> {
+class _MainMenuBody extends StatefulWidget {
+  const _MainMenuBody({
+    required this.settingsController,
+  });
+
+  final SettingsController settingsController;
+
+  @override
+  State<_MainMenuBody> createState() => __MainMenuBodyState();
+}
+
+class __MainMenuBodyState extends State<_MainMenuBody> {
   int _numberOfPlayers = 2;
 
   final List<bool> _isPlayerVisible = [true, true, false, false];
+
+  final audioController = sl.get<AudioController>();
 
   void _incrementPlayers() {
     if (_numberOfPlayers < 4) {
@@ -97,11 +117,17 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      audioController.setSong(audioController.themeSong);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.sizeOf(context).width;
     final screenHeight = MediaQuery.sizeOf(context).height;
-
-    final settingsController = context.watch<SettingsController>();
 
     return WillPopScope(
       onWillPop: () async => false,
@@ -252,7 +278,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
             Positioned(
               top: screenHeight / 40,
               left: screenWidth / 40,
-              child: soundSettings(settingsController, screenWidth),
+              child: soundSettings(widget.settingsController, screenWidth),
             ),
           ],
         ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lg_flutter_hackathon/audio/audio_controller.dart';
 import 'package:lg_flutter_hackathon/audio/sounds.dart';
-import 'package:provider/provider.dart';
+import 'package:lg_flutter_hackathon/dependencies.dart';
 
 class PushableButton extends StatefulWidget {
   final Widget child;
@@ -28,7 +28,7 @@ class _PushableButtonState extends State<PushableButton> {
 
   @override
   Widget build(BuildContext context) {
-    final audioController = context.watch<AudioController>();
+    final audioController = sl.get<AudioController>();
 
     return GestureDetector(
       onTapDown: (_) {

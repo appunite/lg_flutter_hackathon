@@ -146,7 +146,7 @@ class AudioController with ReporterMixin {
 
   Future<void> _playMusic(String filename) async {
     try {
-      await _musicPlayer.play(AssetSource('/music/$filename'), volume: 0.5);
+      await _musicPlayer.play(AssetSource('/music/$filename'), volume: 0.3);
     } catch (e, st) {
       logError(e, st, message: 'Could not play music: $filename');
     }

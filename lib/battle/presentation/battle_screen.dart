@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
@@ -22,6 +23,7 @@ import 'package:lg_flutter_hackathon/components/tool_tip.dart';
 import 'package:lg_flutter_hackathon/constants/design_consts.dart';
 import 'package:lg_flutter_hackathon/constants/image_assets.dart';
 import 'package:lg_flutter_hackathon/constants/strings.dart';
+import 'package:lg_flutter_hackathon/dependencies.dart';
 import 'package:lg_flutter_hackathon/logger.dart';
 import 'package:lg_flutter_hackathon/utils/drawing_utils.dart';
 import 'package:overlay_tooltip/overlay_tooltip.dart';
@@ -83,12 +85,17 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   bool _showAccuracyAnimation = false;
   DrawingModeEnum _currentDrawingMode = DrawingModeEnum.attack;
 
+  final audioController = sl.get<AudioController>();
+
   @override
   void initState() {
     super.initState();
     _controller.onDone(
       () => setState(() => done = true),
     );
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      audioController.setSong(audioController.forestBattleSong);
+    });
 
     _startTimer(widget.level.monster.speed, widget.chosenBonus);
   }
@@ -115,10 +122,6 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.sizeOf(context).height;
     final screenWidth = MediaQuery.sizeOf(context).width;
-
-    final audioController = context.watch<AudioController>();
-
-    audioController.setSong(audioController.forestBattleSong);
 
     return BlocConsumer<BattleCubit, BattleState>(
       listener: (context, state) {
@@ -174,7 +177,9 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
                     onGameEnd: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const EndGameScreen(isVictory: true),
+                        builder: (context) => const EndGameScreen(
+                          isVictory: true,
+                        ),
                       ),
                     ),
                   ),
