@@ -75,7 +75,6 @@ class App extends StatelessWidget {
     return AppLifecycleObserver(
       child: MultiProvider(
         providers: [
-          // Provider(create: (context) => SettingsController()),
           ProxyProvider<AppLifecycleStateNotifier, SettingsController>(
             create: (context) => SettingsController(),
             update: (context, lifecycleNotifier, settings) {
