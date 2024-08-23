@@ -3,7 +3,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:lg_flutter_hackathon/components/pushable_button.dart';
 import 'package:lg_flutter_hackathon/constants/design_consts.dart';
 import 'package:lg_flutter_hackathon/constants/image_assets.dart';
-import 'package:lg_flutter_hackathon/constants/strings.dart';
 
 class ConfirmationPopUp extends StatelessWidget {
   const ConfirmationPopUp({super.key, required this.title, this.alertMessage});
