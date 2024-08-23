@@ -225,7 +225,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => const BattleScreen(
-                          level: LevelEnum.first,
+                          level: LevelEnum.third,
                           players: PlayersEntity(healthPoints: 100, numberOfPlayers: 4, damage: 10),
                         ),
                       ),
