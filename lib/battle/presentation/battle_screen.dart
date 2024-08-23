@@ -80,7 +80,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   double _overlayOpacity = 0.0;
   bool _showAccuracyAnimation = false;
   DrawingModeEnum _currentDrawingMode = DrawingModeEnum.attack;
-  bool _showtutorial = false;
+  bool _showTutorial = false;
 
   @override
   void initState() {
@@ -90,14 +90,15 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
         _drawRune(DrawingModeEnum.attack);
       },
     );
-    if (!_showtutorial) {
-      _startTimer(widget.level.monster.speed, widget.chosenBonus);
-    }
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (_showtutorial) {
-        await Future.delayed(const Duration(seconds: 4));
+      await Future.delayed(const Duration(seconds: 4));
+      //start tutorial or game
+      if (_showTutorial) {
         _toolTipController.start();
+      } else {
+        _startTimer(widget.level.monster.speed, widget.chosenBonus);
+        _drawRune(DrawingModeEnum.attack);
       }
     });
   }
@@ -129,7 +130,8 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
     return ValueListenableBuilder<bool>(
       valueListenable: settingsController.tutorial,
       builder: (context, showTutorial, _) {
-        _showtutorial = showTutorial;
+        _showTutorial = showTutorial;
+
         return BlocConsumer<BattleCubit, BattleState>(
           listener: (context, state) {
             state.mapOrNull(
@@ -168,7 +170,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
                         opacity: _overlayOpacity,
                         duration: const Duration(milliseconds: 500),
                         child: _isDrawing
-                            ? _buildDrawingOverlayContent(context, 250, _showtutorial, settingsController)
+                            ? _buildDrawingOverlayContent(context, 250, _showTutorial, settingsController)
                             : const SizedBox.shrink(),
                       ),
                       if (_showAccuracyAnimation && _accuracy != null)
@@ -308,13 +310,13 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
       },
       tutorialFinished: (value) async {
         setState(() {
-          settingsController.showTutorial(false);
-          _showtutorial = false;
+          settingsController.showTutorial(!value);
+          _showTutorial = false;
           _isDrawing = false;
-          // start drawing after tutorial ends
         });
-        _startTimer(widget.level.monster.speed, widget.chosenBonus);
+        // start drawing after tutorial ends
         await Future.delayed(const Duration(seconds: 1));
+        _startTimer(widget.level.monster.speed, widget.chosenBonus);
         _drawRune(DrawingModeEnum.attack);
       },
       tutorial: showTutorial,

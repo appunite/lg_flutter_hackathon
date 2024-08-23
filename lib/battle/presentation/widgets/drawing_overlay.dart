@@ -24,15 +24,16 @@ class DrawingOverlay extends StatefulWidget {
   final ValueChanged<bool> tutorialFinished;
   final bool tutorial;
 
-  const DrawingOverlay(
-      {super.key,
-      required this.onDrawingCompleted,
-      required this.thresholdPercentage,
-      required this.glyphAsset,
-      required this.drawingAreaSize,
-      required this.drawingMode,
-      required this.tutorialFinished,
-      required this.tutorial});
+  const DrawingOverlay({
+    super.key,
+    required this.onDrawingCompleted,
+    required this.thresholdPercentage,
+    required this.glyphAsset,
+    required this.drawingAreaSize,
+    required this.drawingMode,
+    required this.tutorialFinished,
+    required this.tutorial,
+  });
 
   @override
   State<DrawingOverlay> createState() => _DrawingOverlayState();
