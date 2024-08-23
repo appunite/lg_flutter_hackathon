@@ -1,6 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lg_flutter_hackathon/audio/audio_controller.dart';
+import 'package:lg_flutter_hackathon/audio/sounds.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/bonus_entity.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/level_enum.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/players_entity.dart';
@@ -8,6 +11,7 @@ import 'package:lg_flutter_hackathon/battle/presentation/battle_screen.dart';
 import 'package:lg_flutter_hackathon/components/pushable_button.dart';
 import 'package:lg_flutter_hackathon/constants/design_consts.dart';
 import 'package:lg_flutter_hackathon/constants/image_assets.dart';
+import 'package:lg_flutter_hackathon/dependencies.dart';
 
 class BonusesScreen extends StatefulWidget {
   const BonusesScreen({
@@ -26,11 +30,16 @@ class BonusesScreen extends StatefulWidget {
 class _BonusesScreenState extends State<BonusesScreen> {
   late final CarouselController _carouselController;
   late BonusEntity _currentBonus = widget.level.bonuses.first;
+  final audioController = sl.get<AudioController>();
 
   @override
   void initState() {
     super.initState();
     _carouselController = CarouselController();
+
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      audioController.playSfx(SfxType.bonusScreen1);
+    });
   }
 
   @override

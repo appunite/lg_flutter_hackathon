@@ -1,7 +1,11 @@
 class ImageAssets {
   static const String splashScreenBackground = 'assets/ilustrations/splash_background.svg';
   static const String players = 'assets/ilustrations/players.svg';
+  static const String dialogCloud = 'assets/ilustrations/dialog_cloud.svg';
   static const String trollEnemy = 'assets/ilustrations/troll_enemy.svg';
+  static const String hopgoblinEnemy = 'assets/ilustrations/hopgoblin_enemy.svg';
+  static const String bugbearEnemy = 'assets/ilustrations/bugbear_enemy.svg';
+  static const String ogreEnemy = 'assets/ilustrations/ogre_enemy.svg';
   static const String drawingBoard = 'assets/ilustrations/drawing_board.svg';
   static const String magicPenSvg = 'assets/ilustrations/magic_pen.svg';
   static const String healthBarBackground = 'assets/ilustrations/health_bar_background.svg';
@@ -53,6 +57,7 @@ class ImageAssets {
   static const String redStick = 'assets/ilustrations/red_stick.svg';
   static const String yellowStick = 'assets/ilustrations/yellow_stick.svg';
   static const String greenStick = 'assets/ilustrations/green_stick.svg';
+  static const String cancelButton = 'assets/ilustrations/cancel_button.svg';
 
   static const String round = 'assets/ilustrations/round.svg';
   static const String round1number = 'assets/ilustrations/round_1.svg';
@@ -86,6 +91,10 @@ class ImageAssets {
 }
 
 List<String> assetsList = [
+  ImageAssets.dialogCloud,
+  ImageAssets.bugbearEnemy,
+  ImageAssets.hopgoblinEnemy,
+  ImageAssets.ogreEnemy,
   ImageAssets.players,
   ImageAssets.trollEnemy,
   ImageAssets.drawingBoard,

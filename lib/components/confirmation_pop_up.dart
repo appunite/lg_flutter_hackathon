@@ -3,6 +3,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lg_flutter_hackathon/constants/design_consts.dart';
 import 'package:lg_flutter_hackathon/constants/image_assets.dart';
 import 'package:lg_flutter_hackathon/story/presentation/widgets/story_button.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:lg_flutter_hackathon/audio/audio_controller.dart';
+import 'package:lg_flutter_hackathon/dependencies.dart';
 
 class ConfirmationPopUp extends StatelessWidget {
   const ConfirmationPopUp({
@@ -16,6 +19,7 @@ class ConfirmationPopUp extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.sizeOf(context).width;
     final screenHeight = MediaQuery.sizeOf(context).height;
+    final audioController = sl.get<AudioController>();
 
     return Dialog(
       backgroundColor: Colors.transparent,
@@ -43,6 +47,7 @@ class ConfirmationPopUp extends StatelessWidget {
             child: StoryButton(
               text: 'Cancel',
               onTap: () {
+                audioController.setSong(audioController.themeSong);
                 Navigator.pop(context);
               },
             ),
@@ -53,6 +58,7 @@ class ConfirmationPopUp extends StatelessWidget {
             child: StoryButton(
               text: 'Exit',
               onTap: () {
+                audioController.setSong(audioController.themeSong);
                 Navigator.popUntil(context, (route) => route.isFirst);
               },
             ),

@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lg_flutter_hackathon/audio/audio_controller.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/ending_screen.dart';
 import 'package:lg_flutter_hackathon/constants/design_consts.dart';
+import 'package:lg_flutter_hackathon/dependencies.dart';
 import 'package:lg_flutter_hackathon/story/domain/ending_story_enum.dart';
 import 'package:lg_flutter_hackathon/story/presentation/widgets/story_text_container.dart';
 import 'package:lg_flutter_hackathon/utils/transitions.dart';
@@ -21,6 +23,8 @@ class EndingStoryScreen extends StatefulWidget {
 }
 
 class _EndingStoryScreenState extends State<EndingStoryScreen> {
+  final audioController = sl.get<AudioController>();
+
   @override
   void initState() {
     super.initState();
@@ -80,7 +84,9 @@ class _EndingStoryScreenState extends State<EndingStoryScreen> {
     Navigator.pushReplacement(
       context,
       FadeRoute(
-        page: const EndGameScreen(isVictory: true),
+        page: const EndGameScreen(
+          isVictory: true,
+        ),
       ),
     );
   }

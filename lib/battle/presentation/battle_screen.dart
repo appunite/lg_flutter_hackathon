@@ -1,8 +1,15 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
+
 import 'package:lg_flutter_hackathon/battle/domain/entities/bonus_entity.dart';
+import 'package:lg_flutter_hackathon/battle/domain/entities/dialog_enum.dart';
+import 'package:lg_flutter_hackathon/audio/audio_controller.dart';
+import 'package:lg_flutter_hackathon/audio/sounds.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/drawing_details_entity.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/drawing_mode_enum.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/level_enum.dart';
@@ -19,10 +26,12 @@ import 'package:lg_flutter_hackathon/components/tool_tip.dart';
 import 'package:lg_flutter_hackathon/constants/design_consts.dart';
 import 'package:lg_flutter_hackathon/constants/image_assets.dart';
 import 'package:lg_flutter_hackathon/constants/strings.dart';
+import 'package:lg_flutter_hackathon/dependencies.dart';
 import 'package:lg_flutter_hackathon/logger.dart';
 import 'package:lg_flutter_hackathon/settings/settings.dart';
 import 'package:lg_flutter_hackathon/story/domain/ending_story_enum.dart';
 import 'package:lg_flutter_hackathon/story/presentation/ending_story_screen.dart';
+import 'package:lg_flutter_hackathon/story/presentation/widgets/story_text_container.dart';
 import 'package:lg_flutter_hackathon/utils/drawing_utils.dart';
 import 'package:lg_flutter_hackathon/utils/transitions.dart';
 import 'package:overlay_tooltip/overlay_tooltip.dart';
@@ -86,14 +95,23 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   DrawingModeEnum _currentDrawingMode = DrawingModeEnum.attack;
   bool _showTutorial = false;
 
+  final audioController = sl.get<AudioController>();
+
+  bool _showVoiceDialog = false;
+  DialogEnum _voiceDialogType = DialogEnum.intro;
+
   @override
   void initState() {
     super.initState();
+
     _toolTipController.onDone(
       () {
         _drawRune(DrawingModeEnum.attack);
       },
     );
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      audioController.setSong(audioController.forestBattleSong);
+    });
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await Future.delayed(const Duration(seconds: 4));
@@ -125,6 +143,24 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
     _timer!.start();
   }
 
+  Future<void> showVoiceDialog(DialogEnum type) async {
+    setState(() {
+      _showVoiceDialog = true;
+      _voiceDialogType = type;
+    });
+    final delay = switch (type) {
+      DialogEnum.intro => 5,
+      DialogEnum.outro => 7,
+      DialogEnum.attack => 3,
+      DialogEnum.defense => 3,
+    };
+
+    await Future.delayed(Duration(seconds: delay));
+    setState(() {
+      _showVoiceDialog = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.sizeOf(context).height;
@@ -141,13 +177,20 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
             state.mapOrNull(
               loaded: (result) {
                 if (result.currentMonsterHealthPoints <= 0) {
+                  showVoiceDialog(DialogEnum.outro);
                   _openVictoryScreen();
                 } else if (result.currentPlayersHealthPoints <= 0) {
                   _openGameOverScreen();
                 }
               },
-              monsterAttack: (_) => _monsterAttackAnimation(),
-              playerAttack: (_) => _playersAttackAnimation(),
+              monsterAttack: (_) {
+                showVoiceDialog(DialogEnum.attack);
+                return _monsterAttackAnimation();
+              },
+              playerAttack: (_) {
+                showVoiceDialog(DialogEnum.defense);
+                return _playersAttackAnimation();
+              },
             );
           },
           builder: (context, state) {
@@ -175,6 +218,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
                       _buildArrow(screenHeight, screenWidth, state),
                       _buildEnemy(screenHeight, screenWidth),
                       _buildSettingsButton(context),
+                      _buildDialogCloud(screenHeight, screenWidth),
                       AnimatedOpacity(
                         opacity: _overlayOpacity,
                         duration: const Duration(milliseconds: 500),
@@ -297,12 +341,9 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
               setState(() {
                 settingsController.showTutorial(!value);
                 _showTutorial = false;
-                _isDrawing = false;
               });
               // start drawing after tutorial ends
-              await Future.delayed(const Duration(seconds: 1));
               _startTimer(widget.level.monster.speed, widget.chosenBonus);
-              _drawRune(DrawingModeEnum.attack);
             },
             tutorial: showTutorial,
             thresholdPercentage: 0.9,
@@ -320,7 +361,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   Widget _buildPlayer(double screenHeight, double screenWidth) {
     return Positioned(
       bottom: screenHeight / DesignConsts.playerBottomPositionFactor,
-      left: screenWidth / DesignConsts.widthDivisionForPlayer,
+      left: screenWidth / 8,
       child: OverlayTooltipItem(
         displayIndex: 2,
         tooltipVerticalPosition: TooltipVerticalPosition.TOP,
@@ -347,8 +388,8 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
 
   Widget _buildEnemy(double screenHeight, double screenWidth) {
     return Positioned(
-      bottom: screenHeight / DesignConsts.playerBottomPositionFactor,
-      right: screenWidth / DesignConsts.widthDivisionForPlayer,
+      bottom: screenHeight / widget.level.enemyBottomPositionBottom,
+      right: screenWidth / widget.level.enemyBottomPositionRight,
       child: OverlayTooltipItem(
         displayIndex: 3,
         tooltip: (controller) {
@@ -356,14 +397,36 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
         },
         tooltipVerticalPosition: TooltipVerticalPosition.TOP,
         child: SvgPicture.asset(
-          height: screenHeight / 4,
-          ImageAssets.trollEnemy,
+          height: screenHeight / widget.level.enemyScale,
+          widget.level.monsterAsset,
           fit: BoxFit.cover,
           placeholderBuilder: (BuildContext context) => const SizedBox(
             width: 50,
             height: 50,
             child: CircularProgressIndicator(),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDialogCloud(double screenHeight, double screenWidth) {
+    final text = switch (_voiceDialogType) {
+      DialogEnum.intro => introDialog(widget.level),
+      DialogEnum.outro => outroDialog(widget.level),
+      DialogEnum.attack => attackDialogs(widget.level)[Random().nextInt(3)],
+      DialogEnum.defense => defenseDialogs(widget.level)[Random().nextInt(3)],
+    };
+
+    return Visibility(
+      visible: _showVoiceDialog,
+      child: Positioned(
+        bottom: 8,
+        right: screenWidth / 8,
+        left: screenWidth / 8,
+        child: StoryTextContainer(
+          text: text,
+          leadingAsset: widget.level.monsterAsset,
         ),
       ),
     );
@@ -392,6 +455,8 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   }
 
   Future<void> _monsterAttackAnimation() async {
+    enemyRoars.shuffle();
+    audioController.playSfx(enemyRoars.first);
     // TODO: Run monster attack animation
     // ignore: avoid_print
     print('TODO: Run monster attack animation');
@@ -411,6 +476,8 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   }
 
   Future<void> _playersAttackAnimation() async {
+    playerShouts.shuffle();
+    audioController.playSfx(playerShouts.first);
     // TODO: Run players attack animation
     // ignore: avoid_print
     print('TODO: Run players attack animation');
@@ -452,6 +519,8 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
     Future.delayed(
       const Duration(seconds: 2),
       () {
+        audioController.playSfx(SfxType.gameOver);
+        audioController.setSong(audioController.gameoverSong);
         Navigator.pushReplacement(
           context,
           FadeRoute(
@@ -469,6 +538,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
       const Duration(seconds: 2),
       () {
         if (widget.level == LevelEnum.fourth) {
+          audioController.setSong(audioController.victorySong);
           Navigator.pushReplacement(
             context,
             FadeRoute(

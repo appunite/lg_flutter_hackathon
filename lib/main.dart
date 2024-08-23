@@ -77,14 +77,13 @@ class App extends StatelessWidget {
     return AppLifecycleObserver(
       child: MultiProvider(
         providers: [
-          Provider(create: (context) => SettingsController()),
-          ProxyProvider2<AppLifecycleStateNotifier, SettingsController, AudioController>(
-            create: (context) => AudioController(),
-            update: (context, lifecycleNotifier, settings, audio) {
-              audio!.attachDependencies(lifecycleNotifier, settings);
-              return audio;
+          ProxyProvider<AppLifecycleStateNotifier, SettingsController>(
+            create: (context) => SettingsController(),
+            update: (context, lifecycleNotifier, settings) {
+              sl.get<AudioController>().attachDependencies(lifecycleNotifier, settings!);
+              return settings;
             },
-            dispose: (context, audio) => audio.dispose(),
+            dispose: (context, value) => sl.get<AudioController>().dispose(),
             lazy: false,
           ),
         ],
@@ -109,7 +108,7 @@ class App extends StatelessWidget {
               '/main-menu': (context) => const MainMenuScreen(),
               '/battle': (context) => const BattleScreen(
                     level: LevelEnum.first,
-                    players: PlayersEntity(healthPoints: 100, numberOfPlayers: 4, damage: 10),
+                    players: PlayersEntity(healthPoints: 100, numberOfPlayers: 4, damage: 1000),
                   ),
               '/bonuses': (context) => const BonusesScreen(
                     level: LevelEnum.first,
