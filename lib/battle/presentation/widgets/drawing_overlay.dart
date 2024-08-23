@@ -26,6 +26,7 @@ class DrawingOverlay extends StatefulWidget {
   final DrawingModeEnum drawingMode;
   final ValueChanged<bool> tutorialFinished;
   final bool tutorial;
+  final int currentPlayerIndex;
 
   const DrawingOverlay({
     super.key,
@@ -36,6 +37,7 @@ class DrawingOverlay extends StatefulWidget {
     required this.drawingMode,
     required this.tutorialFinished,
     required this.tutorial,
+    required this.currentPlayerIndex,
   });
 
   @override
@@ -235,7 +237,7 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
           Positioned(
             top: 64,
             child: Text(
-              'Time for ${widget.drawingMode.name}!',
+              '${_getPlayerName(widget.currentPlayerIndex)} ${widget.drawingMode.name}!',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontFamily: DesignConsts.fontFamily,
@@ -327,6 +329,18 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
         ),
       ),
     );
+  }
+
+  String _getPlayerName(int currentPlayerIndex) {
+    if (currentPlayerIndex == 0) {
+      return 'Sapphire';
+    } else if (currentPlayerIndex == 1) {
+      return 'Emerald';
+    } else if (currentPlayerIndex == 2) {
+      return 'Topaz';
+    } else {
+      return 'Ruby';
+    }
   }
 
   @override

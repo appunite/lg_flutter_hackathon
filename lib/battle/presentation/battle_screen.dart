@@ -14,10 +14,10 @@ import 'package:lg_flutter_hackathon/battle/domain/entities/players_entity.dart'
 import 'package:lg_flutter_hackathon/battle/presentation/cubit/battle_cubit.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/ending_screen.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/accuracy_animated_text.dart';
-import 'package:lg_flutter_hackathon/battle/presentation/widgets/debug_bar.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/drawing_overlay.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/health_bar.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/round_widget.dart';
+import 'package:lg_flutter_hackathon/bonuses/bonuses_screen.dart';
 import 'package:lg_flutter_hackathon/components/confirmation_pop_up.dart';
 import 'package:lg_flutter_hackathon/components/tool_tip.dart';
 import 'package:lg_flutter_hackathon/constants/design_consts.dart';
@@ -26,7 +26,10 @@ import 'package:lg_flutter_hackathon/constants/strings.dart';
 import 'package:lg_flutter_hackathon/dependencies.dart';
 import 'package:lg_flutter_hackathon/logger.dart';
 import 'package:lg_flutter_hackathon/settings/settings.dart';
+import 'package:lg_flutter_hackathon/story/domain/ending_story_enum.dart';
+import 'package:lg_flutter_hackathon/story/presentation/ending_story_screen.dart';
 import 'package:lg_flutter_hackathon/utils/drawing_utils.dart';
+import 'package:lg_flutter_hackathon/utils/transitions.dart';
 import 'package:overlay_tooltip/overlay_tooltip.dart';
 import 'package:pausable_timer/pausable_timer.dart';
 
@@ -44,17 +47,18 @@ class BattleScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final playersWithBonuses = players.copyWith(
+      healthPoints:
+          chosenBonus?.type == BonusEnum.health ? players.healthPoints + chosenBonus!.strength : players.healthPoints,
+      damage: chosenBonus?.type == BonusEnum.damage ? players.damage + chosenBonus!.strength : players.damage,
+    );
+
     return BlocProvider(
       create: (context) => BattleCubit(
         level,
-        players.copyWith(
-          healthPoints: chosenBonus?.type == BonusEnum.health
-              ? players.healthPoints + chosenBonus!.strength
-              : players.healthPoints,
-          damage: chosenBonus?.type == BonusEnum.damage ? players.damage + chosenBonus!.strength : players.damage,
-        ),
+        playersWithBonuses,
       ),
-      child: _BattleScreenBody(level, players, chosenBonus),
+      child: _BattleScreenBody(level, playersWithBonuses, chosenBonus),
     );
   }
 }
@@ -145,10 +149,15 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
         return BlocConsumer<BattleCubit, BattleState>(
           listener: (context, state) {
             state.mapOrNull(
+              loaded: (result) {
+                if (result.currentMonsterHealthPoints <= 0) {
+                  _openVictoryScreen();
+                } else if (result.currentPlayersHealthPoints <= 0) {
+                  _openGameOverScreen();
+                }
+              },
               monsterAttack: (_) => _monsterAttackAnimation(),
               playerAttack: (_) => _playersAttackAnimation(),
-              gameOver: (_) => _openGameOverScreen(),
-              victory: (_) => _openVictoryScreen(),
             );
           },
           builder: (context, state) {
@@ -171,7 +180,6 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
                     children: [
                       _buildBackground(),
                       _buildPlayerHealthBar(screenHeight, screenWidth),
-                      _buildPlayerIndicator(screenHeight, screenWidth),
                       _buildEnemyHealthBar(screenHeight, screenWidth),
                       _buildPlayer(screenHeight, screenWidth),
                       _buildEnemy(screenHeight, screenWidth),
@@ -192,16 +200,6 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
                             child: AnimatedAccuracyText(accuracy: _accuracy),
                           ),
                         ),
-                      DebugBar(
-                        onDrawRune: () => _drawRune(DrawingModeEnum.attack),
-                        onGameEnd: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const EndGameScreen(isVictory: true),
-                          ),
-                        ),
-                        startTutorial: () => _toolTipController.start(),
-                      ),
                     ],
                   ),
                 ),
@@ -239,23 +237,6 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
                 ),
               );
             },
-            orElse: () => const SizedBox.shrink(),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildPlayerIndicator(double screenHeight, double screenWidth) {
-    return Positioned(
-      left: screenWidth / DesignConsts.playerHealthBarLeftFactor,
-      top: screenHeight / DesignConsts.heightDivision32 + 120,
-      child: BlocBuilder<BattleCubit, BattleState>(
-        builder: (context, state) {
-          return state.maybeMap(
-            loaded: (result) => Text(
-              'Current player number = ${result.currentPlayerIndex + 1}',
-            ),
             orElse: () => const SizedBox.shrink(),
           );
         },
@@ -302,38 +283,46 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
     bool showTutorial,
     SettingsController settingsController,
   ) {
-    return DrawingOverlay(
-      onDrawingCompleted: (DrawingDetails details) {
-        setState(() {
-          _accuracy = details.accuracy;
-          _overlayOpacity = 0.0;
-          _isDrawing = false;
-          _showAccuracyAnimation = true;
-        });
-        info("Drawing completed with accuracy: ${details.toString()}");
+    return BlocBuilder<BattleCubit, BattleState>(
+      builder: (context, state) {
+        return state.maybeMap(
+          loaded: (result) => DrawingOverlay(
+            onDrawingCompleted: (DrawingDetails details) {
+              setState(() {
+                _accuracy = details.accuracy;
+                _overlayOpacity = 0.0;
+                _isDrawing = false;
+                _showAccuracyAnimation = true;
+              });
+              info("Drawing completed with accuracy: ${details.toString()}");
 
-        if (_currentDrawingMode == DrawingModeEnum.attack) {
-          context.read<BattleCubit>().playerAttack(accuracy: details.accuracy);
-        } else {
-          context.read<BattleCubit>().monsterAttack(accuracy: details.accuracy);
-        }
+              if (_currentDrawingMode == DrawingModeEnum.attack) {
+                context.read<BattleCubit>().playerAttack(accuracy: details.accuracy);
+              } else {
+                context.read<BattleCubit>().monsterAttack(accuracy: details.accuracy);
+              }
+            },
+            tutorialFinished: (value) async {
+              setState(() {
+                settingsController.showTutorial(!value);
+                _showTutorial = false;
+                _isDrawing = false;
+              });
+              // start drawing after tutorial ends
+              await Future.delayed(const Duration(seconds: 1));
+              _startTimer(widget.level.monster.speed, widget.chosenBonus);
+              _drawRune(DrawingModeEnum.attack);
+            },
+            tutorial: showTutorial,
+            thresholdPercentage: 0.9,
+            glyphAsset: DrawingUtils().getRandomGlyphEntity(),
+            drawingAreaSize: glyphSize,
+            drawingMode: _currentDrawingMode,
+            currentPlayerIndex: result.currentPlayerIndex,
+          ),
+          orElse: () => const SizedBox.shrink(),
+        );
       },
-      tutorialFinished: (value) async {
-        setState(() {
-          settingsController.showTutorial(!value);
-          _showTutorial = false;
-          _isDrawing = false;
-        });
-        // start drawing after tutorial ends
-        await Future.delayed(const Duration(seconds: 1));
-        _startTimer(widget.level.monster.speed, widget.chosenBonus);
-        _drawRune(DrawingModeEnum.attack);
-      },
-      tutorial: showTutorial,
-      thresholdPercentage: 0.9,
-      glyphAsset: DrawingUtils().getRandomGlyphEntity(),
-      drawingAreaSize: glyphSize,
-      drawingMode: _currentDrawingMode,
     );
   }
 
@@ -448,9 +437,6 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
     );
 
     // TODO: Wait for player attack animation
-    Future.delayed(const Duration(seconds: 2)).then((val) {
-      //context.read<BattleCubit>().victory();
-    });
   }
 
   void _nextTurn() {
@@ -476,14 +462,49 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   }
 
   void _openGameOverScreen() {
-    audioController.playSfx(SfxType.gameOver);
-    audioController.setSong(audioController.gameoverSong);
-    // TODO: Create game over screen
+    Future.delayed(
+      const Duration(seconds: 2),
+      () {
+        audioController.playSfx(SfxType.gameOver);
+        audioController.setSong(audioController.gameoverSong);
+        Navigator.pushReplacement(
+          context,
+          FadeRoute(
+            page: const EndGameScreen(
+              isVictory: false,
+            ),
+          ),
+        );
+      },
+    );
   }
 
   void _openVictoryScreen() {
-    audioController.setSong(audioController.victorySong);
-
-    // TODO: Create victory over screen
+    Future.delayed(
+      const Duration(seconds: 2),
+      () {
+        if (widget.level == LevelEnum.fourth) {
+          audioController.setSong(audioController.victorySong);
+          Navigator.pushReplacement(
+            context,
+            FadeRoute(
+              page: const EndingStoryScreen(
+                step: EndingStoryStep.fountain,
+              ),
+            ),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            FadeRoute(
+              page: BonusesScreen(
+                players: widget.players,
+                level: widget.level,
+              ),
+            ),
+          );
+        }
+      },
+    );
   }
 }

@@ -34,10 +34,6 @@ class _EndingStoryScreenState extends State<EndingStoryScreen> {
       Duration(seconds: widget.step.displayDuration),
       () => _navigateToNextStep(context),
     );
-
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      audioController.setSong(audioController.victorySong);
-    });
   }
 
   @override
