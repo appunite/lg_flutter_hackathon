@@ -89,6 +89,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   @override
   void initState() {
     super.initState();
+
     _toolTipController.onDone(
       () {
         _drawRune(DrawingModeEnum.attack);
@@ -296,12 +297,9 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
               setState(() {
                 settingsController.showTutorial(!value);
                 _showTutorial = false;
-                _isDrawing = false;
               });
               // start drawing after tutorial ends
-              await Future.delayed(const Duration(seconds: 1));
               _startTimer(widget.level.monster.speed, widget.chosenBonus);
-              _drawRune(DrawingModeEnum.attack);
             },
             tutorial: showTutorial,
             thresholdPercentage: 0.9,

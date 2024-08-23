@@ -18,8 +18,8 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$BattleState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(double currentPlayersHealthPoints,
-            double currentMonsterHealthPoints, int currentPlayerIndex)
+    required TResult Function(
+            double currentPlayersHealthPoints, double currentMonsterHealthPoints, int currentPlayerIndex)
         loaded,
     required TResult Function() monsterAttack,
     required TResult Function() playerAttack,
@@ -27,8 +27,7 @@ mixin _$BattleState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(double currentPlayersHealthPoints,
-            double currentMonsterHealthPoints, int currentPlayerIndex)?
+    TResult? Function(double currentPlayersHealthPoints, double currentMonsterHealthPoints, int currentPlayerIndex)?
         loaded,
     TResult? Function()? monsterAttack,
     TResult? Function()? playerAttack,
@@ -36,8 +35,7 @@ mixin _$BattleState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(double currentPlayersHealthPoints,
-            double currentMonsterHealthPoints, int currentPlayerIndex)?
+    TResult Function(double currentPlayersHealthPoints, double currentMonsterHealthPoints, int currentPlayerIndex)?
         loaded,
     TResult Function()? monsterAttack,
     TResult Function()? playerAttack,
@@ -70,14 +68,12 @@ mixin _$BattleState {
 
 /// @nodoc
 abstract class $BattleStateCopyWith<$Res> {
-  factory $BattleStateCopyWith(
-          BattleState value, $Res Function(BattleState) then) =
+  factory $BattleStateCopyWith(BattleState value, $Res Function(BattleState) then) =
       _$BattleStateCopyWithImpl<$Res, BattleState>;
 }
 
 /// @nodoc
-class _$BattleStateCopyWithImpl<$Res, $Val extends BattleState>
-    implements $BattleStateCopyWith<$Res> {
+class _$BattleStateCopyWithImpl<$Res, $Val extends BattleState> implements $BattleStateCopyWith<$Res> {
   _$BattleStateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -88,23 +84,16 @@ class _$BattleStateCopyWithImpl<$Res, $Val extends BattleState>
 
 /// @nodoc
 abstract class _$$LoadedImplCopyWith<$Res> {
-  factory _$$LoadedImplCopyWith(
-          _$LoadedImpl value, $Res Function(_$LoadedImpl) then) =
+  factory _$$LoadedImplCopyWith(_$LoadedImpl value, $Res Function(_$LoadedImpl) then) =
       __$$LoadedImplCopyWithImpl<$Res>;
   @useResult
-  $Res call(
-      {double currentPlayersHealthPoints,
-      double currentMonsterHealthPoints,
-      int currentPlayerIndex});
+  $Res call({double currentPlayersHealthPoints, double currentMonsterHealthPoints, int currentPlayerIndex});
 }
 
 /// @nodoc
-class __$$LoadedImplCopyWithImpl<$Res>
-    extends _$BattleStateCopyWithImpl<$Res, _$LoadedImpl>
+class __$$LoadedImplCopyWithImpl<$Res> extends _$BattleStateCopyWithImpl<$Res, _$LoadedImpl>
     implements _$$LoadedImplCopyWith<$Res> {
-  __$$LoadedImplCopyWithImpl(
-      _$LoadedImpl _value, $Res Function(_$LoadedImpl) _then)
-      : super(_value, _then);
+  __$$LoadedImplCopyWithImpl(_$LoadedImpl _value, $Res Function(_$LoadedImpl) _then) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -155,67 +144,57 @@ class _$LoadedImpl implements _Loaded {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$LoadedImpl &&
-            (identical(other.currentPlayersHealthPoints,
-                    currentPlayersHealthPoints) ||
-                other.currentPlayersHealthPoints ==
-                    currentPlayersHealthPoints) &&
-            (identical(other.currentMonsterHealthPoints,
-                    currentMonsterHealthPoints) ||
-                other.currentMonsterHealthPoints ==
-                    currentMonsterHealthPoints) &&
+            (identical(other.currentPlayersHealthPoints, currentPlayersHealthPoints) ||
+                other.currentPlayersHealthPoints == currentPlayersHealthPoints) &&
+            (identical(other.currentMonsterHealthPoints, currentMonsterHealthPoints) ||
+                other.currentMonsterHealthPoints == currentMonsterHealthPoints) &&
             (identical(other.currentPlayerIndex, currentPlayerIndex) ||
                 other.currentPlayerIndex == currentPlayerIndex));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, currentPlayersHealthPoints,
-      currentMonsterHealthPoints, currentPlayerIndex);
+  int get hashCode =>
+      Object.hash(runtimeType, currentPlayersHealthPoints, currentMonsterHealthPoints, currentPlayerIndex);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$LoadedImplCopyWith<_$LoadedImpl> get copyWith =>
-      __$$LoadedImplCopyWithImpl<_$LoadedImpl>(this, _$identity);
+  _$$LoadedImplCopyWith<_$LoadedImpl> get copyWith => __$$LoadedImplCopyWithImpl<_$LoadedImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(double currentPlayersHealthPoints,
-            double currentMonsterHealthPoints, int currentPlayerIndex)
+    required TResult Function(
+            double currentPlayersHealthPoints, double currentMonsterHealthPoints, int currentPlayerIndex)
         loaded,
     required TResult Function() monsterAttack,
     required TResult Function() playerAttack,
   }) {
-    return loaded(currentPlayersHealthPoints, currentMonsterHealthPoints,
-        currentPlayerIndex);
+    return loaded(currentPlayersHealthPoints, currentMonsterHealthPoints, currentPlayerIndex);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(double currentPlayersHealthPoints,
-            double currentMonsterHealthPoints, int currentPlayerIndex)?
+    TResult? Function(double currentPlayersHealthPoints, double currentMonsterHealthPoints, int currentPlayerIndex)?
         loaded,
     TResult? Function()? monsterAttack,
     TResult? Function()? playerAttack,
   }) {
-    return loaded?.call(currentPlayersHealthPoints, currentMonsterHealthPoints,
-        currentPlayerIndex);
+    return loaded?.call(currentPlayersHealthPoints, currentMonsterHealthPoints, currentPlayerIndex);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(double currentPlayersHealthPoints,
-            double currentMonsterHealthPoints, int currentPlayerIndex)?
+    TResult Function(double currentPlayersHealthPoints, double currentMonsterHealthPoints, int currentPlayerIndex)?
         loaded,
     TResult Function()? monsterAttack,
     TResult Function()? playerAttack,
     required TResult orElse(),
   }) {
     if (loaded != null) {
-      return loaded(currentPlayersHealthPoints, currentMonsterHealthPoints,
-          currentPlayerIndex);
+      return loaded(currentPlayersHealthPoints, currentMonsterHealthPoints, currentPlayerIndex);
     }
     return orElse();
   }
@@ -265,23 +244,19 @@ abstract class _Loaded implements BattleState {
   double get currentMonsterHealthPoints;
   int get currentPlayerIndex;
   @JsonKey(ignore: true)
-  _$$LoadedImplCopyWith<_$LoadedImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$LoadedImplCopyWith<_$LoadedImpl> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class _$$MonsterAttackImplCopyWith<$Res> {
-  factory _$$MonsterAttackImplCopyWith(
-          _$MonsterAttackImpl value, $Res Function(_$MonsterAttackImpl) then) =
+  factory _$$MonsterAttackImplCopyWith(_$MonsterAttackImpl value, $Res Function(_$MonsterAttackImpl) then) =
       __$$MonsterAttackImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$MonsterAttackImplCopyWithImpl<$Res>
-    extends _$BattleStateCopyWithImpl<$Res, _$MonsterAttackImpl>
+class __$$MonsterAttackImplCopyWithImpl<$Res> extends _$BattleStateCopyWithImpl<$Res, _$MonsterAttackImpl>
     implements _$$MonsterAttackImplCopyWith<$Res> {
-  __$$MonsterAttackImplCopyWithImpl(
-      _$MonsterAttackImpl _value, $Res Function(_$MonsterAttackImpl) _then)
+  __$$MonsterAttackImplCopyWithImpl(_$MonsterAttackImpl _value, $Res Function(_$MonsterAttackImpl) _then)
       : super(_value, _then);
 }
 
@@ -297,8 +272,7 @@ class _$MonsterAttackImpl implements _MonsterAttack {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$MonsterAttackImpl);
+    return identical(this, other) || (other.runtimeType == runtimeType && other is _$MonsterAttackImpl);
   }
 
   @override
@@ -307,8 +281,8 @@ class _$MonsterAttackImpl implements _MonsterAttack {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(double currentPlayersHealthPoints,
-            double currentMonsterHealthPoints, int currentPlayerIndex)
+    required TResult Function(
+            double currentPlayersHealthPoints, double currentMonsterHealthPoints, int currentPlayerIndex)
         loaded,
     required TResult Function() monsterAttack,
     required TResult Function() playerAttack,
@@ -319,8 +293,7 @@ class _$MonsterAttackImpl implements _MonsterAttack {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(double currentPlayersHealthPoints,
-            double currentMonsterHealthPoints, int currentPlayerIndex)?
+    TResult? Function(double currentPlayersHealthPoints, double currentMonsterHealthPoints, int currentPlayerIndex)?
         loaded,
     TResult? Function()? monsterAttack,
     TResult? Function()? playerAttack,
@@ -331,8 +304,7 @@ class _$MonsterAttackImpl implements _MonsterAttack {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(double currentPlayersHealthPoints,
-            double currentMonsterHealthPoints, int currentPlayerIndex)?
+    TResult Function(double currentPlayersHealthPoints, double currentMonsterHealthPoints, int currentPlayerIndex)?
         loaded,
     TResult Function()? monsterAttack,
     TResult Function()? playerAttack,
@@ -385,17 +357,14 @@ abstract class _MonsterAttack implements BattleState {
 
 /// @nodoc
 abstract class _$$PlayerAttackImplCopyWith<$Res> {
-  factory _$$PlayerAttackImplCopyWith(
-          _$PlayerAttackImpl value, $Res Function(_$PlayerAttackImpl) then) =
+  factory _$$PlayerAttackImplCopyWith(_$PlayerAttackImpl value, $Res Function(_$PlayerAttackImpl) then) =
       __$$PlayerAttackImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$PlayerAttackImplCopyWithImpl<$Res>
-    extends _$BattleStateCopyWithImpl<$Res, _$PlayerAttackImpl>
+class __$$PlayerAttackImplCopyWithImpl<$Res> extends _$BattleStateCopyWithImpl<$Res, _$PlayerAttackImpl>
     implements _$$PlayerAttackImplCopyWith<$Res> {
-  __$$PlayerAttackImplCopyWithImpl(
-      _$PlayerAttackImpl _value, $Res Function(_$PlayerAttackImpl) _then)
+  __$$PlayerAttackImplCopyWithImpl(_$PlayerAttackImpl _value, $Res Function(_$PlayerAttackImpl) _then)
       : super(_value, _then);
 }
 
@@ -411,8 +380,7 @@ class _$PlayerAttackImpl implements _PlayerAttack {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$PlayerAttackImpl);
+    return identical(this, other) || (other.runtimeType == runtimeType && other is _$PlayerAttackImpl);
   }
 
   @override
@@ -421,8 +389,8 @@ class _$PlayerAttackImpl implements _PlayerAttack {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(double currentPlayersHealthPoints,
-            double currentMonsterHealthPoints, int currentPlayerIndex)
+    required TResult Function(
+            double currentPlayersHealthPoints, double currentMonsterHealthPoints, int currentPlayerIndex)
         loaded,
     required TResult Function() monsterAttack,
     required TResult Function() playerAttack,
@@ -433,8 +401,7 @@ class _$PlayerAttackImpl implements _PlayerAttack {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(double currentPlayersHealthPoints,
-            double currentMonsterHealthPoints, int currentPlayerIndex)?
+    TResult? Function(double currentPlayersHealthPoints, double currentMonsterHealthPoints, int currentPlayerIndex)?
         loaded,
     TResult? Function()? monsterAttack,
     TResult? Function()? playerAttack,
@@ -445,8 +412,7 @@ class _$PlayerAttackImpl implements _PlayerAttack {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(double currentPlayersHealthPoints,
-            double currentMonsterHealthPoints, int currentPlayerIndex)?
+    TResult Function(double currentPlayersHealthPoints, double currentMonsterHealthPoints, int currentPlayerIndex)?
         loaded,
     TResult Function()? monsterAttack,
     TResult Function()? playerAttack,
