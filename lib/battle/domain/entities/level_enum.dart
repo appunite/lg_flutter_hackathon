@@ -44,7 +44,7 @@ enum LevelEnum {
       attackAnimation: 'bugbear-attack',
       monsterName: 'Jerry the Werewolf',
     ),
-     ImageAssets.werewolfBackground,
+    ImageAssets.werewolfBackground,
     [
       BonusEntity(type: BonusEnum.health, strength: 3),
       BonusEntity(type: BonusEnum.damage, strength: 3),
@@ -59,7 +59,7 @@ enum LevelEnum {
         damage: 13,
         attackAnimation: 'ogre-attack',
         monsterName: 'Leviathus, the Crusher of Souls'),
-     ImageAssets.leviathusBackground,
+    ImageAssets.leviathusBackground,
     // we don't display bonus screen after the final boss
     [],
     ImageAssets.round4number,

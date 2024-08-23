@@ -1,33 +1,64 @@
 import 'package:flutter/material.dart';
-import 'package:lg_flutter_hackathon/constants/strings.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lg_flutter_hackathon/constants/design_consts.dart';
+import 'package:lg_flutter_hackathon/constants/image_assets.dart';
+import 'package:lg_flutter_hackathon/story/presentation/widgets/story_button.dart';
 
 class ConfirmationPopUp extends StatelessWidget {
-  const ConfirmationPopUp({super.key, required this.title, this.alertMessage});
+  const ConfirmationPopUp({
+    super.key,
+    required this.title,
+  });
 
   final String title;
-  final String? alertMessage;
 
   @override
   Widget build(BuildContext context) {
-    Widget yesButton = TextButton(
-      child: const Text(Strings.yes),
-      onPressed: () {
-        Navigator.popAndPushNamed(context, '/');
-      },
-    );
-    Widget cancelButton = TextButton(
-      child: const Text(
-        Strings.cancel,
-        style: TextStyle(color: Colors.red),
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final screenHeight = MediaQuery.sizeOf(context).height;
+
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          SvgPicture.asset(
+            ImageAssets.tutorialContainer,
+            width: screenWidth / 2,
+          ),
+          Positioned(
+            top: screenHeight / 6,
+            child: Text(
+              title,
+              style: TextStyle(
+                fontFamily: DesignConsts.fontFamily,
+                color: Colors.white,
+                fontSize: screenWidth / 40,
+              ),
+            ),
+          ),
+          Positioned(
+            right: screenWidth / 12,
+            bottom: screenHeight / 15,
+            child: StoryButton(
+              text: 'Cancel',
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+          Positioned(
+            bottom: screenHeight / 15,
+            left: screenWidth / 12,
+            child: StoryButton(
+              text: 'Exit',
+              onTap: () {
+                Navigator.popUntil(context, (route) => route.isFirst);
+              },
+            ),
+          ),
+        ],
       ),
-      onPressed: () {
-        Navigator.pop(context);
-      },
-    );
-    return AlertDialog(
-      title: Text(title),
-      content: alertMessage != null ? Text(alertMessage!) : null,
-      actions: [yesButton, cancelButton],
     );
   }
 }
