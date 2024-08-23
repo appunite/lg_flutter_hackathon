@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lg_flutter_hackathon/audio/audio_controller.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/game_results_player_entity.dart';
 import 'package:lg_flutter_hackathon/components/pushable_button.dart';
 import 'package:lg_flutter_hackathon/constants/design_consts.dart';
@@ -8,7 +10,9 @@ import 'package:lg_flutter_hackathon/constants/image_assets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lg_flutter_hackathon/constants/strings.dart';
 import 'package:lg_flutter_hackathon/dependencies.dart';
+import 'package:lg_flutter_hackathon/main_menu/main_menu_screen.dart';
 import 'package:lg_flutter_hackathon/utils/storage.dart';
+import 'package:lg_flutter_hackathon/utils/transitions.dart';
 
 class EndGameScreen extends StatefulWidget {
   const EndGameScreen({
@@ -40,6 +44,8 @@ class _EndGameScreenState extends State<EndGameScreen> with SingleTickerProvider
 
   List<GameResultPlayer> gameResults = [];
 
+  final audioController = sl.get<AudioController>();
+
   @override
   void initState() {
     super.initState();
@@ -62,6 +68,10 @@ class _EndGameScreenState extends State<EndGameScreen> with SingleTickerProvider
       curve: Curves.easeInOut,
     ));
     loadGameResults();
+
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      audioController.setSong(audioController.victorySong);
+    });
   }
 
   Future<void> loadGameResults() async {
@@ -109,6 +119,12 @@ class _EndGameScreenState extends State<EndGameScreen> with SingleTickerProvider
               onPressed: () {
                 sl<GameResultPlayerStorage>().clear();
                 Navigator.popUntil(context, (route) => route.isFirst);
+                Navigator.pushReplacement(
+                  context,
+                  FadeRoute(
+                    page: const MainMenuScreen(),
+                  ),
+                );
               },
               child: SvgPicture.asset(
                 ImageAssets.playAgainButton,
