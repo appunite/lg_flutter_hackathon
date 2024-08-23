@@ -386,37 +386,9 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   }
 
   Widget _buildEnemy(double screenHeight, double screenWidth) {
-    final enemyAsset = switch (widget.level) {
-      LevelEnum.first => ImageAssets.trollEnemy,
-      LevelEnum.second => ImageAssets.hopgoblinEnemy,
-      LevelEnum.third => ImageAssets.bugbearEnemy,
-      LevelEnum.fourth => ImageAssets.ogreEnemy,
-    };
-
-    final enemyScale = switch (widget.level) {
-      LevelEnum.first => 4,
-      LevelEnum.second => 1.7,
-      LevelEnum.third => 1.5,
-      LevelEnum.fourth => 1.3,
-    };
-
-    final enemyBottomPositionBottom = switch (widget.level) {
-      LevelEnum.first => 8,
-      LevelEnum.second => 12,
-      LevelEnum.third => 10,
-      LevelEnum.fourth => 9,
-    };
-
-    final enemyBottomPositionRight = switch (widget.level) {
-      LevelEnum.first => 8,
-      LevelEnum.second => 12,
-      LevelEnum.third => 10,
-      LevelEnum.fourth => 12,
-    };
-
     return Positioned(
-      bottom: screenHeight / enemyBottomPositionBottom,
-      right: screenWidth / enemyBottomPositionRight,
+      bottom: screenHeight / widget.level.enemyBottomPositionBottom,
+      right: screenWidth / widget.level.enemyBottomPositionRight,
       child: OverlayTooltipItem(
         displayIndex: 3,
         tooltip: (controller) {
@@ -424,8 +396,8 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
         },
         tooltipVerticalPosition: TooltipVerticalPosition.TOP,
         child: SvgPicture.asset(
-          height: screenHeight / enemyScale,
-          enemyAsset,
+          height: screenHeight / widget.level.enemyScale,
+          widget.level.monsterAsset,
           fit: BoxFit.cover,
           placeholderBuilder: (BuildContext context) => const SizedBox(
             width: 50,
@@ -438,46 +410,11 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   }
 
   Widget _buildDialogCloud(double screenHeight, double screenWidth) {
-    final introDialog = switch (widget.level) {
-      LevelEnum.first => Strings.enemy1IntroDialog,
-      LevelEnum.second => Strings.enemy2IntroDialog,
-      LevelEnum.third => Strings.enemy3IntroDialog,
-      LevelEnum.fourth => Strings.enemy4IntroDialog,
-    };
-
-    final outroDialog = switch (widget.level) {
-      LevelEnum.first => Strings.enemy1OutroDialog,
-      LevelEnum.second => Strings.enemy2OutroDialog,
-      LevelEnum.third => Strings.enemy3OutroDialog,
-      LevelEnum.fourth => Strings.enemy4OutroDialog,
-    };
-
-    final attackDialogs = switch (widget.level) {
-      LevelEnum.first => Strings.enemy1AttackDialogs,
-      LevelEnum.second => Strings.enemy2AttackDialogs,
-      LevelEnum.third => Strings.enemy3AttackDialogs,
-      LevelEnum.fourth => Strings.enemy4AttackDialogs,
-    };
-
-    final defenseDialogs = switch (widget.level) {
-      LevelEnum.first => Strings.enemy1DefenseDialogs,
-      LevelEnum.second => Strings.enemy2DefenseDialogs,
-      LevelEnum.third => Strings.enemy3DefenseDialogs,
-      LevelEnum.fourth => Strings.enemy4DefenseDialogs,
-    };
-
     final text = switch (_voiceDialogType) {
-      DialogEnum.intro => introDialog,
-      DialogEnum.outro => outroDialog,
-      DialogEnum.attack => attackDialogs[Random().nextInt(3)],
-      DialogEnum.defense => defenseDialogs[Random().nextInt(3)],
-    };
-
-    final enemyAsset = switch (widget.level) {
-      LevelEnum.first => ImageAssets.trollEnemy,
-      LevelEnum.second => ImageAssets.hopgoblinEnemy,
-      LevelEnum.third => ImageAssets.bugbearEnemy,
-      LevelEnum.fourth => ImageAssets.ogreEnemy,
+      DialogEnum.intro => introDialog(widget.level),
+      DialogEnum.outro => outroDialog(widget.level),
+      DialogEnum.attack => attackDialogs(widget.level)[Random().nextInt(3)],
+      DialogEnum.defense => defenseDialogs(widget.level)[Random().nextInt(3)],
     };
 
     return Visibility(
@@ -493,7 +430,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
               children: [
                 SvgPicture.asset(
                   height: screenHeight / 10,
-                  enemyAsset,
+                  widget.level.monsterAsset,
                   fit: BoxFit.cover,
                   placeholderBuilder: (BuildContext context) => const SizedBox(
                     width: 50,
@@ -656,9 +593,9 @@ class BlurredContainer extends StatelessWidget {
   final Widget child;
 
   const BlurredContainer({
-    Key? key,
+    super.key,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
