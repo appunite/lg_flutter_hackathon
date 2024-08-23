@@ -12,6 +12,8 @@ class ConfirmationPopUp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final audioController = sl.get<AudioController>();
+
     final screenWidth = MediaQuery.sizeOf(context).width;
     final screenHeight = MediaQuery.sizeOf(context).height;
 
@@ -73,6 +75,7 @@ class ConfirmationPopUp extends StatelessWidget {
                   SizedBox(width: screenWidth / DesignConsts.tutorialButtonSpacingFactor),
                   PushableButton(
                     onPressed: () {
+                      audioController.setSong(audioController.themeSong);
                       Navigator.popAndPushNamed(context, '/');
                     },
                     child: Opacity(

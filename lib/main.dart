@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,10 +12,11 @@ import 'package:lg_flutter_hackathon/bonuses/bonuses_screen.dart';
 import 'package:lg_flutter_hackathon/constants/image_assets.dart';
 import 'package:lg_flutter_hackathon/dependencies.dart';
 import 'package:lg_flutter_hackathon/main_menu/main_menu_screen.dart';
+import 'package:lg_flutter_hackathon/splash/presentation/pages/splash_screen.dart';
 import 'package:lg_flutter_hackathon/story/domain/ending_story_enum.dart';
+import 'package:lg_flutter_hackathon/story/domain/opening_story_enum.dart';
 import 'package:lg_flutter_hackathon/story/presentation/ending_story_screen.dart';
 import 'package:lg_flutter_hackathon/story/presentation/opening_story_screen.dart';
-import 'package:lg_flutter_hackathon/story/domain/opening_story_enum.dart';
 import 'package:lg_flutter_hackathon/utils/window_manager_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart';
@@ -75,14 +77,13 @@ class App extends StatelessWidget {
     return AppLifecycleObserver(
       child: MultiProvider(
         providers: [
-          Provider(create: (context) => SettingsController()),
-          ProxyProvider2<AppLifecycleStateNotifier, SettingsController, AudioController>(
-            create: (context) => AudioController(),
-            update: (context, lifecycleNotifier, settings, audio) {
-              audio!.attachDependencies(lifecycleNotifier, settings);
-              return audio;
+          ProxyProvider<AppLifecycleStateNotifier, SettingsController>(
+            create: (context) => SettingsController(),
+            update: (context, lifecycleNotifier, settings) {
+              sl.get<AudioController>().attachDependencies(lifecycleNotifier, settings!);
+              return settings;
             },
-            dispose: (context, audio) => audio.dispose(),
+            dispose: (context, value) => sl.get<AudioController>().dispose(),
             lazy: false,
           ),
         ],
@@ -103,10 +104,11 @@ class App extends StatelessWidget {
             ),
             initialRoute: '/',
             routes: {
-              '/': (context) => const MainMenuScreen(),
+              '/': (context) => const SplashScreen(),
+              '/main-menu': (context) => const MainMenuScreen(),
               '/battle': (context) => const BattleScreen(
                     level: LevelEnum.first,
-                    players: PlayersEntity(healthPoints: 100, numberOfPlayers: 4, damage: 10),
+                    players: PlayersEntity(healthPoints: 100, numberOfPlayers: 4, damage: 1000),
                   ),
               '/bonuses': (context) => const BonusesScreen(
                     level: LevelEnum.first,

@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lg_flutter_hackathon/audio/audio_controller.dart';
+import 'package:lg_flutter_hackathon/audio/sounds.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/drawing_details_entity.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/drawing_mode_enum.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/glyph_entity.dart';
@@ -13,6 +15,7 @@ import 'package:lg_flutter_hackathon/battle/presentation/widgets/overlay_widget.
 import 'package:lg_flutter_hackathon/components/tool_tip.dart';
 import 'package:lg_flutter_hackathon/constants/design_consts.dart';
 import 'package:lg_flutter_hackathon/constants/image_assets.dart';
+import 'package:lg_flutter_hackathon/dependencies.dart';
 import 'package:overlay_tooltip/overlay_tooltip.dart';
 
 class DrawingOverlay extends StatefulWidget {
@@ -23,6 +26,7 @@ class DrawingOverlay extends StatefulWidget {
   final DrawingModeEnum drawingMode;
   final ValueChanged<bool> tutorialFinished;
   final bool tutorial;
+  final int currentPlayerIndex;
 
   const DrawingOverlay({
     super.key,
@@ -33,6 +37,7 @@ class DrawingOverlay extends StatefulWidget {
     required this.drawingMode,
     required this.tutorialFinished,
     required this.tutorial,
+    required this.currentPlayerIndex,
   });
 
   @override
@@ -211,6 +216,7 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
     final double drawingBoardSize = widget.drawingAreaSize * 2;
     final double glyphSize = widget.drawingAreaSize;
     final screenWidth = MediaQuery.sizeOf(context).width;
+    final audioController = sl.get<AudioController>();
 
     return OverlayTooltipScaffold(
       tooltipAnimationCurve: Curves.linear,
@@ -231,7 +237,7 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
           Positioned(
             top: 64,
             child: Text(
-              'Time for ${widget.drawingMode.name}!',
+              '${_getPlayerName(widget.currentPlayerIndex)} ${widget.drawingMode.name}!',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontFamily: DesignConsts.fontFamily,
@@ -255,6 +261,8 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
                   Center(
                     child: GestureDetector(
                       onPanStart: (details) => setState(() {
+                        audioController.playSfx(SfxType.drawing);
+
                         _currentPenPosition = details.localPosition;
                       }),
                       onPanUpdate: (details) => setState(() {
@@ -321,6 +329,18 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
         ),
       ),
     );
+  }
+
+  String _getPlayerName(int currentPlayerIndex) {
+    if (currentPlayerIndex == 0) {
+      return 'Sapphire';
+    } else if (currentPlayerIndex == 1) {
+      return 'Emerald';
+    } else if (currentPlayerIndex == 2) {
+      return 'Topaz';
+    } else {
+      return 'Ruby';
+    }
   }
 
   @override

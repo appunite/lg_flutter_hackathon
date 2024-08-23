@@ -1,35 +1,51 @@
 import 'package:flutter/material.dart';
+
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lg_flutter_hackathon/audio/audio_controller.dart';
+import 'package:lg_flutter_hackathon/audio/sounds.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/level_enum.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/players_entity.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/battle_screen.dart';
-import 'package:lg_flutter_hackathon/bonuses/bonuses_screen.dart';
 import 'package:lg_flutter_hackathon/components/loading_screen.dart';
 import 'package:lg_flutter_hackathon/components/pushable_button.dart';
 import 'package:lg_flutter_hackathon/constants/design_consts.dart';
 import 'package:lg_flutter_hackathon/constants/image_assets.dart';
 import 'package:lg_flutter_hackathon/constants/strings.dart';
-import 'package:lg_flutter_hackathon/story/domain/ending_story_enum.dart';
-import 'package:lg_flutter_hackathon/story/domain/opening_story_enum.dart';
-import 'package:lg_flutter_hackathon/story/presentation/ending_story_screen.dart';
-import 'package:lg_flutter_hackathon/story/presentation/opening_story_screen.dart';
-import 'package:lg_flutter_hackathon/utils/transitions.dart';
+import 'package:lg_flutter_hackathon/dependencies.dart';
 import 'package:provider/provider.dart';
+
 import '../settings/settings.dart';
 
-import 'package:flutter_svg/flutter_svg.dart';
-
-class MainMenuScreen extends StatefulWidget {
+class MainMenuScreen extends StatelessWidget {
   const MainMenuScreen({super.key});
 
   @override
-  State<MainMenuScreen> createState() => _MainMenuScreenState();
+  Widget build(BuildContext context) {
+    final settingsController = context.watch<SettingsController>();
+
+    return _MainMenuBody(settingsController: settingsController);
+  }
 }
 
-class _MainMenuScreenState extends State<MainMenuScreen> {
+class _MainMenuBody extends StatefulWidget {
+  const _MainMenuBody({
+    required this.settingsController,
+  });
+
+  final SettingsController settingsController;
+
+  @override
+  State<_MainMenuBody> createState() => __MainMenuBodyState();
+}
+
+class __MainMenuBodyState extends State<_MainMenuBody> {
   int _numberOfPlayers = 2;
 
   final List<bool> _isPlayerVisible = [true, true, false, false];
+
+  final audioController = sl.get<AudioController>();
 
   void _incrementPlayers() {
     if (_numberOfPlayers < 4) {
@@ -96,11 +112,17 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      audioController.setSong(audioController.themeSong);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.sizeOf(context).width;
     final screenHeight = MediaQuery.sizeOf(context).height;
-
-    final settingsController = context.watch<SettingsController>();
 
     return WillPopScope(
       onWillPop: () async => false,
@@ -150,7 +172,8 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               PushableButton(
-                                onPressed: _numberOfPlayers > 2 ? _decrementPlayers : () {},
+                                onPressed: _numberOfPlayers > 2 ? _decrementPlayers : null,
+                                sfxType: SfxType.deletePlayerPop,
                                 child: Opacity(
                                   opacity: _numberOfPlayers > 2 ? 1.0 : 0.5,
                                   child: SvgPicture.asset(
@@ -192,7 +215,8 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                               ),
                               SizedBox(width: screenWidth / DesignConsts.buttonSpacingFactor),
                               PushableButton(
-                                onPressed: _numberOfPlayers < 4 ? _incrementPlayers : () {},
+                                onPressed: _numberOfPlayers < 4 ? _incrementPlayers : null,
+                                sfxType: SfxType.addPlayerPop,
                                 child: Opacity(
                                   opacity: _numberOfPlayers < 4 ? 1.0 : 0.5,
                                   child: SvgPicture.asset(
@@ -249,7 +273,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
             Positioned(
               top: screenHeight / 40,
               left: screenWidth / 40,
-              child: soundSettings(settingsController, screenWidth),
+              child: soundSettings(widget.settingsController, screenWidth),
             ),
           ],
         ),
@@ -287,53 +311,6 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
               color: Colors.white,
             );
           },
-        ),
-        //TODO: remove later
-        ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const BonusesScreen(
-                  level: LevelEnum.third,
-                  players: PlayersEntity(
-                    healthPoints: 100,
-                    numberOfPlayers: 4,
-                    damage: 10,
-                  ),
-                ),
-              ),
-            );
-          },
-          child: const Text('Bonuses'),
-        ),
-        const SizedBox(width: 32),
-        ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              FadeRoute(
-                page: OpeningStoryScreen(
-                  step: OpeningStoryStep.values.first,
-                ),
-              ),
-            );
-          },
-          child: const Text('Opening story'),
-        ),
-        const SizedBox(width: 32),
-        ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              FadeRoute(
-                page: EndingStoryScreen(
-                  step: EndingStoryStep.values.first,
-                ),
-              ),
-            );
-          },
-          child: const Text('Ending story'),
         ),
       ],
     );
