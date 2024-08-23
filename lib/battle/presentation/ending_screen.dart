@@ -10,7 +10,9 @@ import 'package:lg_flutter_hackathon/constants/image_assets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lg_flutter_hackathon/constants/strings.dart';
 import 'package:lg_flutter_hackathon/dependencies.dart';
+import 'package:lg_flutter_hackathon/main_menu/main_menu_screen.dart';
 import 'package:lg_flutter_hackathon/utils/storage.dart';
+import 'package:lg_flutter_hackathon/utils/transitions.dart';
 
 class EndGameScreen extends StatefulWidget {
   const EndGameScreen({
@@ -117,6 +119,12 @@ class _EndGameScreenState extends State<EndGameScreen> with SingleTickerProvider
               onPressed: () {
                 sl<GameResultPlayerStorage>().clear();
                 Navigator.popUntil(context, (route) => route.isFirst);
+                Navigator.pushReplacement(
+                  context,
+                  FadeRoute(
+                    page: const MainMenuScreen(),
+                  ),
+                );
               },
               child: SvgPicture.asset(
                 ImageAssets.playAgainButton,
