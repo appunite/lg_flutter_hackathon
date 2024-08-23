@@ -255,7 +255,7 @@ class __MainMenuBodyState extends State<_MainMenuBody> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => const BattleScreen(
-                          level: LevelEnum.third,
+                          level: LevelEnum.first,
                           players: PlayersEntity(healthPoints: 100, numberOfPlayers: 4, damage: 10),
                         ),
                       ),
