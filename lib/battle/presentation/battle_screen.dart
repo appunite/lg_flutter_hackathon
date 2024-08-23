@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -32,6 +31,7 @@ import 'package:lg_flutter_hackathon/logger.dart';
 import 'package:lg_flutter_hackathon/settings/settings.dart';
 import 'package:lg_flutter_hackathon/story/domain/ending_story_enum.dart';
 import 'package:lg_flutter_hackathon/story/presentation/ending_story_screen.dart';
+import 'package:lg_flutter_hackathon/story/presentation/widgets/story_text_container.dart';
 import 'package:lg_flutter_hackathon/utils/drawing_utils.dart';
 import 'package:lg_flutter_hackathon/utils/transitions.dart';
 import 'package:overlay_tooltip/overlay_tooltip.dart';
@@ -420,39 +420,12 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
     return Visibility(
       visible: _showVoiceDialog,
       child: Positioned(
-        bottom: screenHeight / 25,
+        bottom: 8,
         right: screenWidth / 8,
         left: screenWidth / 8,
-        child: ClipRect(
-          child: BlurredContainer(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SvgPicture.asset(
-                  height: screenHeight / 10,
-                  widget.level.monsterAsset,
-                  fit: BoxFit.cover,
-                  placeholderBuilder: (BuildContext context) => const SizedBox(
-                    width: 50,
-                    height: 50,
-                    child: CircularProgressIndicator(),
-                  ),
-                ),
-                Expanded(
-                  child: Text(
-                    text,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: screenHeight * 0.025,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontFamily: DesignConsts.fontFamily,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+        child: StoryTextContainer(
+          text: text,
+          leadingAsset: widget.level.monsterAsset,
         ),
       ),
     );
@@ -585,29 +558,6 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
           );
         }
       },
-    );
-  }
-}
-
-class BlurredContainer extends StatelessWidget {
-  final Widget child;
-
-  const BlurredContainer({
-    super.key,
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(color: Colors.transparent),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(
-          sigmaX: 10.0,
-          sigmaY: 50.0,
-        ),
-        child: child,
-      ),
     );
   }
 }
