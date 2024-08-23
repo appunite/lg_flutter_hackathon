@@ -39,6 +39,12 @@ class ImageAssets {
   static const String gameStatsPointFirstRow = 'assets/ilustrations/game_stats_point_first_row.svg';
   static const String gameStatsPointSecondRow = 'assets/ilustrations/game_stats_point_second_row.svg';
   static const String gameResultHolder = 'assets/ilustrations/game_result_holder.svg';
+  static const String tutorialContainer = 'assets/ilustrations/tutorial_container.svg';
+  static const String tutorialNextButton = 'assets/ilustrations/tutorial_next_button.svg';
+  static const String tutorialBackButton = 'assets/ilustrations/tutorial_back_button.svg';
+  static const String tutorialSkipButton = 'assets/ilustrations/tutorial_skip_button.svg';
+  static const String tutorialStartButton = 'assets/ilustrations/tutorial_start_button.svg';
+
   static const String round = 'assets/ilustrations/round.svg';
   static const String round1number = 'assets/ilustrations/round_1.svg';
   static const String round2number = 'assets/ilustrations/round_2.svg';

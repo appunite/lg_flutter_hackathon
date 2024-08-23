@@ -9,6 +9,8 @@ class SettingsController {
 
   ValueNotifier<bool> musicOn = ValueNotifier(false);
 
+  ValueNotifier<bool> tutorial = ValueNotifier(true);
+
   SettingsController({SettingsPrefs? store}) : _store = store ?? LocalStorageSettingsPrefs() {
     _loadStateFromPrefs();
   }
@@ -21,6 +23,11 @@ class SettingsController {
   void toggleSoundsOn() {
     soundsOn.value = !soundsOn.value;
     _store.saveSoundsOn(soundsOn.value);
+  }
+
+  void showTutorial(bool show) {
+    tutorial.value = show;
+    _store.setTutorial(tutorial.value);
   }
 
   Future<void> _loadStateFromPrefs() async {

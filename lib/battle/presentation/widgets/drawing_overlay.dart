@@ -12,9 +12,11 @@ import 'package:lg_flutter_hackathon/battle/domain/entities/drawing_mode_enum.da
 import 'package:lg_flutter_hackathon/battle/domain/entities/glyph_entity.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/drawing_painter.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/overlay_widget.dart';
+import 'package:lg_flutter_hackathon/components/tool_tip.dart';
 import 'package:lg_flutter_hackathon/constants/design_consts.dart';
 import 'package:lg_flutter_hackathon/constants/image_assets.dart';
 import 'package:lg_flutter_hackathon/dependencies.dart';
+import 'package:overlay_tooltip/overlay_tooltip.dart';
 
 class DrawingOverlay extends StatefulWidget {
   final ValueChanged<DrawingDetails> onDrawingCompleted;
@@ -22,6 +24,8 @@ class DrawingOverlay extends StatefulWidget {
   final GlyphEntity glyphAsset;
   final double drawingAreaSize;
   final DrawingModeEnum drawingMode;
+  final ValueChanged<bool> tutorialFinished;
+  final bool tutorial;
 
   const DrawingOverlay({
     super.key,
@@ -30,6 +34,8 @@ class DrawingOverlay extends StatefulWidget {
     required this.glyphAsset,
     required this.drawingAreaSize,
     required this.drawingMode,
+    required this.tutorialFinished,
+    required this.tutorial,
   });
 
   @override
@@ -43,11 +49,23 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
   Uint8List? _drawnImageBytes;
   ui.Image? _backgroundImage;
   final double _strokeWidth = 16;
+  final TooltipController _toolGlyphTipController = TooltipController();
 
   @override
   void initState() {
     super.initState();
+    _toolGlyphTipController.onDone(() {
+      setState(() {
+        widget.tutorialFinished(true);
+      });
+    });
     _loadPresentationImage();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (widget.tutorial) {
+        await Future.delayed(const Duration(seconds: 1));
+        _toolGlyphTipController.start();
+      }
+    });
   }
 
   Future<void> _loadPresentationImage() async {
@@ -198,71 +216,97 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
     final screenWidth = MediaQuery.sizeOf(context).width;
     final audioController = sl.get<AudioController>();
 
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        const OverlayWidget(),
-        Positioned(
-          top: 64,
-          child: Text(
-            'Time for ${widget.drawingMode.name}!',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontFamily: DesignConsts.fontFamily,
-              fontSize: screenWidth / 30,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+    return OverlayTooltipScaffold(
+      tooltipAnimationCurve: Curves.linear,
+      tooltipAnimationDuration: const Duration(milliseconds: 1000),
+      controller: _toolGlyphTipController,
+      preferredOverlay: GestureDetector(
+        onTap: () => _toolGlyphTipController.next(),
+        child: Container(
+          height: double.infinity,
+          width: double.infinity,
+          color: Colors.black.withOpacity(0.5),
+        ),
+      ),
+      builder: (context) => Stack(
+        alignment: Alignment.center,
+        children: [
+          const OverlayWidget(),
+          Positioned(
+            top: 64,
+            child: Text(
+              'Time for ${widget.drawingMode.name}!',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: DesignConsts.fontFamily,
+                fontSize: screenWidth / 30,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
           ),
-        ),
-        Center(
-          child: SizedBox(
-            width: drawingBoardSize,
-            height: drawingBoardSize,
-            child: Stack(
-              children: [
-                SvgPicture.asset(
-                  ImageAssets.drawingBoard,
-                  width: drawingBoardSize,
-                  height: drawingBoardSize,
-                ),
-                Center(
-                  child: GestureDetector(
-                    onPanStart: (details) => setState(() {
-                      audioController.playSfx(SfxType.drawing);
-                      _currentPenPosition = details.localPosition;
-                    }),
-                    onPanUpdate: (details) => setState(() {
-                      Offset localPosition = details.localPosition;
-                      _points.add(localPosition);
-                      if (_points.length > 1 && _points[_points.length - 2] != null) {}
-                      _currentPenPosition = localPosition;
-                    }),
-                    onPanEnd: (details) async {
-                      _points.add(null);
-                      DrawingDetails details = await _saveAndCompareDrawing();
-                      widget.onDrawingCompleted(details);
-                      setState(() {
-                        _points.clear();
-                        _currentPenPosition = null;
-                      });
-                    },
-                    child: SizedBox(
-                      width: glyphSize,
-                      height: glyphSize,
-                      child: CustomPaint(
-                        painter: DrawPainter(_points, _backgroundImage, _strokeWidth),
-                        size: Size.infinite,
+          Center(
+            child: SizedBox(
+              width: drawingBoardSize,
+              height: drawingBoardSize,
+              child: Stack(
+                children: [
+                  SvgPicture.asset(
+                    ImageAssets.drawingBoard,
+                    width: drawingBoardSize,
+                    height: drawingBoardSize,
+                  ),
+                  Center(
+                    child: GestureDetector(
+                      onPanStart: (details) => setState(() {
+                        audioController.playSfx(SfxType.drawing);
+
+                        _currentPenPosition = details.localPosition;
+                      }),
+                      onPanUpdate: (details) => setState(() {
+                        Offset localPosition = details.localPosition;
+                        _points.add(localPosition);
+                        if (_points.length > 1 && _points[_points.length - 2] != null) {}
+                        _currentPenPosition = localPosition;
+                      }),
+                      onPanEnd: (details) async {
+                        _points.add(null);
+                        DrawingDetails details = await _saveAndCompareDrawing();
+                        widget.onDrawingCompleted(details);
+                        setState(() {
+                          _points.clear();
+                          _currentPenPosition = null;
+                        });
+                      },
+                      child: SizedBox(
+                        width: glyphSize,
+                        height: glyphSize,
+                        child: OverlayTooltipItem(
+                          displayIndex: 0,
+                          tooltipVerticalPosition: TooltipVerticalPosition.TOP,
+                          tooltipHorizontalPosition: TooltipHorizontalPosition.RIGHT,
+                          tooltip: (controller) {
+                            return MTooltip(
+                              title:
+                                  'The damage you deal depends on your accuracy! Watch out the monster can also attack, but you\'ll figure it out..',
+                              controller: controller,
+                            );
+                          },
+                          child: CustomPaint(
+                            painter: DrawPainter(_points, _backgroundImage, _strokeWidth),
+                            size: Size.infinite,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                if (_currentPenPosition != null) _buildMagicPen(glyphSize),
-              ],
+                  if (_currentPenPosition != null) _buildMagicPen(glyphSize),
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -283,5 +327,11 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _toolGlyphTipController.dispose();
+    super.dispose();
   }
 }

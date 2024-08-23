@@ -28,4 +28,16 @@ class LocalStorageSettingsPrefs extends SettingsPrefs {
     final prefs = await instanceFuture;
     await prefs.setBool('soundsOn', value);
   }
+
+  @override
+  Future<void> setTutorial(bool value) async {
+    final prefs = await instanceFuture;
+    await prefs.setBool('tutorial', value);
+  }
+
+  @override
+  Future<bool> showTutorial({required bool defaultValue}) async {
+    final prefs = await instanceFuture;
+    return prefs.getBool('tutorial') ?? defaultValue;
+  }
 }
