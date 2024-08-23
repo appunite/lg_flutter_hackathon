@@ -11,8 +11,4 @@ class BattleState with _$BattleState {
   const factory BattleState.monsterAttack() = _MonsterAttack;
 
   const factory BattleState.playerAttack() = _PlayerAttack;
-
-  const factory BattleState.gameOver() = _GameOver;
-
-  const factory BattleState.victory() = _Victory;
 }
