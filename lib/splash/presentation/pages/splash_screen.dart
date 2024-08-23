@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lg_flutter_hackathon/constants/image_assets.dart';
-import 'package:lg_flutter_hackathon/main_menu/main_menu_screen.dart';
+import 'package:lg_flutter_hackathon/story/domain/opening_story_enum.dart';
+import 'package:lg_flutter_hackathon/story/presentation/opening_story_screen.dart';
 import 'package:lg_flutter_hackathon/utils/transitions.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -23,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
           () => Navigator.pushReplacement(
             context,
             FadeRoute(
-              page: const MainMenuScreen(),
+              page: const OpeningStoryScreen(step: OpeningStoryStep.castle),
             ),
           ),
         );

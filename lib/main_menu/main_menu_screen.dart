@@ -1,23 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/level_enum.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/players_entity.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/battle_screen.dart';
-import 'package:lg_flutter_hackathon/bonuses/bonuses_screen.dart';
 import 'package:lg_flutter_hackathon/components/loading_screen.dart';
 import 'package:lg_flutter_hackathon/components/pushable_button.dart';
 import 'package:lg_flutter_hackathon/constants/design_consts.dart';
 import 'package:lg_flutter_hackathon/constants/image_assets.dart';
 import 'package:lg_flutter_hackathon/constants/strings.dart';
-import 'package:lg_flutter_hackathon/story/domain/ending_story_enum.dart';
-import 'package:lg_flutter_hackathon/story/domain/opening_story_enum.dart';
-import 'package:lg_flutter_hackathon/story/presentation/ending_story_screen.dart';
-import 'package:lg_flutter_hackathon/story/presentation/opening_story_screen.dart';
-import 'package:lg_flutter_hackathon/utils/transitions.dart';
 import 'package:provider/provider.dart';
-import '../settings/settings.dart';
 
-import 'package:flutter_svg/flutter_svg.dart';
+import '../settings/settings.dart';
 
 class MainMenuScreen extends StatefulWidget {
   const MainMenuScreen({super.key});
@@ -287,53 +281,6 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
               color: Colors.white,
             );
           },
-        ),
-        //TODO: remove later
-        ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const BonusesScreen(
-                  level: LevelEnum.third,
-                  players: PlayersEntity(
-                    healthPoints: 100,
-                    numberOfPlayers: 4,
-                    damage: 10,
-                  ),
-                ),
-              ),
-            );
-          },
-          child: const Text('Bonuses'),
-        ),
-        const SizedBox(width: 32),
-        ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              FadeRoute(
-                page: OpeningStoryScreen(
-                  step: OpeningStoryStep.values.first,
-                ),
-              ),
-            );
-          },
-          child: const Text('Opening story'),
-        ),
-        const SizedBox(width: 32),
-        ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              FadeRoute(
-                page: EndingStoryScreen(
-                  step: EndingStoryStep.values.first,
-                ),
-              ),
-            );
-          },
-          child: const Text('Ending story'),
         ),
       ],
     );
