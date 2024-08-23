@@ -2,7 +2,11 @@ class ImageAssets {
   static const String battleBackground = 'assets/ilustrations/battle_background.svg';
   static const String splashScreenBackground = 'assets/ilustrations/splash_background.svg';
   static const String players = 'assets/ilustrations/players.svg';
+  static const String dialogCloud = 'assets/ilustrations/dialog_cloud.svg';
   static const String trollEnemy = 'assets/ilustrations/troll_enemy.svg';
+  static const String hopgoblinEnemy = 'assets/ilustrations/hopgoblin_enemy.svg';
+  static const String bugbearEnemy = 'assets/ilustrations/bugbear_enemy.svg';
+  static const String ogreEnemy = 'assets/ilustrations/ogre_enemy.svg';
   static const String drawingBoard = 'assets/ilustrations/drawing_board.svg';
   static const String magicPenSvg = 'assets/ilustrations/magic_pen.svg';
   static const String healthBarBackground = 'assets/ilustrations/health_bar_background.svg';
@@ -79,6 +83,10 @@ class ImageAssets {
 
 List<String> assetsList = [
   ImageAssets.battleBackground,
+  ImageAssets.dialogCloud,
+  ImageAssets.bugbearEnemy,
+  ImageAssets.hopgoblinEnemy,
+  ImageAssets.ogreEnemy,
   ImageAssets.players,
   ImageAssets.trollEnemy,
   ImageAssets.drawingBoard,

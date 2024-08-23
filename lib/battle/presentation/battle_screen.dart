@@ -1,8 +1,12 @@
+import 'dart:math';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/bonus_entity.dart';
+import 'package:lg_flutter_hackathon/battle/domain/entities/dialog_enum.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/drawing_details_entity.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/drawing_mode_enum.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/level_enum.dart';
@@ -86,6 +90,9 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   DrawingModeEnum _currentDrawingMode = DrawingModeEnum.attack;
   bool _showTutorial = false;
 
+  bool _showVoiceDialog = false;
+  DialogEnum _voiceDialogType = DialogEnum.intro;
+
   @override
   void initState() {
     super.initState();
@@ -125,6 +132,24 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
     _timer!.start();
   }
 
+  Future<void> showVoiceDialog(DialogEnum type) async {
+    setState(() {
+      _showVoiceDialog = true;
+      _voiceDialogType = type;
+    });
+    final delay = switch (type) {
+      DialogEnum.intro => 5,
+      DialogEnum.outro => 7,
+      DialogEnum.attack => 3,
+      DialogEnum.defense => 3,
+    };
+
+    await Future.delayed(Duration(seconds: delay));
+    setState(() {
+      _showVoiceDialog = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.sizeOf(context).height;
@@ -141,13 +166,20 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
             state.mapOrNull(
               loaded: (result) {
                 if (result.currentMonsterHealthPoints <= 0) {
+                  showVoiceDialog(DialogEnum.outro);
                   _openVictoryScreen();
                 } else if (result.currentPlayersHealthPoints <= 0) {
                   _openGameOverScreen();
                 }
               },
-              monsterAttack: (_) => _monsterAttackAnimation(),
-              playerAttack: (_) => _playersAttackAnimation(),
+              monsterAttack: (_) {
+                showVoiceDialog(DialogEnum.attack);
+                return _monsterAttackAnimation();
+              },
+              playerAttack: (_) {
+                showVoiceDialog(DialogEnum.defense);
+                return _playersAttackAnimation();
+              },
             );
           },
           builder: (context, state) {
@@ -174,6 +206,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
                       _buildPlayer(screenHeight, screenWidth),
                       _buildEnemy(screenHeight, screenWidth),
                       _buildSettingsButton(context),
+                      _buildDialogCloud(screenHeight, screenWidth),
                       AnimatedOpacity(
                         opacity: _overlayOpacity,
                         duration: const Duration(milliseconds: 500),
@@ -319,7 +352,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   Widget _buildPlayer(double screenHeight, double screenWidth) {
     return Positioned(
       bottom: screenHeight / DesignConsts.playerBottomPositionFactor,
-      left: screenWidth / DesignConsts.widthDivisionForPlayer,
+      left: screenWidth / 8,
       child: OverlayTooltipItem(
         displayIndex: 2,
         tooltipVerticalPosition: TooltipVerticalPosition.TOP,
@@ -345,9 +378,37 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   }
 
   Widget _buildEnemy(double screenHeight, double screenWidth) {
+    final enemyAsset = switch (widget.level) {
+      LevelEnum.first => ImageAssets.trollEnemy,
+      LevelEnum.second => ImageAssets.hopgoblinEnemy,
+      LevelEnum.third => ImageAssets.bugbearEnemy,
+      LevelEnum.fourth => ImageAssets.ogreEnemy,
+    };
+
+    final enemyScale = switch (widget.level) {
+      LevelEnum.first => 4,
+      LevelEnum.second => 1.7,
+      LevelEnum.third => 1.5,
+      LevelEnum.fourth => 1.3,
+    };
+
+    final enemyBottomPositionBottom = switch (widget.level) {
+      LevelEnum.first => 8,
+      LevelEnum.second => 12,
+      LevelEnum.third => 10,
+      LevelEnum.fourth => 9,
+    };
+
+    final enemyBottomPositionRight = switch (widget.level) {
+      LevelEnum.first => 8,
+      LevelEnum.second => 12,
+      LevelEnum.third => 10,
+      LevelEnum.fourth => 12,
+    };
+
     return Positioned(
-      bottom: screenHeight / DesignConsts.playerBottomPositionFactor,
-      right: screenWidth / DesignConsts.widthDivisionForPlayer,
+      bottom: screenHeight / enemyBottomPositionBottom,
+      right: screenWidth / enemyBottomPositionRight,
       child: OverlayTooltipItem(
         displayIndex: 3,
         tooltip: (controller) {
@@ -355,13 +416,97 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
         },
         tooltipVerticalPosition: TooltipVerticalPosition.TOP,
         child: SvgPicture.asset(
-          height: screenHeight / 4,
-          ImageAssets.trollEnemy,
+          height: screenHeight / enemyScale,
+          enemyAsset,
           fit: BoxFit.cover,
           placeholderBuilder: (BuildContext context) => const SizedBox(
             width: 50,
             height: 50,
             child: CircularProgressIndicator(),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDialogCloud(double screenHeight, double screenWidth) {
+    final introDialog = switch (widget.level) {
+      LevelEnum.first => Strings.enemy1IntroDialog,
+      LevelEnum.second => Strings.enemy2IntroDialog,
+      LevelEnum.third => Strings.enemy3IntroDialog,
+      LevelEnum.fourth => Strings.enemy4IntroDialog,
+    };
+
+    final outroDialog = switch (widget.level) {
+      LevelEnum.first => Strings.enemy1OutroDialog,
+      LevelEnum.second => Strings.enemy2OutroDialog,
+      LevelEnum.third => Strings.enemy3OutroDialog,
+      LevelEnum.fourth => Strings.enemy4OutroDialog,
+    };
+
+    final attackDialogs = switch (widget.level) {
+      LevelEnum.first => Strings.enemy1AttackDialogs,
+      LevelEnum.second => Strings.enemy2AttackDialogs,
+      LevelEnum.third => Strings.enemy3AttackDialogs,
+      LevelEnum.fourth => Strings.enemy4AttackDialogs,
+    };
+
+    final defenseDialogs = switch (widget.level) {
+      LevelEnum.first => Strings.enemy1DefenseDialogs,
+      LevelEnum.second => Strings.enemy2DefenseDialogs,
+      LevelEnum.third => Strings.enemy3DefenseDialogs,
+      LevelEnum.fourth => Strings.enemy4DefenseDialogs,
+    };
+
+    final text = switch (_voiceDialogType) {
+      DialogEnum.intro => introDialog,
+      DialogEnum.outro => outroDialog,
+      DialogEnum.attack => attackDialogs[Random().nextInt(3)],
+      DialogEnum.defense => defenseDialogs[Random().nextInt(3)],
+    };
+
+    final enemyAsset = switch (widget.level) {
+      LevelEnum.first => ImageAssets.trollEnemy,
+      LevelEnum.second => ImageAssets.hopgoblinEnemy,
+      LevelEnum.third => ImageAssets.bugbearEnemy,
+      LevelEnum.fourth => ImageAssets.ogreEnemy,
+    };
+
+    return Visibility(
+      visible: _showVoiceDialog,
+      child: Positioned(
+        bottom: screenHeight / 25,
+        right: screenWidth / 8,
+        left: screenWidth / 8,
+        child: ClipRect(
+          child: BlurredContainer(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset(
+                  height: screenHeight / 10,
+                  enemyAsset,
+                  fit: BoxFit.cover,
+                  placeholderBuilder: (BuildContext context) => const SizedBox(
+                    width: 50,
+                    height: 50,
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    text,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: screenHeight * 0.025,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontFamily: DesignConsts.fontFamily,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -488,6 +633,29 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
           );
         }
       },
+    );
+  }
+}
+
+class BlurredContainer extends StatelessWidget {
+  final Widget child;
+
+  const BlurredContainer({
+    Key? key,
+    required this.child,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(color: Colors.transparent),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(
+          sigmaX: 10.0,
+          sigmaY: 50.0,
+        ),
+        child: child,
+      ),
     );
   }
 }
