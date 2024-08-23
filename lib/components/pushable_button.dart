@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:lg_flutter_hackathon/audio/audio_controller.dart';
+import 'package:lg_flutter_hackathon/audio/sounds.dart';
+import 'package:lg_flutter_hackathon/dependencies.dart';
 
 class PushableButton extends StatefulWidget {
   final Widget child;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final double scale;
   final Duration duration;
+  final SfxType? sfxType;
 
   const PushableButton({
     required this.child,
-    required this.onPressed,
+    this.onPressed,
     this.scale = 0.95,
     this.duration = const Duration(milliseconds: 100),
+    this.sfxType,
     super.key,
   });
 
@@ -23,11 +28,20 @@ class _PushableButtonState extends State<PushableButton> {
 
   @override
   Widget build(BuildContext context) {
+    final audioController = sl.get<AudioController>();
+
     return GestureDetector(
-      onTapDown: (_) => setState(() => _isPressed = true),
+      onTapDown: (_) {
+        if (widget.onPressed != null) {
+          setState(() => _isPressed = true);
+          audioController.playSfx(widget.sfxType ?? SfxType.buttonTap);
+        }
+      },
       onTapUp: (_) {
-        setState(() => _isPressed = false);
-        widget.onPressed();
+        if (widget.onPressed != null) {
+          widget.onPressed!();
+          setState(() => _isPressed = false);
+        }
       },
       onTapCancel: () => setState(() => _isPressed = false),
       child: AnimatedScale(

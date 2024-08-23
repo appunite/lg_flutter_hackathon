@@ -49,6 +49,8 @@ class ImageAssets {
   static const String tutorialBackButton = 'assets/ilustrations/tutorial_back_button.svg';
   static const String tutorialSkipButton = 'assets/ilustrations/tutorial_skip_button.svg';
   static const String tutorialStartButton = 'assets/ilustrations/tutorial_start_button.svg';
+  static const String cancelButton = 'assets/ilustrations/cancel_button.svg';
+  static const String yesButton = 'assets/ilustrations/yes_button.svg';
 
   static const String round = 'assets/ilustrations/round.svg';
   static const String round1number = 'assets/ilustrations/round_1.svg';

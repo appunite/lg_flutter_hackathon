@@ -2,11 +2,15 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
+
 import 'package:lg_flutter_hackathon/battle/domain/entities/bonus_entity.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/dialog_enum.dart';
+import 'package:lg_flutter_hackathon/audio/audio_controller.dart';
+import 'package:lg_flutter_hackathon/audio/sounds.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/drawing_details_entity.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/drawing_mode_enum.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/level_enum.dart';
@@ -23,6 +27,7 @@ import 'package:lg_flutter_hackathon/components/tool_tip.dart';
 import 'package:lg_flutter_hackathon/constants/design_consts.dart';
 import 'package:lg_flutter_hackathon/constants/image_assets.dart';
 import 'package:lg_flutter_hackathon/constants/strings.dart';
+import 'package:lg_flutter_hackathon/dependencies.dart';
 import 'package:lg_flutter_hackathon/logger.dart';
 import 'package:lg_flutter_hackathon/settings/settings.dart';
 import 'package:lg_flutter_hackathon/story/domain/ending_story_enum.dart';
@@ -90,17 +95,23 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   DrawingModeEnum _currentDrawingMode = DrawingModeEnum.attack;
   bool _showTutorial = false;
 
+  final audioController = sl.get<AudioController>();
+
   bool _showVoiceDialog = false;
   DialogEnum _voiceDialogType = DialogEnum.intro;
 
   @override
   void initState() {
     super.initState();
+
     _toolTipController.onDone(
       () {
         _drawRune(DrawingModeEnum.attack);
       },
     );
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      audioController.setSong(audioController.forestBattleSong);
+    });
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await Future.delayed(const Duration(seconds: 4));
@@ -329,12 +340,9 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
               setState(() {
                 settingsController.showTutorial(!value);
                 _showTutorial = false;
-                _isDrawing = false;
               });
               // start drawing after tutorial ends
-              await Future.delayed(const Duration(seconds: 1));
               _startTimer(widget.level.monster.speed, widget.chosenBonus);
-              _drawRune(DrawingModeEnum.attack);
             },
             tutorial: showTutorial,
             thresholdPercentage: 0.9,
@@ -536,6 +544,8 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   }
 
   Future<void> _monsterAttackAnimation() async {
+    enemyRoars.shuffle();
+    audioController.playSfx(enemyRoars.first);
     // TODO: Run monster attack animation
     // ignore: avoid_print
     print('TODO: Run monster attack animation');
@@ -555,6 +565,8 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   }
 
   Future<void> _playersAttackAnimation() async {
+    playerShouts.shuffle();
+    audioController.playSfx(playerShouts.first);
     // TODO: Run players attack animation
     // ignore: avoid_print
     print('TODO: Run players attack animation');
@@ -596,6 +608,8 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
     Future.delayed(
       const Duration(seconds: 2),
       () {
+        audioController.playSfx(SfxType.gameOver);
+        audioController.setSong(audioController.gameoverSong);
         Navigator.pushReplacement(
           context,
           FadeRoute(
@@ -613,6 +627,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
       const Duration(seconds: 2),
       () {
         if (widget.level == LevelEnum.fourth) {
+          audioController.setSong(audioController.victorySong);
           Navigator.pushReplacement(
             context,
             FadeRoute(
