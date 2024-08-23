@@ -7,7 +7,6 @@ import 'package:lg_flutter_hackathon/dependencies.dart';
 import 'package:lg_flutter_hackathon/utils/storage.dart';
 
 part 'battle_cubit.freezed.dart';
-
 part 'battle_state.dart';
 
 class BattleCubit extends Cubit<BattleState> {
@@ -51,7 +50,8 @@ class BattleCubit extends Cubit<BattleState> {
       loaded: (result) async {
         emit(const BattleState.playerAttack());
         final damage = _players.damage * accuracy / 100;
-        final monsterHealthPointsAfterDamage = result.currentMonsterHealthPoints - damage;
+        var monsterHealthPointsAfterDamage = result.currentMonsterHealthPoints - damage;
+
         final nextPlayerIndex =
             result.currentPlayerIndex == _players.numberOfPlayers - 1 ? 0 : result.currentPlayerIndex + 1;
         final monsterHealthPointsAfterHit = monsterHealthPointsAfterDamage <= 0 ? 0.0 : monsterHealthPointsAfterDamage;
@@ -81,13 +81,5 @@ class BattleCubit extends Cubit<BattleState> {
     ]..insert(result.currentPlayerIndex, updatedPlayerStat);
 
     gameResultPlayerStorage.setGameResultPlayer(newStats);
-  }
-
-  void victory() {
-    emit(const BattleState.victory());
-  }
-
-  void gameOver() {
-    emit(const BattleState.gameOver());
   }
 }

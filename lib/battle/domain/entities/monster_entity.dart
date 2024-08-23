@@ -9,5 +9,6 @@ class MonsterEntity with _$MonsterEntity {
     required double healthPoints,
     required int damage,
     required String attackAnimation,
+    required String monsterName,
   }) = _MonsterEntity;
 }

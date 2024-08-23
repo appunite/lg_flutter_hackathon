@@ -64,7 +64,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
       ImageAssets.playerRedName,
     ];
 
-    return List<Widget>.generate(4, (index) {
+    return List<Widget>.generate(_numberOfPlayers, (index) {
       return AnimatedOpacity(
         opacity: _isPlayerVisible[index] ? 1.0 : 0.0,
         duration: const Duration(milliseconds: 300),
@@ -75,18 +75,19 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
               padding: EdgeInsets.symmetric(horizontal: width / 100),
               child: SvgPicture.asset(
                 playerAssets[index],
-                // width: width / DesignConsts.playerIconWidthFactor,
+                width: width / DesignConsts.playerIconWidthFactor,
                 height: height / 5,
               ),
             ),
-            SizedBox(height: height / 30),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: width / 100),
               child: SvgPicture.asset(
                 nameAssets[index],
-                height: height / 20,
+                height: height / 15,
+                width: 100,
               ),
             ),
+            SizedBox(height: height / 30),
             SizedBox(height: height / 20),
           ],
         ),
@@ -111,13 +112,16 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
               fit: BoxFit.cover,
             ),
             Positioned(
-              bottom: screenHeight / DesignConsts.screenBottomPositionFactor,
+              bottom: screenHeight / 10,
               left: screenWidth / DesignConsts.screenLeftRightPositionFactor,
               right: screenWidth / DesignConsts.screenLeftRightPositionFactor,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: _buildPlayersIcons(screenWidth, screenHeight),
                   ),
                   Stack(
@@ -222,7 +226,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                     ),
                   );
 
-                  Future.delayed(const Duration(seconds: 5), () {
+                  Future.delayed(const Duration(seconds: 4), () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(

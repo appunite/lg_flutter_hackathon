@@ -5,10 +5,12 @@ class DebugBar extends StatelessWidget {
     super.key,
     required this.onDrawRune,
     required this.onGameEnd,
+    required this.startTutorial,
   });
 
   final VoidCallback onDrawRune;
   final VoidCallback onGameEnd;
+  final VoidCallback startTutorial;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +31,10 @@ class DebugBar extends StatelessWidget {
             ElevatedButton(
               onPressed: onGameEnd,
               child: const Text('End Game'),
+            ),
+            ElevatedButton(
+              onPressed: startTutorial,
+              child: const Text('Start tutorial'),
             ),
           ],
         ),
