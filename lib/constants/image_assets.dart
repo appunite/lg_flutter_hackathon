@@ -79,7 +79,7 @@ class ImageAssets {
   static const String openingStory11 = 'assets/ilustrations/story_stick_troll.svg';
   static const String openingStory12 = 'assets/ilustrations/palms.svg';
   static const String openingStory13 = 'assets/ilustrations/underwood.svg';
-  static const String buttonNext = 'assets/ilustrations/button_next.svg';
+  static const String buttonEmpty = 'assets/ilustrations/button_next.svg';
 
   // ending story
   static const String endingStory1 = 'assets/ilustrations/fountain_trolls.svg';
@@ -148,7 +148,7 @@ List<String> assetsList = [
   ImageAssets.openingStory11,
   ImageAssets.openingStory12,
   ImageAssets.openingStory13,
-  ImageAssets.buttonNext,
+  ImageAssets.buttonEmpty,
   ImageAssets.endingStory1,
   ImageAssets.endingStory2,
   ImageAssets.endingStory3,

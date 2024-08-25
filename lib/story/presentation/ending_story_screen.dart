@@ -7,6 +7,7 @@ import 'package:lg_flutter_hackathon/battle/presentation/ending_screen.dart';
 import 'package:lg_flutter_hackathon/constants/design_consts.dart';
 import 'package:lg_flutter_hackathon/dependencies.dart';
 import 'package:lg_flutter_hackathon/story/domain/ending_story_enum.dart';
+import 'package:lg_flutter_hackathon/story/presentation/widgets/story_button.dart';
 import 'package:lg_flutter_hackathon/story/presentation/widgets/story_text_container.dart';
 import 'package:lg_flutter_hackathon/utils/transitions.dart';
 
@@ -38,6 +39,7 @@ class _EndingStoryScreenState extends State<EndingStoryScreen> {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.sizeOf(context).height;
+    final screenWidth = MediaQuery.sizeOf(context).width;
 
     return Scaffold(
       body: Stack(
@@ -57,6 +59,14 @@ class _EndingStoryScreenState extends State<EndingStoryScreen> {
               children: [
                 StoryTextContainer(text: widget.step.text),
               ],
+            ),
+          ),
+          Positioned(
+            bottom: screenHeight / 25,
+            right: screenWidth / 40,
+            child: StoryButton(
+              onTap: () => _navigateToStats(context),
+              isSkip: true,
             ),
           ),
         ],

@@ -89,7 +89,7 @@ class App extends StatelessWidget {
         ],
         child: Builder(builder: (context) {
           return MaterialApp(
-            title: 'LG hackathon',
+            title: 'Trolls in a Trench Coat',
             theme: ThemeData(
               primarySwatch: Colors.deepPurple,
             ).copyWith(

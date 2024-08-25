@@ -1,11 +1,11 @@
 {
-    "name": "lg_flutter_hackathon",
-    "short_name": "lg_flutter_hackathon",
+    "name": "Trolls in a Trench Coat",
+    "short_name": "Trolls in a Trench Coat",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#hexcode",
+    "theme_color": "#hexcode",
+    "description": "Flutter game for LG hackathon",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

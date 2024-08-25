@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lg_flutter_hackathon/buttons/button_with_text.dart';
 import 'package:lg_flutter_hackathon/constants/design_consts.dart';
 import 'package:lg_flutter_hackathon/constants/image_assets.dart';
-import 'package:lg_flutter_hackathon/story/presentation/widgets/story_button.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lg_flutter_hackathon/audio/audio_controller.dart';
 import 'package:lg_flutter_hackathon/dependencies.dart';
@@ -44,7 +44,7 @@ class ConfirmationPopUp extends StatelessWidget {
           Positioned(
             right: screenWidth / 12,
             bottom: screenHeight / 15,
-            child: StoryButton(
+            child: ButtonWithText(
               text: 'Cancel',
               onTap: () {
                 audioController.setSong(audioController.themeSong);
@@ -55,7 +55,7 @@ class ConfirmationPopUp extends StatelessWidget {
           Positioned(
             bottom: screenHeight / 15,
             left: screenWidth / 12,
-            child: StoryButton(
+            child: ButtonWithText(
               text: 'Exit',
               onTap: () {
                 audioController.setSong(audioController.themeSong);

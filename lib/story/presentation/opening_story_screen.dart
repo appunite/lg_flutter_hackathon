@@ -44,7 +44,6 @@ class OpeningStoryScreen extends StatelessWidget {
             bottom: screenHeight / DesignConsts.storyScreenBottomPositionFactor / 2,
             right: screenWidth / 5,
             child: StoryButton(
-              text: 'Next',
               onTap: () => _onNextPressed(context),
             ),
           ),
@@ -52,7 +51,7 @@ class OpeningStoryScreen extends StatelessWidget {
             bottom: screenHeight / DesignConsts.storyScreenBottomPositionFactor / 2,
             left: screenWidth / 5,
             child: StoryButton(
-              text: 'Skip',
+              isSkip: true,
               onTap: () => _navigateToMainMenu(context),
             ),
           ),
