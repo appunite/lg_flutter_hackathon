@@ -630,10 +630,6 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
     );
   }
 
-  void _triggerMonsterAttackAnimation() {
-    _monsterAttackAnimation();
-  }
-
   void _triggerPlayerShakeAnimation() {
     _playerShakeController.forward(from: 0.0);
   }
