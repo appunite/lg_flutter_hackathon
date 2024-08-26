@@ -8,7 +8,7 @@ enum LevelEnum {
   first(
     MonsterEntity(
       speed: 25,
-      healthPoints: 1,
+      healthPoints: 7 * 15,
       damage: 25,
       attackAnimation: ImageAssets.feastAttack,
       monsterName: 'Grunk the Less-Cute Troll',
