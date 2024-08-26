@@ -353,10 +353,10 @@ class _EndGameScreenState extends State<EndGameScreen> with SingleTickerProvider
 
   String _getPlayerIcon(int index) {
     List<String> playerAssets = [
-      ImageAssets.playerRed,
-      ImageAssets.playerYellow,
-      ImageAssets.playerGreen,
       ImageAssets.playerBlue,
+      ImageAssets.playerGreen,
+      ImageAssets.playerYellow,
+      ImageAssets.playerRed,
     ];
 
     return playerAssets[index];
