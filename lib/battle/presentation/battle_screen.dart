@@ -5,11 +5,10 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
-
-import 'package:lg_flutter_hackathon/battle/domain/entities/bonus_entity.dart';
-import 'package:lg_flutter_hackathon/battle/domain/entities/dialog_enum.dart';
 import 'package:lg_flutter_hackathon/audio/audio_controller.dart';
 import 'package:lg_flutter_hackathon/audio/sounds.dart';
+import 'package:lg_flutter_hackathon/battle/domain/entities/bonus_entity.dart';
+import 'package:lg_flutter_hackathon/battle/domain/entities/dialog_enum.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/drawing_details_entity.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/drawing_mode_enum.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/level_enum.dart';
@@ -19,6 +18,7 @@ import 'package:lg_flutter_hackathon/battle/presentation/ending_screen.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/accuracy_animated_text.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/drawing_overlay.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/health_bar.dart';
+import 'package:lg_flutter_hackathon/battle/presentation/widgets/pulsating_arrow.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/round_widget.dart';
 import 'package:lg_flutter_hackathon/bonuses/bonuses_screen.dart';
 import 'package:lg_flutter_hackathon/components/confirmation_pop_up.dart';
@@ -357,6 +357,8 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   }
 
   Widget _buildPlayer(double screenHeight, double screenWidth) {
+    final numberOfPlayers = widget.players.numberOfPlayers;
+
     return Positioned(
       bottom: screenHeight / DesignConsts.playerBottomPositionFactor,
       left: screenWidth / 8,
@@ -372,7 +374,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
         },
         child: SvgPicture.asset(
           height: screenHeight / 2,
-          ImageAssets.players,
+          _getAssetForPlayers(numberOfPlayers),
           fit: BoxFit.cover,
           placeholderBuilder: (BuildContext context) => const SizedBox(
             width: 50,
@@ -382,6 +384,18 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
         ),
       ),
     );
+  }
+
+  String _getAssetForPlayers(int numberOfPlayers) {
+    if (numberOfPlayers == 2) {
+      return ImageAssets.players2;
+    } else if (numberOfPlayers == 3) {
+      return ImageAssets.players3;
+    } else if (numberOfPlayers == 4) {
+      return ImageAssets.players4;
+    } else {
+      throw Exception('Wrong number of players $numberOfPlayers');
+    }
   }
 
   Widget _buildEnemy(double screenHeight, double screenWidth) {
@@ -566,26 +580,13 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   Widget _buildArrow(double screenHeight, double screenWidth, BattleState state) {
     return state.maybeMap(
       loaded: (result) => Positioned(
-        bottom: _getPositionBasedOnPlayer(screenHeight, result.currentPlayerIndex),
-        left: screenWidth / 7,
-        child: SvgPicture.asset(
-          ImageAssets.arrow,
-          height: screenWidth / 30,
-          width: screenWidth / 26,
+        left: screenWidth / 12,
+        child: PulsatingArrow(
+          currentPlayerIndex: result.currentPlayerIndex,
+          numberOfPlayers: widget.players.numberOfPlayers,
         ),
       ),
       orElse: () => const SizedBox.shrink(),
     );
-  }
-
-  double _getPositionBasedOnPlayer(double screenHeight, int currentPlayerIndex) {
-    // TODO after adding animation
-    final numOfPlayers = widget.players.numberOfPlayers;
-    if (numOfPlayers == 2) {
-      if (currentPlayerIndex == 0) {
-      } else {}
-    } else if (numOfPlayers == 3) {
-    } else if (numOfPlayers == 4) {}
-    return screenHeight / 6;
   }
 }
