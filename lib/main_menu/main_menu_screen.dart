@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
@@ -254,9 +253,13 @@ class __MainMenuBodyState extends State<_MainMenuBody> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const BattleScreen(
+                        builder: (context) => BattleScreen(
                           level: LevelEnum.first,
-                          players: PlayersEntity(healthPoints: 100, numberOfPlayers: 4, damage: 10),
+                          players: PlayersEntity(
+                            healthPoints: _numberOfPlayers * 25,
+                            numberOfPlayers: _numberOfPlayers,
+                            damage: 10,
+                          ),
                         ),
                       ),
                     );
