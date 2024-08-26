@@ -429,7 +429,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
             tooltip: (controller) {
               return MTooltip(
                 title:
-                    'The damage you deal depends on your accuracy! Watch out the monster can also attack, but you\'ll figure it out..',
+                    'A rune will appear. Aim to draw within its lines. The closer you get, the more powerful your strike will be!',
                 controller: controller,
               );
             },
