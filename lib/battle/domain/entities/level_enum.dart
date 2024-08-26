@@ -7,16 +7,16 @@ import 'package:lg_flutter_hackathon/constants/strings.dart';
 enum LevelEnum {
   first(
     MonsterEntity(
-      speed: 25,
-      healthPoints: 7 * 15,
-      damage: 25,
+      speed: 8,
+      healthPoints: 35,
+      damage: 20,
       attackAnimation: 'goblin-attack',
       monsterName: 'Grunk the Less-Cute Troll',
     ),
     ImageAssets.trollBackground,
     [
-      BonusEntity(type: BonusEnum.health, strength: 1),
-      BonusEntity(type: BonusEnum.damage, strength: 1),
+      BonusEntity(type: BonusEnum.health, strength: 3),
+      BonusEntity(type: BonusEnum.damage, strength: 2),
       BonusEntity(type: BonusEnum.time, strength: 1),
     ],
     ImageAssets.round1number,
@@ -27,16 +27,16 @@ enum LevelEnum {
   ),
   second(
     MonsterEntity(
-      speed: 5,
-      healthPoints: 37 * 14,
-      damage: 11,
+      speed: 8,
+      healthPoints: 45,
+      damage: 25,
       attackAnimation: 'wolf-attack',
       monsterName: 'Pip and Squeak',
     ),
     ImageAssets.pipSqueakBackground,
     [
-      BonusEntity(type: BonusEnum.health, strength: 2),
-      BonusEntity(type: BonusEnum.damage, strength: 2),
+      BonusEntity(type: BonusEnum.health, strength: 4),
+      BonusEntity(type: BonusEnum.damage, strength: 3),
       BonusEntity(type: BonusEnum.time, strength: 2),
     ],
     ImageAssets.round2number,
@@ -47,15 +47,15 @@ enum LevelEnum {
   ),
   third(
     MonsterEntity(
-      speed: 30,
-      healthPoints: 27 * 16,
-      damage: 11,
+      speed: 7,
+      healthPoints: 55,
+      damage: 30,
       attackAnimation: 'bugbear-attack',
       monsterName: 'Jerry the Werewolf',
     ),
     ImageAssets.werewolfBackground,
     [
-      BonusEntity(type: BonusEnum.health, strength: 3),
+      BonusEntity(type: BonusEnum.health, strength: 5),
       BonusEntity(type: BonusEnum.damage, strength: 3),
       BonusEntity(type: BonusEnum.time, strength: 3),
     ],
@@ -67,9 +67,9 @@ enum LevelEnum {
   ),
   fourth(
     MonsterEntity(
-        speed: 40,
-        healthPoints: 59 * 11,
-        damage: 13,
+        speed: 7,
+        healthPoints: 70,
+        damage: 35,
         attackAnimation: 'ogre-attack',
         monsterName: 'Leviathus, the Crusher of Souls'),
     ImageAssets.leviathusBackground,
