@@ -1,6 +1,8 @@
 class ImageAssets {
   static const String splashScreenBackground = 'assets/ilustrations/splash_background.svg';
-  static const String players = 'assets/ilustrations/players.svg';
+  static const String players2 = 'assets/ilustrations/players_2.svg';
+  static const String players3 = 'assets/ilustrations/players_3.svg';
+  static const String players4 = 'assets/ilustrations/players_4.svg';
   static const String dialogCloud = 'assets/ilustrations/dialog_cloud.svg';
   static const String trollEnemy = 'assets/ilustrations/troll_enemy.svg';
   static const String hopgoblinEnemy = 'assets/ilustrations/hopgoblin_enemy.svg';
@@ -83,6 +85,10 @@ class ImageAssets {
   static const String openingStory13 = 'assets/ilustrations/underwood.svg';
   static const String buttonEmpty = 'assets/ilustrations/button_next.svg';
 
+  // attacks
+  static const String feastAttack = 'assets/ilustrations/feast_attack.svg';
+  static const String scratchAttack = 'assets/ilustrations/scratch_attack.svg';
+
   // ending story
   static const String endingStory1 = 'assets/ilustrations/fountain_trolls.svg';
   static const String endingStory2 = 'assets/ilustrations/city.svg';
@@ -97,7 +103,9 @@ List<String> assetsList = [
   ImageAssets.bugbearEnemy,
   ImageAssets.hopgoblinEnemy,
   ImageAssets.ogreEnemy,
-  ImageAssets.players,
+  ImageAssets.players2,
+  ImageAssets.players3,
+  ImageAssets.players4,
   ImageAssets.trollEnemy,
   ImageAssets.drawingBoard,
   ImageAssets.magicPenSvg,
