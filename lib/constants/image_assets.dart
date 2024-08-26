@@ -58,6 +58,8 @@ class ImageAssets {
   static const String yellowStick = 'assets/ilustrations/yellow_stick.svg';
   static const String greenStick = 'assets/ilustrations/green_stick.svg';
   static const String cancelButton = 'assets/ilustrations/cancel_button.svg';
+  static const String leftTrees = 'assets/ilustrations/trees_left.svg';
+  static const String rightTrees = 'assets/ilustrations/trees_right.svg';
 
   static const String round = 'assets/ilustrations/round.svg';
   static const String round1number = 'assets/ilustrations/round_1.svg';

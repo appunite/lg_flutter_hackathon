@@ -17,6 +17,7 @@ import 'package:lg_flutter_hackathon/battle/domain/entities/players_entity.dart'
 import 'package:lg_flutter_hackathon/battle/presentation/cubit/battle_cubit.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/ending_screen.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/accuracy_animated_text.dart';
+import 'package:lg_flutter_hackathon/battle/presentation/widgets/battle_end_animation.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/drawing_overlay.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/health_bar.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/round_widget.dart';
@@ -94,6 +95,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   bool _showAccuracyAnimation = false;
   DrawingModeEnum _currentDrawingMode = DrawingModeEnum.attack;
   bool _showTutorial = false;
+  bool _showGameOver = true;
 
   final audioController = sl.get<AudioController>();
 
@@ -170,7 +172,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
     return ValueListenableBuilder<bool>(
       valueListenable: settingsController.tutorial,
       builder: (context, showTutorial, _) {
-        _showTutorial = showTutorial;
+        _showTutorial = false;
 
         return BlocConsumer<BattleCubit, BattleState>(
           listener: (context, state) {
@@ -180,6 +182,9 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
                   showVoiceDialog(DialogEnum.outro);
                   _openVictoryScreen();
                 } else if (result.currentPlayersHealthPoints <= 0) {
+                  setState(() {
+                    _showGameOver = true;
+                  });
                   _openGameOverScreen();
                 }
               },
@@ -519,7 +524,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
 
   void _openGameOverScreen() {
     Future.delayed(
-      const Duration(seconds: 2),
+      const Duration(seconds: 4),
       () {
         audioController.playSfx(SfxType.gameOver);
         audioController.setSong(audioController.gameoverSong);
