@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -52,6 +53,8 @@ class BattleScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final settingsController = context.watch<SettingsController>();
+
     final playersWithBonuses = players.copyWith(
       healthPoints:
           chosenBonus?.type == BonusEnum.health ? players.healthPoints + chosenBonus!.strength : players.healthPoints,
@@ -59,12 +62,11 @@ class BattleScreen extends StatelessWidget {
     );
 
     return BlocProvider(
-      create: (context) => BattleCubit(
-        level,
-        playersWithBonuses,
-      ),
-      child: _BattleScreenBody(level, playersWithBonuses, chosenBonus),
-    );
+        create: (context) => BattleCubit(
+              level,
+              playersWithBonuses,
+            ),
+        child: _BattleScreenBody(level, playersWithBonuses, chosenBonus, settingsController));
   }
 }
 
@@ -73,11 +75,13 @@ class _BattleScreenBody extends StatefulWidget {
     this.level,
     this.players,
     this.chosenBonus,
+    this.settingsController,
   );
 
   final LevelEnum level;
   final PlayersEntity players;
   final BonusEntity? chosenBonus;
+  final SettingsController settingsController;
 
   @override
   State<_BattleScreenBody> createState() => __BattleScreenBodyState();
@@ -116,10 +120,14 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   void initState() {
     super.initState();
 
-    _toolTipController.onDone(() {
-      _drawRune(DrawingModeEnum.attack);
-    });
-
+    _toolTipController.onDone(
+      () {
+        _startTimer(widget.level.monster.speed, widget.chosenBonus);
+        _drawRune(DrawingModeEnum.attack);
+        widget.settingsController.setTutorial(false);
+        _showTutorial = false;
+      },
+    );
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       audioController.setSong(audioController.forestBattleSong);
     });
@@ -202,7 +210,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
     return ValueListenableBuilder<bool>(
       valueListenable: settingsController.tutorial,
       builder: (context, showTutorial, _) {
-        _showTutorial = false;
+        _showTutorial = showTutorial;
 
         return BlocConsumer<BattleCubit, BattleState>(
           listener: (context, state) {
@@ -263,7 +271,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
                         opacity: _overlayOpacity,
                         duration: const Duration(milliseconds: 500),
                         child: _isDrawing
-                            ? _buildDrawingOverlayContent(context, 250, _showTutorial, settingsController)
+                            ? _buildDrawingOverlayContent(context, 250, settingsController)
                             : const SizedBox.shrink(),
                       ),
                       if (_showAccuracyAnimation && _accuracy != null)
@@ -358,7 +366,6 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   Widget _buildDrawingOverlayContent(
     BuildContext context,
     double glyphSize,
-    bool showTutorial,
     SettingsController settingsController,
   ) {
     return BlocBuilder<BattleCubit, BattleState>(
@@ -372,7 +379,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
                 _isDrawing = false;
                 _showAccuracyAnimation = true;
               });
-              info("Drawing completed with accuracy: ${details.toString()}");
+              info("\nDrawing completed with accuracy: ${details.toString()}");
 
               if (_currentDrawingMode == DrawingModeEnum.attack) {
                 context.read<BattleCubit>().playerAttack(accuracy: details.accuracy);
@@ -380,14 +387,6 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
                 context.read<BattleCubit>().monsterAttack(accuracy: details.accuracy);
               }
             },
-            tutorialFinished: (value) async {
-              setState(() {
-                settingsController.showTutorial(!value);
-                _showTutorial = false;
-              });
-              _startTimer(widget.level.monster.speed, widget.chosenBonus);
-            },
-            tutorial: showTutorial,
             thresholdPercentage: 0.9,
             glyphAsset: DrawingUtils().getRandomGlyphEntity(),
             drawingAreaSize: glyphSize,
@@ -413,6 +412,39 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
               return MTooltip(
                 title:
                     'You will be taking turns on attacking the enemy! After each attack pass the remote to the next player',
+                controller: controller,
+              );
+            },
+            child: AnimatedBuilder(
+              animation: _playerShakeAnimation,
+              builder: (context, child) {
+                return Transform.translate(
+                  offset: _playerShakeAnimation.value,
+                  child: SvgPicture.asset(
+                    height: screenHeight / 2,
+                    _getAssetForPlayers(widget.players.numberOfPlayers),
+                    fit: BoxFit.cover,
+                    placeholderBuilder: (BuildContext context) => const SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+        Positioned(
+          bottom: screenHeight / DesignConsts.playerBottomPositionFactor,
+          left: screenWidth / 8,
+          child: OverlayTooltipItem(
+            displayIndex: 4,
+            tooltipVerticalPosition: TooltipVerticalPosition.TOP,
+            tooltip: (controller) {
+              return MTooltip(
+                title:
+                    'A rune will appear. Aim to draw within its lines. The closer you get, the more powerful your strike will be!',
                 controller: controller,
               );
             },

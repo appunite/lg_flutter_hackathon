@@ -20,6 +20,7 @@ class MTooltip extends StatelessWidget {
     final currentDisplayIndex = controller.nextPlayIndex + 1;
     final totalLength = controller.playWidgetLength;
     final hasPreviousItem = currentDisplayIndex != 1;
+    final hasNextItem = currentDisplayIndex < totalLength;
 
     final screenWidth = MediaQuery.sizeOf(context).width;
     final screenHeight = MediaQuery.sizeOf(context).height;
@@ -64,29 +65,25 @@ class MTooltip extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  totalLength == 1
-                      ? const SizedBox()
-                      : PushableButton(
-                          onPressed: () {
-                            if (hasPreviousItem) {
-                              controller.previous();
-                            } else {
-                              controller.dismiss();
-                            }
-                          },
-                          child: Opacity(
-                            opacity: 1,
-                            child: SvgPicture.asset(
-                              hasPreviousItem ? ImageAssets.tutorialBackButton : ImageAssets.tutorialSkipButton,
-                              fit: BoxFit.contain,
-                              width: containerWidth * 0.2,
-                              height: containerHeight * 0.2,
-                            ),
-                          ),
-                        ),
-                  totalLength == 1
-                      ? const SizedBox()
-                      : SizedBox(width: screenWidth / DesignConsts.tutorialButtonSpacingFactor),
+                  PushableButton(
+                    onPressed: () {
+                      if (hasPreviousItem) {
+                        controller.previous();
+                      } else {
+                        controller.dismiss();
+                      }
+                    },
+                    child: Opacity(
+                      opacity: 1,
+                      child: SvgPicture.asset(
+                        hasPreviousItem ? ImageAssets.tutorialBackButton : ImageAssets.tutorialSkipButton,
+                        fit: BoxFit.contain,
+                        width: containerWidth * 0.2,
+                        height: containerHeight * 0.2,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: screenWidth / DesignConsts.tutorialButtonSpacingFactor),
                   PushableButton(
                     onPressed: () {
                       controller.next();
@@ -94,7 +91,7 @@ class MTooltip extends StatelessWidget {
                     child: Opacity(
                       opacity: 1,
                       child: SvgPicture.asset(
-                        totalLength == 1 ? ImageAssets.tutorialStartButton : ImageAssets.tutorialNextButton,
+                        hasNextItem ? ImageAssets.tutorialNextButton : ImageAssets.tutorialStartButton,
                         fit: BoxFit.contain,
                         width: containerWidth * 0.2,
                         height: containerHeight * 0.2,
