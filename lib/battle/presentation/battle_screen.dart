@@ -677,12 +677,16 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   }
 
   void _drawRune(DrawingModeEnum drawingMode) {
-    setState(() {
-      _isDrawing = true;
-      _overlayOpacity = 1.0;
-      _showAccuracyAnimation = false;
-      _currentDrawingMode = drawingMode;
-    });
+    if (_showBattleEndAnimation) {
+      setState(() {});
+    } else {
+      setState(() {
+        _isDrawing = true;
+        _overlayOpacity = 1.0;
+        _showAccuracyAnimation = false;
+        _currentDrawingMode = drawingMode;
+      });
+    }
   }
 
   void _openGameOverScreen() {
