@@ -207,15 +207,27 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
         const OverlayWidget(),
         Positioned(
           top: 64,
-          child: Text(
-            '${_getPlayerName(widget.currentPlayerIndex)} ${widget.drawingMode.name}!',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontFamily: DesignConsts.fontFamily,
-              fontSize: screenWidth / 30,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SvgPicture.asset(
+                _getPlayerAsset(widget.currentPlayerIndex),
+                height: screenWidth / 25,
+                width: screenWidth / 25,
+              ),
+              const SizedBox(width: 16),
+              Text(
+                '${_getPlayerName(widget.currentPlayerIndex)} ${widget.drawingMode.name}!',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: DesignConsts.fontFamily,
+                  fontSize: screenWidth / 35,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ],
           ),
         ),
         Center(
@@ -312,6 +324,18 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
       return ImageAssets.yellowStick;
     } else {
       return ImageAssets.redStick;
+    }
+  }
+
+  String _getPlayerAsset(currentPlayerIndex) {
+    if (currentPlayerIndex == 0) {
+      return ImageAssets.playerBlue;
+    } else if (currentPlayerIndex == 1) {
+      return ImageAssets.playerGreen;
+    } else if (currentPlayerIndex == 2) {
+      return ImageAssets.playerYellow;
+    } else {
+      return ImageAssets.playerRed;
     }
   }
 }
