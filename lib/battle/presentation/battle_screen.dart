@@ -5,11 +5,10 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
-
-import 'package:lg_flutter_hackathon/battle/domain/entities/bonus_entity.dart';
-import 'package:lg_flutter_hackathon/battle/domain/entities/dialog_enum.dart';
 import 'package:lg_flutter_hackathon/audio/audio_controller.dart';
 import 'package:lg_flutter_hackathon/audio/sounds.dart';
+import 'package:lg_flutter_hackathon/battle/domain/entities/bonus_entity.dart';
+import 'package:lg_flutter_hackathon/battle/domain/entities/dialog_enum.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/drawing_details_entity.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/drawing_mode_enum.dart';
 import 'package:lg_flutter_hackathon/battle/domain/entities/level_enum.dart';
@@ -19,6 +18,7 @@ import 'package:lg_flutter_hackathon/battle/presentation/ending_screen.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/accuracy_animated_text.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/drawing_overlay.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/health_bar.dart';
+import 'package:lg_flutter_hackathon/battle/presentation/widgets/pulsating_arrow.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/round_widget.dart';
 import 'package:lg_flutter_hackathon/bonuses/bonuses_screen.dart';
 import 'package:lg_flutter_hackathon/components/confirmation_pop_up.dart';
@@ -82,7 +82,7 @@ class _BattleScreenBody extends StatefulWidget {
   State<_BattleScreenBody> createState() => __BattleScreenBodyState();
 }
 
-class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixin {
+class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixin, TickerProviderStateMixin {
   final TooltipController _toolTipController = TooltipController();
 
   PausableTimer? _timer;
@@ -100,22 +100,29 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   bool _showVoiceDialog = false;
   DialogEnum _voiceDialogType = DialogEnum.intro;
 
+  bool _showEnemyAttackAnimation = false;
+  bool _isEnemyHit = false;
+
+  late final AnimationController _playerShakeController;
+  late final AnimationController _enemyShakeController;
+
+  late final Animation<Offset> _playerShakeAnimation;
+  late final Animation<Offset> _enemyShakeAnimation;
+
   @override
   void initState() {
     super.initState();
 
-    _toolTipController.onDone(
-      () {
-        _drawRune(DrawingModeEnum.attack);
-      },
-    );
+    _toolTipController.onDone(() {
+      _drawRune(DrawingModeEnum.attack);
+    });
+
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       audioController.setSong(audioController.forestBattleSong);
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await Future.delayed(const Duration(seconds: 4));
-      //start tutorial or game
       if (_showTutorial) {
         _toolTipController.start();
       } else {
@@ -123,12 +130,36 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
         _drawRune(DrawingModeEnum.attack);
       }
     });
+
+    _playerShakeController = AnimationController(
+      duration: const Duration(milliseconds: 750),
+      vsync: this,
+    );
+
+    _playerShakeAnimation = Tween<Offset>(
+      begin: Offset.zero,
+      end: const Offset(10, 0),
+    ).chain(CurveTween(curve: Curves.elasticIn)).animate(_playerShakeController);
+
+    _enemyShakeController = AnimationController(
+      duration: const Duration(milliseconds: 750),
+      vsync: this,
+    );
+
+    _enemyShakeAnimation = Tween<Offset>(
+      begin: Offset.zero,
+      end: const Offset(10, 0),
+    ).chain(CurveTween(curve: Curves.elasticIn)).animate(_enemyShakeController)
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          _enemyShakeController.reverse();
+        }
+      });
   }
 
   void _startTimer(int monsterSpeed, BonusEntity? bonus) {
     int seconds = monsterSpeed;
 
-    // apply time bonus
     if (bonus != null && bonus.type == BonusEnum.time) {
       seconds += bonus.strength;
     }
@@ -254,7 +285,6 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
             loaded: (result) {
               double healthPoints = widget.players.healthPoints;
 
-              // apply health bonus
               if (widget.chosenBonus?.type == BonusEnum.health) {
                 healthPoints += widget.chosenBonus!.strength.toDouble();
               }
@@ -340,7 +370,6 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
                 settingsController.showTutorial(!value);
                 _showTutorial = false;
               });
-              // start drawing after tutorial ends
               _startTimer(widget.level.monster.speed, widget.chosenBonus);
             },
             tutorial: showTutorial,
@@ -357,31 +386,111 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   }
 
   Widget _buildPlayer(double screenHeight, double screenWidth) {
-    return Positioned(
-      bottom: screenHeight / DesignConsts.playerBottomPositionFactor,
-      left: screenWidth / 8,
-      child: OverlayTooltipItem(
-        displayIndex: 2,
-        tooltipVerticalPosition: TooltipVerticalPosition.TOP,
-        tooltip: (controller) {
-          return MTooltip(
-            title:
-                'You will be taking turns on attacking the enemy! After each attack pass the remote to the next player',
-            controller: controller,
-          );
-        },
-        child: SvgPicture.asset(
-          height: screenHeight / 2,
-          ImageAssets.players,
-          fit: BoxFit.cover,
-          placeholderBuilder: (BuildContext context) => const SizedBox(
-            width: 50,
-            height: 50,
-            child: CircularProgressIndicator(),
+    return Stack(
+      children: [
+        Positioned(
+          bottom: screenHeight / DesignConsts.playerBottomPositionFactor,
+          left: screenWidth / 8,
+          child: OverlayTooltipItem(
+            displayIndex: 2,
+            tooltipVerticalPosition: TooltipVerticalPosition.TOP,
+            tooltip: (controller) {
+              return MTooltip(
+                title:
+                    'You will be taking turns on attacking the enemy! After each attack pass the remote to the next player',
+                controller: controller,
+              );
+            },
+            child: AnimatedBuilder(
+              animation: _playerShakeAnimation,
+              builder: (context, child) {
+                return Transform.translate(
+                  offset: _playerShakeAnimation.value,
+                  child: SvgPicture.asset(
+                    height: screenHeight / 2,
+                    _getAssetForPlayers(widget.players.numberOfPlayers),
+                    fit: BoxFit.cover,
+                    placeholderBuilder: (BuildContext context) => const SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
         ),
-      ),
+        if (_showEnemyAttackAnimation)
+          if (widget.level.monster.attackAnimation == ImageAssets.feastAttack)
+            TweenAnimationBuilder(
+              tween: Tween<Offset>(
+                begin: const Offset(0, 0),
+                end: Offset(-screenWidth / 8, -screenHeight / 16),
+              ),
+              duration: const Duration(seconds: 1),
+              builder: (context, Offset offset, child) {
+                return Positioned(
+                  bottom: screenHeight / 3 + offset.dy,
+                  left: screenWidth / 4 + offset.dx,
+                  child: TweenAnimationBuilder(
+                    tween: Tween<double>(begin: 0.0, end: -3.14 / 2),
+                    duration: const Duration(seconds: 1),
+                    builder: (context, double rotation, child) {
+                      return Opacity(
+                        opacity: rotation > -3.14 / 2 ? 1.0 : 0.0,
+                        child: Transform(
+                          alignment: Alignment.center,
+                          transform: Matrix4.identity()
+                            ..rotateZ(rotation)
+                            ..scale(-1.0, 1.0),
+                          child: SvgPicture.asset(
+                            ImageAssets.feastAttack,
+                            height: MediaQuery.sizeOf(context).height / 8,
+                            width: MediaQuery.sizeOf(context).width / 8,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                );
+              },
+            )
+          else
+            Positioned(
+              bottom: screenHeight / 3,
+              left: screenWidth / 6,
+              child: TweenAnimationBuilder(
+                tween: Tween<double>(begin: 0.0, end: 1.0),
+                duration: const Duration(seconds: 1),
+                builder: (context, double opacity, child) {
+                  return Center(
+                    child: Opacity(
+                      opacity: opacity,
+                      child: SvgPicture.asset(
+                        ImageAssets.scratchAttack,
+                        height: MediaQuery.sizeOf(context).height / 4,
+                        width: MediaQuery.sizeOf(context).width / 4,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+      ],
     );
+  }
+
+  String _getAssetForPlayers(int numberOfPlayers) {
+    if (numberOfPlayers == 2) {
+      return ImageAssets.players2;
+    } else if (numberOfPlayers == 3) {
+      return ImageAssets.players3;
+    } else if (numberOfPlayers == 4) {
+      return ImageAssets.players4;
+    } else {
+      throw Exception('Wrong number of players $numberOfPlayers');
+    }
   }
 
   Widget _buildEnemy(double screenHeight, double screenWidth) {
@@ -391,18 +500,53 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
       child: OverlayTooltipItem(
         displayIndex: 3,
         tooltip: (controller) {
-          return MTooltip(title: 'You have to defeat him! he\'s blocking your way!', controller: controller);
+          return MTooltip(
+            title: 'You have to defeat him! he\'s blocking your way!',
+            controller: controller,
+          );
         },
         tooltipVerticalPosition: TooltipVerticalPosition.TOP,
-        child: SvgPicture.asset(
-          height: screenHeight / widget.level.enemyScale,
-          widget.level.monsterAsset,
-          fit: BoxFit.cover,
-          placeholderBuilder: (BuildContext context) => const SizedBox(
-            width: 50,
-            height: 50,
-            child: CircularProgressIndicator(),
-          ),
+        child: AnimatedBuilder(
+          animation: _enemyShakeAnimation,
+          builder: (context, child) {
+            return Transform.translate(
+              offset: _enemyShakeAnimation.value,
+              child: Stack(
+                children: [
+                  SvgPicture.asset(
+                    height: screenHeight / widget.level.enemyScale,
+                    widget.level.monsterAsset,
+                    fit: BoxFit.cover,
+                    placeholderBuilder: (BuildContext context) => const SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                  AnimatedOpacity(
+                    opacity: _isEnemyHit ? 0.6 : 0.0,
+                    duration: const Duration(milliseconds: 500),
+                    child: ColorFiltered(
+                      colorFilter: const ColorFilter.mode(
+                        Colors.red,
+                        BlendMode.srcIn,
+                      ),
+                      child: SvgPicture.asset(
+                        height: screenHeight / widget.level.enemyScale,
+                        widget.level.monsterAsset,
+                        fit: BoxFit.cover,
+                        placeholderBuilder: (BuildContext context) => const SizedBox(
+                          width: 50,
+                          height: 50,
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
         ),
       ),
     );
@@ -448,6 +592,8 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
 
   @override
   void dispose() {
+    _playerShakeController.dispose();
+    _enemyShakeController.dispose();
     _toolTipController.dispose();
     _timer?.cancel();
     super.dispose();
@@ -456,48 +602,61 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   Future<void> _monsterAttackAnimation() async {
     enemyRoars.shuffle();
     audioController.playSfx(enemyRoars.first);
-    // TODO: Run monster attack animation
-    // ignore: avoid_print
-    print('TODO: Run monster attack animation');
 
-    // ignore: avoid_print
-    print('TODO: Wait for monster attack animation end');
-    Future.delayed(
-      const Duration(seconds: 2),
-      () {
-        _nextTurn();
-      },
-    );
-
-    // TODO: Wait for monster attack animation
-    Future.delayed(const Duration(seconds: 2)).then((val) {
-      //context.read<BattleCubit>().gameOver();
+    Future.delayed(const Duration(milliseconds: 250), () {
+      _triggerPlayerShakeAnimation();
     });
+
+    setState(() {
+      _showEnemyAttackAnimation = true;
+    });
+
+    await Future.delayed(const Duration(seconds: 2));
+
+    setState(() {
+      _showEnemyAttackAnimation = false;
+    });
+
+    _nextTurn();
   }
 
   Future<void> _playersAttackAnimation() async {
     playerShouts.shuffle();
     audioController.playSfx(playerShouts.first);
-    // TODO: Run players attack animation
-    // ignore: avoid_print
-    print('TODO: Run players attack animation');
 
-    // ignore: avoid_print
-    print('TODO: Wait for players attack animation end');
+    Future.delayed(const Duration(milliseconds: 250), () {
+      _triggerEnemyShakeAnimation();
+    });
+
+    setState(() {
+      _isEnemyHit = true;
+    });
+
+    await Future.delayed(const Duration(milliseconds: 300));
+
+    setState(() {
+      _isEnemyHit = false;
+    });
+
     Future.delayed(
       const Duration(seconds: 2),
       () {
         _nextTurn();
       },
     );
+  }
 
-    // TODO: Wait for player attack animation
+  void _triggerPlayerShakeAnimation() {
+    _playerShakeController.forward(from: 0.0);
+  }
+
+  void _triggerEnemyShakeAnimation() {
+    _enemyShakeController.forward(from: 0.0);
   }
 
   void _nextTurn() {
     if (_shouldMonsterAttack) {
       _drawRune(DrawingModeEnum.defence);
-
       _timer?.start();
       setState(() {
         _shouldMonsterAttack = false;
@@ -565,27 +724,11 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
 
   Widget _buildArrow(double screenHeight, double screenWidth, BattleState state) {
     return state.maybeMap(
-      loaded: (result) => Positioned(
-        bottom: _getPositionBasedOnPlayer(screenHeight, result.currentPlayerIndex),
-        left: screenWidth / 7,
-        child: SvgPicture.asset(
-          ImageAssets.arrow,
-          height: screenWidth / 30,
-          width: screenWidth / 26,
-        ),
+      loaded: (result) => PulsatingArrow(
+        currentPlayerIndex: result.currentPlayerIndex,
+        numberOfPlayers: widget.players.numberOfPlayers,
       ),
       orElse: () => const SizedBox.shrink(),
     );
-  }
-
-  double _getPositionBasedOnPlayer(double screenHeight, int currentPlayerIndex) {
-    // TODO after adding animation
-    final numOfPlayers = widget.players.numberOfPlayers;
-    if (numOfPlayers == 2) {
-      if (currentPlayerIndex == 0) {
-      } else {}
-    } else if (numOfPlayers == 3) {
-    } else if (numOfPlayers == 4) {}
-    return screenHeight / 6;
   }
 }
