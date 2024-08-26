@@ -149,7 +149,12 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
     _enemyShakeAnimation = Tween<Offset>(
       begin: Offset.zero,
       end: const Offset(10, 0),
-    ).chain(CurveTween(curve: Curves.elasticIn)).animate(_enemyShakeController);
+    ).chain(CurveTween(curve: Curves.elasticIn)).animate(_enemyShakeController)
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          _enemyShakeController.reverse();
+        }
+      });
   }
 
   void _startTimer(int monsterSpeed, BonusEntity? bonus) {
@@ -504,11 +509,11 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
         child: AnimatedBuilder(
           animation: _enemyShakeAnimation,
           builder: (context, child) {
-            return Stack(
-              children: [
-                Transform.translate(
-                  offset: _enemyShakeAnimation.value,
-                  child: SvgPicture.asset(
+            return Transform.translate(
+              offset: _enemyShakeAnimation.value,
+              child: Stack(
+                children: [
+                  SvgPicture.asset(
                     height: screenHeight / widget.level.enemyScale,
                     widget.level.monsterAsset,
                     fit: BoxFit.cover,
@@ -518,28 +523,28 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
                       child: CircularProgressIndicator(),
                     ),
                   ),
-                ),
-                AnimatedOpacity(
-                  opacity: _isEnemyHit ? 0.6 : 0.0,
-                  duration: const Duration(milliseconds: 500),
-                  child: ColorFiltered(
-                    colorFilter: const ColorFilter.mode(
-                      Colors.red,
-                      BlendMode.srcIn,
-                    ),
-                    child: SvgPicture.asset(
-                      height: screenHeight / widget.level.enemyScale,
-                      widget.level.monsterAsset,
-                      fit: BoxFit.cover,
-                      placeholderBuilder: (BuildContext context) => const SizedBox(
-                        width: 50,
-                        height: 50,
-                        child: CircularProgressIndicator(),
+                  AnimatedOpacity(
+                    opacity: _isEnemyHit ? 0.6 : 0.0,
+                    duration: const Duration(milliseconds: 500),
+                    child: ColorFiltered(
+                      colorFilter: const ColorFilter.mode(
+                        Colors.red,
+                        BlendMode.srcIn,
+                      ),
+                      child: SvgPicture.asset(
+                        height: screenHeight / widget.level.enemyScale,
+                        widget.level.monsterAsset,
+                        fit: BoxFit.cover,
+                        placeholderBuilder: (BuildContext context) => const SizedBox(
+                          width: 50,
+                          height: 50,
+                          child: CircularProgressIndicator(),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             );
           },
         ),
