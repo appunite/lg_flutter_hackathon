@@ -431,11 +431,11 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
                   bottom: screenHeight / 3 + offset.dy,
                   left: screenWidth / 4 + offset.dx,
                   child: TweenAnimationBuilder(
-                    tween: Tween<double>(begin: 0.0, end: -3.14159 / 2),
+                    tween: Tween<double>(begin: 0.0, end: -3.14 / 2),
                     duration: const Duration(seconds: 1),
                     builder: (context, double rotation, child) {
                       return Opacity(
-                        opacity: rotation > -3.14159 / 2 ? 1.0 : 0.0,
+                        opacity: rotation > -3.14 / 2 ? 1.0 : 0.0,
                         child: Transform(
                           alignment: Alignment.center,
                           transform: Matrix4.identity()
