@@ -568,7 +568,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
     return state.maybeMap(
       loaded: (result) => Positioned(
         bottom: _getPositionBasedOnPlayer(screenHeight, result.currentPlayerIndex),
-        left: screenWidth / 7,
+        left: screenWidth / 10,
         child: SvgPicture.asset(
           ImageAssets.arrow,
           height: screenWidth / 30,
