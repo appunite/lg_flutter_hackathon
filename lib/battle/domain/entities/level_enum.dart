@@ -104,29 +104,29 @@ enum LevelEnum {
 }
 
 String introDialog(LevelEnum level) => switch (level) {
-  LevelEnum.first => Strings.enemy1IntroDialog,
-  LevelEnum.second => Strings.enemy2IntroDialog,
-  LevelEnum.third => Strings.enemy3IntroDialog,
-  LevelEnum.fourth => Strings.enemy4IntroDialog,
-};
+      LevelEnum.first => Strings.enemy1IntroDialog,
+      LevelEnum.second => Strings.enemy2IntroDialog,
+      LevelEnum.third => Strings.enemy3IntroDialog,
+      LevelEnum.fourth => Strings.enemy4IntroDialog,
+    };
 
 String outroDialog(LevelEnum level) => switch (level) {
-  LevelEnum.first => Strings.enemy1OutroDialog,
-  LevelEnum.second => Strings.enemy2OutroDialog,
-  LevelEnum.third => Strings.enemy3OutroDialog,
-  LevelEnum.fourth => Strings.enemy4OutroDialog,
-};
+      LevelEnum.first => Strings.enemy1OutroDialog,
+      LevelEnum.second => Strings.enemy2OutroDialog,
+      LevelEnum.third => Strings.enemy3OutroDialog,
+      LevelEnum.fourth => Strings.enemy4OutroDialog,
+    };
 
 List<String> attackDialogs(LevelEnum level) => switch (level) {
-  LevelEnum.first => Strings.enemy1AttackDialogs,
-  LevelEnum.second => Strings.enemy2AttackDialogs,
-  LevelEnum.third => Strings.enemy3AttackDialogs,
-  LevelEnum.fourth => Strings.enemy4AttackDialogs,
-};
+      LevelEnum.first => Strings.enemy1AttackDialogs,
+      LevelEnum.second => Strings.enemy2AttackDialogs,
+      LevelEnum.third => Strings.enemy3AttackDialogs,
+      LevelEnum.fourth => Strings.enemy4AttackDialogs,
+    };
 
 List<String> defenseDialogs(LevelEnum level) => switch (level) {
-  LevelEnum.first => Strings.enemy1DefenseDialogs,
-  LevelEnum.second => Strings.enemy2DefenseDialogs,
-  LevelEnum.third => Strings.enemy3DefenseDialogs,
-  LevelEnum.fourth => Strings.enemy4DefenseDialogs,
-};
+      LevelEnum.first => Strings.enemy1DefenseDialogs,
+      LevelEnum.second => Strings.enemy2DefenseDialogs,
+      LevelEnum.third => Strings.enemy3DefenseDialogs,
+      LevelEnum.fourth => Strings.enemy4DefenseDialogs,
+    };
