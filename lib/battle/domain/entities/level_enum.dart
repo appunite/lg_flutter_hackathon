@@ -21,7 +21,7 @@ enum LevelEnum {
     ],
     ImageAssets.round1number,
     ImageAssets.trollEnemy,
-    4,
+    3,
     8,
     8,
   ),
