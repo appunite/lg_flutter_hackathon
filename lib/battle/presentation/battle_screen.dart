@@ -151,14 +151,12 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
     final delay = switch (type) {
       DialogEnum.intro => 5,
       DialogEnum.outro => 7,
-      DialogEnum.attack => 3,
-      DialogEnum.defense => 3,
+      DialogEnum.attack => 2,
+      DialogEnum.defense => 2,
     };
 
     await Future.delayed(Duration(seconds: delay));
-    setState(() {
-      _showVoiceDialog = false;
-    });
+    _showVoiceDialog = false;
   }
 
   @override
@@ -410,6 +408,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   }
 
   Widget _buildDialogCloud(double screenHeight, double screenWidth) {
+    if (!_showVoiceDialog) return const SizedBox.shrink();
     final text = switch (_voiceDialogType) {
       DialogEnum.intro => introDialog(widget.level),
       DialogEnum.outro => outroDialog(widget.level),
