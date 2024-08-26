@@ -40,7 +40,7 @@ class _PulsatingArrowState extends State<PulsatingArrow> with SingleTickerProvid
         setState(() {});
       });
 
-    _animationController.repeat();
+    _animationController.repeat(reverse: true);
   }
 
   @override
