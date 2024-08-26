@@ -75,6 +75,8 @@ class _EndingStoryScreenState extends State<EndingStoryScreen> {
   }
 
   void _navigateToNextStep(BuildContext context) {
+    if (!mounted) return;
+
     final currentIndex = EndingStoryStep.values.indexOf(widget.step);
     if (currentIndex == EndingStoryStep.values.length - 1) {
       _navigateToStats(context);
