@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -51,6 +52,8 @@ class BattleScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final settingsController = context.watch<SettingsController>();
+
     final playersWithBonuses = players.copyWith(
       healthPoints:
           chosenBonus?.type == BonusEnum.health ? players.healthPoints + chosenBonus!.strength : players.healthPoints,
@@ -58,12 +61,11 @@ class BattleScreen extends StatelessWidget {
     );
 
     return BlocProvider(
-      create: (context) => BattleCubit(
-        level,
-        playersWithBonuses,
-      ),
-      child: _BattleScreenBody(level, playersWithBonuses, chosenBonus),
-    );
+        create: (context) => BattleCubit(
+              level,
+              playersWithBonuses,
+            ),
+        child: _BattleScreenBody(level, playersWithBonuses, chosenBonus, settingsController));
   }
 }
 
@@ -72,11 +74,13 @@ class _BattleScreenBody extends StatefulWidget {
     this.level,
     this.players,
     this.chosenBonus,
+    this.settingsController,
   );
 
   final LevelEnum level;
   final PlayersEntity players;
   final BonusEntity? chosenBonus;
+  final SettingsController settingsController;
 
   @override
   State<_BattleScreenBody> createState() => __BattleScreenBodyState();
@@ -106,7 +110,10 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
 
     _toolTipController.onDone(
       () {
+        _startTimer(widget.level.monster.speed, widget.chosenBonus);
         _drawRune(DrawingModeEnum.attack);
+        widget.settingsController.setTutorial(false);
+        _showTutorial = false;
       },
     );
     SchedulerBinding.instance.addPostFrameCallback((_) async {
@@ -221,7 +228,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
                         opacity: _overlayOpacity,
                         duration: const Duration(milliseconds: 500),
                         child: _isDrawing
-                            ? _buildDrawingOverlayContent(context, 250, _showTutorial, settingsController)
+                            ? _buildDrawingOverlayContent(context, 250, settingsController)
                             : const SizedBox.shrink(),
                       ),
                       if (_showAccuracyAnimation && _accuracy != null)
@@ -313,7 +320,6 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   Widget _buildDrawingOverlayContent(
     BuildContext context,
     double glyphSize,
-    bool showTutorial,
     SettingsController settingsController,
   ) {
     return BlocBuilder<BattleCubit, BattleState>(
@@ -327,7 +333,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
                 _isDrawing = false;
                 _showAccuracyAnimation = true;
               });
-              info("Drawing completed with accuracy: ${details.toString()}");
+              info("\nDrawing completed with accuracy: ${details.toString()}");
 
               if (_currentDrawingMode == DrawingModeEnum.attack) {
                 context.read<BattleCubit>().playerAttack(accuracy: details.accuracy);
@@ -335,15 +341,6 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
                 context.read<BattleCubit>().monsterAttack(accuracy: details.accuracy);
               }
             },
-            tutorialFinished: (value) async {
-              setState(() {
-                settingsController.showTutorial(!value);
-                _showTutorial = false;
-              });
-              // start drawing after tutorial ends
-              _startTimer(widget.level.monster.speed, widget.chosenBonus);
-            },
-            tutorial: showTutorial,
             thresholdPercentage: 0.9,
             glyphAsset: DrawingUtils().getRandomGlyphEntity(),
             drawingAreaSize: glyphSize,
@@ -361,12 +358,12 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
       bottom: screenHeight / DesignConsts.playerBottomPositionFactor,
       left: screenWidth / 8,
       child: OverlayTooltipItem(
-        displayIndex: 2,
+        displayIndex: 4,
         tooltipVerticalPosition: TooltipVerticalPosition.TOP,
         tooltip: (controller) {
           return MTooltip(
             title:
-                'You will be taking turns on attacking the enemy! After each attack pass the remote to the next player',
+                'The damage you deal depends on your accuracy! Watch out the monster can also attack, but you\'ll figure it out..',
             controller: controller,
           );
         },
@@ -568,10 +565,21 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
       loaded: (result) => Positioned(
         bottom: _getPositionBasedOnPlayer(screenHeight, result.currentPlayerIndex),
         left: screenWidth / 7,
-        child: SvgPicture.asset(
-          ImageAssets.arrow,
-          height: screenWidth / 30,
-          width: screenWidth / 26,
+        child: OverlayTooltipItem(
+          displayIndex: 2,
+          tooltipVerticalPosition: TooltipVerticalPosition.TOP,
+          tooltip: (controller) {
+            return MTooltip(
+              title:
+                  'You will be taking turns on attacking the enemy! After each attack pass the remote to the next player',
+              controller: controller,
+            );
+          },
+          child: SvgPicture.asset(
+            ImageAssets.arrow,
+            height: screenWidth / 30,
+            width: screenWidth / 26,
+          ),
         ),
       ),
       orElse: () => const SizedBox.shrink(),

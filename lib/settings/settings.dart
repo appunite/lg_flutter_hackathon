@@ -25,7 +25,7 @@ class SettingsController {
     _store.saveSoundsOn(soundsOn.value);
   }
 
-  void showTutorial(bool show) {
+  void setTutorial(bool show) {
     tutorial.value = show;
     _store.setTutorial(tutorial.value);
   }
@@ -39,6 +39,7 @@ class SettingsController {
         return musicOn.value = value;
       }),
       _store.getSoundsOn(defaultValue: true).then((value) => soundsOn.value = value),
+      _store.showTutorial(defaultValue: true).then((value) => tutorial.value = value),
     ]);
   }
 }
