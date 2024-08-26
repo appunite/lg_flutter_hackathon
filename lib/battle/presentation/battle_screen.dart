@@ -270,7 +270,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
                             child: AnimatedAccuracyText(accuracy: _accuracy),
                           ),
                         ),
-                      if (_showBattleEndAnimation)
+                      if (_showBattleEndAnimation && widget.level != LevelEnum.fourth)
                         BattleEndAnimation(
                           isGameOver: _isGameOver,
                         )

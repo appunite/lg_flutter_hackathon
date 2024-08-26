@@ -49,7 +49,7 @@ class BattleCubit extends Cubit<BattleState> {
     state.mapOrNull(
       loaded: (result) async {
         emit(const BattleState.playerAttack());
-        final damage = _players.damage * accuracy / 1000;
+        final damage = _players.damage * accuracy / 100;
         var monsterHealthPointsAfterDamage = result.currentMonsterHealthPoints - damage;
 
         final nextPlayerIndex =
