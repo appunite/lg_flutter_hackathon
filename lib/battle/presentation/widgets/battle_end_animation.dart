@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/overlay_widget.dart';
 import 'package:lg_flutter_hackathon/constants/design_consts.dart';
@@ -58,7 +59,7 @@ class _CurtainAnimationState extends State<CurtainAnimation> with SingleTickerPr
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 2000), // Adjust duration as needed
+      duration: const Duration(milliseconds: 2000),
       vsync: this,
     );
 
@@ -105,14 +106,17 @@ class _CurtainAnimationState extends State<CurtainAnimation> with SingleTickerPr
         ),
         Center(
           child: Text(
-            widget.isGameOver ? 'Game Over' : 'Monster defeated',
+            widget.isGameOver ? 'Game Over!' : 'Monster defeated!\nPrepare for the next round!',
+            textAlign: TextAlign.center,
             style: TextStyle(
               fontFamily: DesignConsts.fontFamily,
               color: Colors.white,
-              fontSize: widget.screenWidth / 40,
+              fontSize: widget.screenWidth / 22,
             ),
-          ),
-        ),
+          ).animate().fadeIn(
+                delay: const Duration(seconds: 3),
+              ),
+        )
       ],
     );
   }

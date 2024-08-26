@@ -16,6 +16,7 @@ import 'package:lg_flutter_hackathon/battle/domain/entities/players_entity.dart'
 import 'package:lg_flutter_hackathon/battle/presentation/cubit/battle_cubit.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/ending_screen.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/accuracy_animated_text.dart';
+import 'package:lg_flutter_hackathon/battle/presentation/widgets/battle_end_animation.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/drawing_overlay.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/health_bar.dart';
 import 'package:lg_flutter_hackathon/battle/presentation/widgets/pulsating_arrow.dart';
@@ -94,7 +95,8 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   bool _showAccuracyAnimation = false;
   DrawingModeEnum _currentDrawingMode = DrawingModeEnum.attack;
   bool _showTutorial = false;
-  bool _showGameOver = true;
+  bool _showBattleEndAnimation = false;
+  bool _isGameOver = false;
 
   final audioController = sl.get<AudioController>();
 
@@ -203,10 +205,15 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
               loaded: (result) {
                 if (result.currentMonsterHealthPoints <= 0) {
                   showVoiceDialog(DialogEnum.outro);
+
+                  setState(() {
+                    _showBattleEndAnimation = true;
+                  });
                   _openVictoryScreen();
                 } else if (result.currentPlayersHealthPoints <= 0) {
                   setState(() {
-                    _showGameOver = true;
+                    _isGameOver = true;
+                    _showBattleEndAnimation = true;
                   });
                   _openGameOverScreen();
                 }
@@ -263,6 +270,10 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
                             child: AnimatedAccuracyText(accuracy: _accuracy),
                           ),
                         ),
+                      if (_showBattleEndAnimation)
+                        BattleEndAnimation(
+                          isGameOver: _isGameOver,
+                        )
                     ],
                   ),
                 ),
@@ -676,7 +687,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
 
   void _openGameOverScreen() {
     Future.delayed(
-      const Duration(seconds: 4),
+      const Duration(seconds: 7),
       () {
         audioController.playSfx(SfxType.gameOver);
         audioController.setSong(audioController.gameoverSong);
@@ -694,7 +705,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
 
   void _openVictoryScreen() {
     Future.delayed(
-      const Duration(seconds: 2),
+      const Duration(seconds: 8),
       () {
         if (widget.level == LevelEnum.fourth) {
           audioController.setSong(audioController.victorySong);
