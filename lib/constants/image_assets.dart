@@ -81,6 +81,10 @@ class ImageAssets {
   static const String openingStory13 = 'assets/ilustrations/underwood.svg';
   static const String buttonEmpty = 'assets/ilustrations/button_next.svg';
 
+  // attacks
+  static const String feastAttack = 'assets/ilustrations/feast_attack.svg';
+  static const String scratchAttack = 'assets/ilustrations/scratch_attack.svg';
+
   // ending story
   static const String endingStory1 = 'assets/ilustrations/fountain_trolls.svg';
   static const String endingStory2 = 'assets/ilustrations/city.svg';
