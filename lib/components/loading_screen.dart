@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lg_flutter_hackathon/constants/design_consts.dart';
@@ -19,6 +20,7 @@ class _LoadingScreenState extends State<LoadingScreen> with TickerProviderStateM
   late Timer _timer;
   int _backgroundIndex = 0;
   int _tipIndex = 0;
+  final _random = Random();
 
   final List<String> _backgroundImages = [
     ImageAssets.boardBackground,
@@ -170,7 +172,7 @@ class _LoadingScreenState extends State<LoadingScreen> with TickerProviderStateM
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: Text(
-                    'TIP: ${Strings.gameTips[_tipIndex]}',
+                    'TIP: ${Strings.gameTips[_getRandomTipIndex()]}',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: DesignConsts.fontFamily,
@@ -187,6 +189,10 @@ class _LoadingScreenState extends State<LoadingScreen> with TickerProviderStateM
         ],
       ),
     );
+  }
+
+  int _getRandomTipIndex() {
+    return _random.nextInt(Strings.gameTips.length);
   }
 
   double _calculateOpacity(int index, double animationValue) {

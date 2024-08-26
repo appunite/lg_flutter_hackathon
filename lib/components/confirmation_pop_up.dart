@@ -1,101 +1,70 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:lg_flutter_hackathon/audio/audio_controller.dart';
-import 'package:lg_flutter_hackathon/components/pushable_button.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lg_flutter_hackathon/buttons/button_with_text.dart';
 import 'package:lg_flutter_hackathon/constants/design_consts.dart';
 import 'package:lg_flutter_hackathon/constants/image_assets.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:lg_flutter_hackathon/audio/audio_controller.dart';
 import 'package:lg_flutter_hackathon/dependencies.dart';
 
 class ConfirmationPopUp extends StatelessWidget {
-  const ConfirmationPopUp({super.key, required this.title, this.alertMessage});
+  const ConfirmationPopUp({
+    super.key,
+    required this.title,
+  });
 
   final String title;
-  final String? alertMessage;
 
   @override
   Widget build(BuildContext context) {
-    final audioController = sl.get<AudioController>();
-
     final screenWidth = MediaQuery.sizeOf(context).width;
     final screenHeight = MediaQuery.sizeOf(context).height;
+    final audioController = sl.get<AudioController>();
 
-    final containerWidth = screenWidth * 0.4;
-    final containerHeight = screenHeight * 0.3;
-
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        SvgPicture.asset(
-          ImageAssets.tutorialContainer,
-          fit: BoxFit.contain,
-          width: containerWidth,
-          height: containerHeight,
-        ),
-        Container(
-          alignment: Alignment.center,
-          width: containerWidth,
-          height: containerHeight,
-          padding: EdgeInsets.symmetric(
-                horizontal: containerWidth * 0.21,
-              ) +
-              EdgeInsets.only(top: containerHeight * 0.2, bottom: containerHeight * 0.1),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SizedBox(
-                height: containerHeight * 0.45,
-                child: Text(
-                  title,
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                    fontFamily: DesignConsts.fontFamily,
-                    fontSize: screenWidth / DesignConsts.tutorialFontSizeFactor,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  PushableButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Opacity(
-                      opacity: 1,
-                      child: SvgPicture.asset(
-                        ImageAssets.cancelButton,
-                        fit: BoxFit.contain,
-                        width: containerWidth * 0.2,
-                        height: containerHeight * 0.2,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: screenWidth / DesignConsts.tutorialButtonSpacingFactor),
-                  PushableButton(
-                    onPressed: () {
-                      audioController.setSong(audioController.themeSong);
-                      Navigator.popAndPushNamed(context, '/');
-                    },
-                    child: Opacity(
-                      opacity: 1,
-                      child: SvgPicture.asset(
-                        ImageAssets.yesButton,
-                        fit: BoxFit.contain,
-                        width: containerWidth * 0.2,
-                        height: containerHeight * 0.2,
-                      ),
-                    ),
-                  ),
-                ],
-              )
-            ],
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          SvgPicture.asset(
+            ImageAssets.tutorialContainer,
+            width: screenWidth / 2,
           ),
-        )
-      ],
+          Positioned(
+            top: screenHeight / 6,
+            child: Text(
+              title,
+              style: TextStyle(
+                fontFamily: DesignConsts.fontFamily,
+                color: Colors.white,
+                fontSize: screenWidth / 40,
+              ),
+            ),
+          ),
+          Positioned(
+            right: screenWidth / 12,
+            bottom: screenHeight / 15,
+            child: ButtonWithText(
+              text: 'Cancel',
+              onTap: () {
+                audioController.setSong(audioController.themeSong);
+                Navigator.pop(context);
+              },
+            ),
+          ),
+          Positioned(
+            bottom: screenHeight / 15,
+            left: screenWidth / 12,
+            child: ButtonWithText(
+              text: 'Exit',
+              onTap: () {
+                audioController.setSong(audioController.themeSong);
+                Navigator.popUntil(context, (route) => route.isFirst);
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -314,23 +315,24 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
 
   //TODO: As suggestion we can add a fade in and fade out animation for the magic pen
   Widget _buildMagicPen(double glyphSize) {
-    double offsetX = glyphSize * -0.8;
-    double offsetY = glyphSize * -0.25;
+    double offsetX = glyphSize * -0.4;
+    double offsetY = glyphSize * -0.6;
 
     return Positioned(
       left: _currentPenPosition!.dx - offsetX,
       top: _currentPenPosition!.dy - offsetY,
       child: Transform.rotate(
-        angle: -45,
+        angle: 1.4 * pi,
         child: SvgPicture.asset(
-          ImageAssets.magicPenSvg,
-          width: glyphSize,
-          height: glyphSize,
+          _getPlayerMagicStick(widget.currentPlayerIndex),
+          width: glyphSize * 0.5,
+          height: glyphSize * 0.5,
         ),
       ),
     );
   }
 
+  // TODO: handle 2 and 3 players
   String _getPlayerName(int currentPlayerIndex) {
     if (currentPlayerIndex == 0) {
       return 'Sapphire';
@@ -340,6 +342,19 @@ class _DrawingOverlayState extends State<DrawingOverlay> {
       return 'Topaz';
     } else {
       return 'Ruby';
+    }
+  }
+
+// TODO: handle 2 and 3 players
+  String _getPlayerMagicStick(int currentPlayerIndex) {
+    if (currentPlayerIndex == 0) {
+      return ImageAssets.blueStick;
+    } else if (currentPlayerIndex == 1) {
+      return ImageAssets.greenStick;
+    } else if (currentPlayerIndex == 2) {
+      return ImageAssets.yellowStick;
+    } else {
+      return ImageAssets.redStick;
     }
   }
 

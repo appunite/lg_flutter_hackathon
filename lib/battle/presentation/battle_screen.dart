@@ -215,6 +215,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
                       _buildPlayerHealthBar(screenHeight, screenWidth),
                       _buildEnemyHealthBar(screenHeight, screenWidth),
                       _buildPlayer(screenHeight, screenWidth),
+                      _buildArrow(screenHeight, screenWidth, state),
                       _buildEnemy(screenHeight, screenWidth),
                       _buildSettingsButton(context),
                       _buildDialogCloud(screenHeight, screenWidth),
@@ -305,7 +306,7 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
   Widget _buildBackground() {
     return SizedBox.expand(
       child: SvgPicture.asset(
-        ImageAssets.battleBackground,
+        widget.level.background,
         fit: BoxFit.cover,
       ),
     );
@@ -559,5 +560,31 @@ class __BattleScreenBodyState extends State<_BattleScreenBody> with ReporterMixi
         }
       },
     );
+  }
+
+  Widget _buildArrow(double screenHeight, double screenWidth, BattleState state) {
+    return state.maybeMap(
+      loaded: (result) => Positioned(
+        bottom: _getPositionBasedOnPlayer(screenHeight, result.currentPlayerIndex),
+        left: screenWidth / 7,
+        child: SvgPicture.asset(
+          ImageAssets.arrow,
+          height: screenWidth / 30,
+          width: screenWidth / 26,
+        ),
+      ),
+      orElse: () => const SizedBox.shrink(),
+    );
+  }
+
+  double _getPositionBasedOnPlayer(double screenHeight, int currentPlayerIndex) {
+    // TODO after adding animation
+    final numOfPlayers = widget.players.numberOfPlayers;
+    if (numOfPlayers == 2) {
+      if (currentPlayerIndex == 0) {
+      } else {}
+    } else if (numOfPlayers == 3) {
+    } else if (numOfPlayers == 4) {}
+    return screenHeight / 6;
   }
 }

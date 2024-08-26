@@ -1,5 +1,4 @@
 class ImageAssets {
-  static const String battleBackground = 'assets/ilustrations/battle_background.svg';
   static const String splashScreenBackground = 'assets/ilustrations/splash_background.svg';
   static const String players = 'assets/ilustrations/players.svg';
   static const String dialogCloud = 'assets/ilustrations/dialog_cloud.svg';
@@ -49,8 +48,16 @@ class ImageAssets {
   static const String tutorialBackButton = 'assets/ilustrations/tutorial_back_button.svg';
   static const String tutorialSkipButton = 'assets/ilustrations/tutorial_skip_button.svg';
   static const String tutorialStartButton = 'assets/ilustrations/tutorial_start_button.svg';
+  static const String trollBackground = 'assets/ilustrations/troll_background.svg';
+  static const String pipSqueakBackground = 'assets/ilustrations/pip_squeak_background.svg';
+  static const String werewolfBackground = 'assets/ilustrations/werewolf_background.svg';
+  static const String leviathusBackground = 'assets/ilustrations/leviathus_background.svg';
+  static const String arrow = 'assets/ilustrations/arrow.svg';
+  static const String blueStick = 'assets/ilustrations/blue_stick.svg';
+  static const String redStick = 'assets/ilustrations/red_stick.svg';
+  static const String yellowStick = 'assets/ilustrations/yellow_stick.svg';
+  static const String greenStick = 'assets/ilustrations/green_stick.svg';
   static const String cancelButton = 'assets/ilustrations/cancel_button.svg';
-  static const String yesButton = 'assets/ilustrations/yes_button.svg';
 
   static const String round = 'assets/ilustrations/round.svg';
   static const String round1number = 'assets/ilustrations/round_1.svg';
@@ -72,7 +79,7 @@ class ImageAssets {
   static const String openingStory11 = 'assets/ilustrations/story_stick_troll.svg';
   static const String openingStory12 = 'assets/ilustrations/palms.svg';
   static const String openingStory13 = 'assets/ilustrations/underwood.svg';
-  static const String buttonNext = 'assets/ilustrations/button_next.svg';
+  static const String buttonEmpty = 'assets/ilustrations/button_next.svg';
 
   // ending story
   static const String endingStory1 = 'assets/ilustrations/fountain_trolls.svg';
@@ -84,7 +91,6 @@ class ImageAssets {
 }
 
 List<String> assetsList = [
-  ImageAssets.battleBackground,
   ImageAssets.dialogCloud,
   ImageAssets.bugbearEnemy,
   ImageAssets.hopgoblinEnemy,
@@ -142,7 +148,7 @@ List<String> assetsList = [
   ImageAssets.openingStory11,
   ImageAssets.openingStory12,
   ImageAssets.openingStory13,
-  ImageAssets.buttonNext,
+  ImageAssets.buttonEmpty,
   ImageAssets.endingStory1,
   ImageAssets.endingStory2,
   ImageAssets.endingStory3,
@@ -155,4 +161,13 @@ List<String> assetsList = [
   ImageAssets.round3number,
   ImageAssets.round4number,
   ImageAssets.splashScreenBackground,
+  ImageAssets.trollBackground,
+  ImageAssets.pipSqueakBackground,
+  ImageAssets.werewolfBackground,
+  ImageAssets.leviathusBackground,
+  ImageAssets.arrow,
+  ImageAssets.blueStick,
+  ImageAssets.redStick,
+  ImageAssets.yellowStick,
+  ImageAssets.greenStick,
 ];

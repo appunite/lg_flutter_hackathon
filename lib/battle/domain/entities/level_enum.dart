@@ -13,7 +13,7 @@ enum LevelEnum {
       attackAnimation: 'goblin-attack',
       monsterName: 'Grunk the Less-Cute Troll',
     ),
-    'goblin-background',
+    ImageAssets.trollBackground,
     [
       BonusEntity(type: BonusEnum.health, strength: 1),
       BonusEntity(type: BonusEnum.damage, strength: 1),
@@ -33,7 +33,7 @@ enum LevelEnum {
       attackAnimation: 'wolf-attack',
       monsterName: 'Pip and Squeak',
     ),
-    'wolf-background',
+    ImageAssets.pipSqueakBackground,
     [
       BonusEntity(type: BonusEnum.health, strength: 2),
       BonusEntity(type: BonusEnum.damage, strength: 2),
@@ -53,7 +53,7 @@ enum LevelEnum {
       attackAnimation: 'bugbear-attack',
       monsterName: 'Jerry the Werewolf',
     ),
-    'bugbear-background',
+    ImageAssets.werewolfBackground,
     [
       BonusEntity(type: BonusEnum.health, strength: 3),
       BonusEntity(type: BonusEnum.damage, strength: 3),
@@ -72,7 +72,7 @@ enum LevelEnum {
         damage: 13,
         attackAnimation: 'ogre-attack',
         monsterName: 'Leviathus, the Crusher of Souls'),
-    'ogre-background',
+    ImageAssets.leviathusBackground,
     // we don't display bonus screen after the final boss
     [],
     ImageAssets.round4number,
